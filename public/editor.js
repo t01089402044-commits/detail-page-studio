@@ -655,27 +655,34 @@ function initIzOverlays(){
 ══════════════════════════════════════════════════════════ */
 function showFT(el){
   if(!el)return;
-  _ftCancelHide&&_ftCancelHide();
-  // 모든 기존 하이라이트 제거
-  document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
-  _ftEl=el;
-  el.classList.add('ft-active');
-  var ft=document.getElementById('ft');
-  if(!ft) return;
-  ft.style.display='flex';
-  var r=el.getBoundingClientRect();
-  var ftH=54,ftW=330;
-  var top=r.top>ftH+8 ? r.top-ftH-4 : r.bottom+4;
-  ft.style.top=Math.max(4,Math.min(top,window.innerHeight-ftH-4))+'px';
-  ft.style.left=Math.max(4,Math.min(r.left,window.innerWidth-ftW-4))+'px';
-  var cs=getComputedStyle(el);
-  var szEl=document.getElementById('ft-sz');
-  if(szEl) szEl.textContent=Math.round(parseFloat(cs.fontSize))+'px';
-  var c=rgbToHex(cs.color);
-  var colEl=document.getElementById('ft-color');
-  if(colEl) colEl.value=c;
-  var hexEl=document.getElementById('ft-color-hex');
-  if(hexEl) hexEl.textContent=c;
+  try{
+    if(typeof _ftCancelHide==='function') _ftCancelHide();
+    document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
+    _ftEl=el;
+    el.classList.add('ft-active');
+    var ft=document.getElementById('ft');
+    if(!ft){ console.warn('[showFT] #ft missing'); return; }
+    // !important 수준으로 강제 표시 (다른 CSS와 충돌해도 보이도록)
+    ft.style.cssText = 'display:flex !important; position:fixed; z-index:99998; background:#0f172a; border:1px solid #1e293b; border-radius:10px; padding:7px 10px; box-shadow:0 8px 32px rgba(0,0,0,.7); flex-direction:row; align-items:center; gap:4px;';
+    var r=el.getBoundingClientRect();
+    var ftH=44, ftW=420;
+    // 위치: 텍스트 위에, 부족하면 아래
+    var topPos = r.top > ftH+10 ? r.top - ftH - 6 : r.bottom + 6;
+    topPos = Math.max(8, Math.min(topPos, window.innerHeight - ftH - 8));
+    var leftPos = Math.max(8, Math.min(r.left, window.innerWidth - ftW - 8));
+    ft.style.top = topPos+'px';
+    ft.style.left = leftPos+'px';
+    var cs=getComputedStyle(el);
+    var szEl=document.getElementById('ft-sz');
+    if(szEl) szEl.textContent=Math.round(parseFloat(cs.fontSize))+'px';
+    var c=rgbToHex(cs.color);
+    var colEl=document.getElementById('ft-color');
+    if(colEl) colEl.value=c;
+    var hexEl=document.getElementById('ft-color-hex');
+    if(hexEl) hexEl.textContent=c;
+  }catch(err){
+    console.error('[showFT] error:', err);
+  }
 }
 function closeFT(){
   document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
