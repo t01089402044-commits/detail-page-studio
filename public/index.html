@@ -6,7 +6,7 @@
   <title>Detail Page Studio</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>?�세?�이지 ?�디??/title>
+<title>상세페이지 에디터</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&family=Oswald:wght@500;600;700&family=DM+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.1.0/dist/tabler-icons.min.css">
@@ -26,10 +26,10 @@
   </select>
   <div class="tb-sep"></div>
   <button class="wb-btn" onclick="setW(480,this)">480px</button>
-  <button class="wb-btn act" id="wb860" onclick="setW(860,this)">860px ??/button>
+  <button class="wb-btn act" id="wb860" onclick="setW(860,this)">860px ★</button>
   <button class="wb-btn" onclick="setW(1080,this)">1080px</button>
   <div class="tb-sep"></div>
-  <button class="tb-btn primary" onclick="openAddModal()"><i class="ti ti-plus"></i> ?�션 추�?</button>
+  <button class="tb-btn primary" onclick="openAddModal()"><i class="ti ti-plus"></i> 섹션 추가</button>
   <div class="tb-spacer"></div>
   <button class="tb-btn orange" onclick="saveJPG()"><i class="ti ti-file-type-jpg"></i> JPG</button>
   <button class="tb-btn accent" onclick="saveHTML()"><i class="ti ti-file-code"></i> HTML</button>
@@ -40,61 +40,61 @@
   <div id="right">
     <div class="tab-bar">
       <button class="tab-btn act" data-tab="ai" onclick="switchTab('ai')"><i class="ti ti-wand"></i>AI</button>
-      <button class="tab-btn" data-tab="dl" onclick="switchTab('dl')"><i class="ti ti-download"></i>?�??/button>
+      <button class="tab-btn" data-tab="dl" onclick="switchTab('dl')"><i class="ti ti-download"></i>저장</button>
       <button class="tab-btn" data-tab="share" onclick="switchTab('share')"><i class="ti ti-info-circle"></i>공유</button>
     </div>
     <div class="tab-content">
       <div class="tab-pane act" id="tab-ai">
-        <div class="ai-banner"><div class="ai-banner-title">?�� AI 카피?�이??/div><div class="ai-banner-desc">?�품 ?�보 ?�력 ???�체 ?�션 ?�동 ?�성</div></div>
-        <div class="rp-field"><label class="rp-label">브랜?�명</label><input class="rp-input" id="ai-brand" value="브랜?�명"></div>
-        <div class="rp-field"><label class="rp-label">?�품�?/label><input class="rp-input" id="ai-product" value="?�품명을 ?�력?�세??></div>
-        <div class="rp-field"><label class="rp-label">카테고리</label><input class="rp-input" id="ai-category" value="?�류/?�션"></div>
-        <div class="rp-field"><label class="rp-label">?�심기능</label><input class="rp-input" id="ai-features" value="기능1, 기능2, 기능3"></div>
-        <div class="rp-field"><label class="rp-label">?��?고객</label><input class="rp-input" id="ai-target" value="20-40?� ?�성"></div>
-        <div class="rp-field"><label class="rp-label">분위�???/label><input class="rp-input" id="ai-tone" value="?�리미엄·감성??></div>
-        <button class="ai-gen-btn" id="ai-gen-btn" onclick="aiGenerate()">??AI 카피 ?�동 ?�성</button>
+        <div class="ai-banner"><div class="ai-banner-title">🤖 AI 카피라이팅</div><div class="ai-banner-desc">제품 정보 입력 → 전체 섹션 자동 생성</div></div>
+        <div class="rp-field"><label class="rp-label">브랜드명</label><input class="rp-input" id="ai-brand" value="브랜드명"></div>
+        <div class="rp-field"><label class="rp-label">제품명</label><input class="rp-input" id="ai-product" value="제품명을 입력하세요"></div>
+        <div class="rp-field"><label class="rp-label">카테고리</label><input class="rp-input" id="ai-category" value="의류/패션"></div>
+        <div class="rp-field"><label class="rp-label">핵심기능</label><input class="rp-input" id="ai-features" value="기능1, 기능2, 기능3"></div>
+        <div class="rp-field"><label class="rp-label">타겟 고객</label><input class="rp-input" id="ai-target" value="20-40대 여성"></div>
+        <div class="rp-field"><label class="rp-label">분위기/톤</label><input class="rp-input" id="ai-tone" value="프리미엄·감성적"></div>
+        <button class="ai-gen-btn" id="ai-gen-btn" onclick="aiGenerate()">✨ AI 카피 자동 생성</button>
         <div id="ai-result" style="display:none;"></div>
-        <button id="ai-apply-btn" class="apply-btn" style="display:none;" onclick="aiApply()">?? 모든 ?�션???�용</button>
+        <button id="ai-apply-btn" class="apply-btn" style="display:none;" onclick="aiApply()">🚀 모든 섹션에 적용</button>
       </div>
       <div class="tab-pane" id="tab-dl">
         <div class="dl-card">
-          <div class="dl-card-title">?�� ?��?지 ?�??/div>
+          <div class="dl-card-title">🖼 이미지 저장</div>
           <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <button class="wb-btn act" id="jpg-1x" onclick="setJpgScale(1,this)">1× ?��?</button>
-            <button class="wb-btn" id="jpg-2x" onclick="setJpgScale(2,this)">2× 고화�?/button>
+            <button class="wb-btn act" id="jpg-1x" onclick="setJpgScale(1,this)">1× 표준</button>
+            <button class="wb-btn" id="jpg-2x" onclick="setJpgScale(2,this)">2× 고화질</button>
           </div>
           <div class="dl-grid">
-            <!-- 분할 ?�??-->
+            <!-- 분할 저장 -->
         <div style="margin-bottom:12px;padding:10px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);border-radius:8px;">
-          <div style="font-size:10px;color:#818cf8;font-weight:800;letter-spacing:.1em;margin-bottom:8px;">??분할 ?�??(3500px 기�?)</div>
-          <button class="dl-btn" onclick="saveSplit(860,1,3500)" style="width:100%;margin-bottom:4px;background:#4f46e5;"><i class="ti ti-scissors"></i> ?�� PC 분할 (1720px)</button>
+          <div style="font-size:10px;color:#818cf8;font-weight:800;letter-spacing:.1em;margin-bottom:8px;">✂ 분할 저장 (3500px 기준)</div>
+          <button class="dl-btn" onclick="saveSplit(860,1,3500)" style="width:100%;margin-bottom:4px;background:#4f46e5;"><i class="ti ti-scissors"></i> 🖥 PC 분할 (1720px)</button>
 
 
 
 
-<!-- ?�모지 ?�커 -->
+<!-- 이모지 피커 -->
 <div id="ep" style="display:none;position:fixed;z-index:9100;background:#111827;border:1px solid #1f2937;border-radius:12px;padding:12px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,.5);">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-    <span style="color:#e2e8f0;font-size:13px;font-weight:700;">?�이�?변�?/span>
-    <button onclick="closeEP()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;">??/button>
+    <span style="color:#e2e8f0;font-size:13px;font-weight:700;">아이콘 변경</span>
+    <button onclick="closeEP()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;">✕</button>
   </div>
-  <input id="ep-input" type="text" placeholder="?�모지 직접 ?�력 ??Enter" style="width:100%;background:#1f2937;border:1px solid #374151;border-radius:8px;color:#e2e8f0;padding:8px 10px;font-size:16px;margin-bottom:8px;box-sizing:border-box;" onkeydown="if(event.key==='Enter'){epSelect(this.value);}" />
+  <input id="ep-input" type="text" placeholder="이모지 직접 입력 후 Enter" style="width:100%;background:#1f2937;border:1px solid #374151;border-radius:8px;color:#e2e8f0;padding:8px 10px;font-size:16px;margin-bottom:8px;box-sizing:border-box;" onkeydown="if(event.key==='Enter'){epSelect(this.value);}" />
   <div id="ep-cats" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;"></div>
   <div id="ep-grid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:4px;max-height:200px;overflow-y:auto;"></div>
 </div>
 
-<!-- ?�로???�스???�바 -->
+<!-- 플로팅 텍스트 툴바 -->
 <div id="ft" style="display:none;position:fixed;z-index:9999;background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:5px 8px;display:none;align-items:center;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,.4);">
-  <button id="ft-szm" title="글???�게" onclick="ftSz(-1)" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:14px;">??/button>
+  <button id="ft-szm" title="글자 작게" onclick="ftSz(-1)" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:14px;">−</button>
   <span id="ft-sz" style="color:#e2e8f0;font-size:11px;min-width:28px;text-align:center;">16px</span>
-  <button id="ft-szp" title="글???�게" onclick="ftSz(1)" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:14px;">+</button>
+  <button id="ft-szp" title="글자 크게" onclick="ftSz(1)" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:14px;">+</button>
   <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
   <button id="ft-b" title="굵게" onclick="ftToggle('bold')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-weight:700;font-size:13px;">B</button>
-  <button id="ft-i" title="기울?? onclick="ftToggle('italic')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-style:italic;font-size:13px;">I</button>
+  <button id="ft-i" title="기울임" onclick="ftToggle('italic')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-style:italic;font-size:13px;">I</button>
   <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
-  <button onclick="ftAlign('left')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">??/button>
-  <button onclick="ftAlign('center')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">??/button>
-  <button onclick="ftAlign('right')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">??/button>
+  <button onclick="ftAlign('left')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">≡</button>
+  <button onclick="ftAlign('center')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">≡</button>
+  <button onclick="ftAlign('right')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">≡</button>
   <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
   <input id="ft-color" type="color" value="#ffffff" onchange="ftColor(this.value)" style="width:26px;height:26px;border:1px solid #334155;border-radius:5px;cursor:pointer;padding:1px;background:#1e293b;" />
 </div>
@@ -102,30 +102,30 @@
 <div id="hint" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(15,15,15,.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99999;white-space:nowrap;"></div>
 <div id="add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:16px;padding:28px;width:480px;max-width:90vw;max-height:80vh;overflow-y:auto;">
-    <div style="font-size:18px;font-weight:800;margin-bottom:20px;">?�션 추�?</div>
+    <div style="font-size:18px;font-weight:800;margin-bottom:20px;">섹션 추가</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-      <button onclick="addSection('banner')" class="add-modal-btn">??배너</button>
-      <button onclick="addSection('hero')" class="add-modal-btn">?�� ?�어�?/button>
-      <button onclick="addSection('copy')" class="add-modal-btn">?�� 감성 카피</button>
-      <button onclick="addSection('feat')" class="add-modal-btn">�?기능 그리??/button>
-      <button onclick="addSection('proof')" class="add-modal-btn">?�� ?�셜 증명</button>
-      <button onclick="addSection('trust')" class="add-modal-btn">?���?구매 ?�심</button>
-      <button onclick="addSection('wearing')" class="add-modal-btn">?�� 착용�?/button>
-      <button onclick="addSection('mood')" class="add-modal-btn">?�� 무드�?/button>
-      <button onclick="addSection('duo')" class="add-modal-btn">?�� 2???��?지</button>
-      <button onclick="addSection('angle')" class="add-modal-btn">?�� ?�각??/button>
-      <button onclick="addSection('compare')" class="add-modal-btn">?�️ 비교�?/button>
-      <button onclick="addSection('story')" class="add-modal-btn">?�� ?�재 ?�토�?/button>
-      <button onclick="addSection('infl')" class="add-modal-btn">?�� ?�플루언??/button>
-      <button onclick="addSection('style')" class="add-modal-btn">?�� ?��???/button>
+      <button onclick="addSection('banner')" class="add-modal-btn">✨ 배너</button>
+      <button onclick="addSection('hero')" class="add-modal-btn">🖼 히어로</button>
+      <button onclick="addSection('copy')" class="add-modal-btn">💬 감성 카피</button>
+      <button onclick="addSection('feat')" class="add-modal-btn">⭐ 기능 그리드</button>
+      <button onclick="addSection('proof')" class="add-modal-btn">📊 소셜 증명</button>
+      <button onclick="addSection('trust')" class="add-modal-btn">🛡️ 구매 안심</button>
+      <button onclick="addSection('wearing')" class="add-modal-btn">👗 착용컷</button>
+      <button onclick="addSection('mood')" class="add-modal-btn">🎨 무드컷</button>
+      <button onclick="addSection('duo')" class="add-modal-btn">📐 2단 이미지</button>
+      <button onclick="addSection('angle')" class="add-modal-btn">🔄 다각도</button>
+      <button onclick="addSection('compare')" class="add-modal-btn">⚖️ 비교컷</button>
+      <button onclick="addSection('story')" class="add-modal-btn">📖 소재 스토리</button>
+      <button onclick="addSection('infl')" class="add-modal-btn">📸 인플루언서</button>
+      <button onclick="addSection('style')" class="add-modal-btn">👠 스타일</button>
       <butt
 
 
-<!-- ?�??버튼 (?�버 API ?�동) -->
+<!-- 저장 버튼 (서버 API 연동) -->
 <script>
-  // ?�??버튼 onclick 교체 - ?�버 API ?�용
+  // 저장 버튼 onclick 교체 - 서버 API 사용
   window.addEventListener('DOMContentLoaded', function(){
-    // topbar ?�??버튼
+    // topbar 저장 버튼
     document.querySelectorAll('[onclick*="saveJPG"],[onclick*="savePNG"]').forEach(function(btn){
       btn.setAttribute('onclick', 'captureViaServer({format:"jpeg"})');
     });
