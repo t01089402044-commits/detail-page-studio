@@ -662,16 +662,8 @@ function showFT(el){
     el.classList.add('ft-active');
     var ft=document.getElementById('ft');
     if(!ft){ console.warn('[showFT] #ft missing'); return; }
-    // !important 수준으로 강제 표시 (다른 CSS와 충돌해도 보이도록)
-    ft.style.cssText = 'display:flex !important; position:fixed; z-index:99998; background:#0f172a; border:1px solid #1e293b; border-radius:10px; padding:7px 10px; box-shadow:0 8px 32px rgba(0,0,0,.7); flex-direction:row; align-items:center; gap:4px;';
-    var r=el.getBoundingClientRect();
-    var ftH=44, ftW=420;
-    // 위치: 텍스트 위에, 부족하면 아래
-    var topPos = r.top > ftH+10 ? r.top - ftH - 6 : r.bottom + 6;
-    topPos = Math.max(8, Math.min(topPos, window.innerHeight - ftH - 8));
-    var leftPos = Math.max(8, Math.min(r.left, window.innerWidth - ftW - 8));
-    ft.style.top = topPos+'px';
-    ft.style.left = leftPos+'px';
+    // 화면 중앙 상단에 고정 표시 (위치 계산 무관, 무조건 보이게)
+    ft.style.cssText = 'display:flex !important; position:fixed !important; top:56px !important; left:50% !important; transform:translateX(-50%); z-index:99998 !important; background:#0f172a; border:2px solid #4f9cf9; border-radius:10px; padding:7px 10px; box-shadow:0 8px 32px rgba(0,0,0,.7); flex-direction:row; align-items:center; gap:4px;';
     var cs=getComputedStyle(el);
     var szEl=document.getElementById('ft-sz');
     if(szEl) szEl.textContent=Math.round(parseFloat(cs.fontSize))+'px';
@@ -682,6 +674,7 @@ function showFT(el){
     if(hexEl) hexEl.textContent=c;
   }catch(err){
     console.error('[showFT] error:', err);
+    if(typeof showHint==='function') showHint('❌ 도구바 오류: '+err.message);
   }
 }
 function closeFT(){
