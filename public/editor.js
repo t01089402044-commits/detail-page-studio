@@ -660,10 +660,19 @@ function showFT(el){
     document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
     _ftEl=el;
     el.classList.add('ft-active');
+
+    // ====== 디버그: showFT가 실행됐는지 화면에 표시 ======
+    if(typeof showHint==='function') showHint('🎯 도구바 표시 시도 — '+(el.className||el.tagName));
+
     var ft=document.getElementById('ft');
-    if(!ft){ console.warn('[showFT] #ft missing'); return; }
-    // 화면 중앙 상단에 고정 표시 (위치 계산 무관, 무조건 보이게)
-    ft.style.cssText = 'display:flex !important; position:fixed !important; top:56px !important; left:50% !important; transform:translateX(-50%); z-index:99998 !important; background:#0f172a; border:2px solid #4f9cf9; border-radius:10px; padding:7px 10px; box-shadow:0 8px 32px rgba(0,0,0,.7); flex-direction:row; align-items:center; gap:4px;';
+    if(!ft){
+      console.warn('[showFT] #ft missing');
+      if(typeof showHint==='function') showHint('❌ #ft 요소를 찾을 수 없음');
+      return;
+    }
+    // 화면 중앙 상단에 고정 표시 — !important로 모든 충돌 무효화
+    ft.setAttribute('style','display:flex !important; position:fixed !important; top:56px !important; left:50% !important; transform:translateX(-50%) !important; z-index:2147483647 !important; background:#0f172a !important; border:3px solid #ef4444 !important; border-radius:10px !important; padding:8px 12px !important; box-shadow:0 8px 32px rgba(0,0,0,.85) !important; flex-direction:row !important; align-items:center !important; gap:4px !important; opacity:1 !important; visibility:visible !important;');
+
     var cs=getComputedStyle(el);
     var szEl=document.getElementById('ft-sz');
     if(szEl) szEl.textContent=Math.round(parseFloat(cs.fontSize))+'px';
