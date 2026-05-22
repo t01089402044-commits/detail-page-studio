@@ -1830,6 +1830,162 @@ function showServerSplitGallery(chunks, width){
 // ── 저장 버튼 연결 ──────────────────────────────────────────────────────────
 function saveServer(opts){ captureViaServer(opts); }
 
+// ── 템플릿 저장/불러오기 + HTML import ──────────────────────────────────────
+var TPL_KEY='dps_templates_v1';
+function tplList(){ try{ return JSON.parse(localStorage.getItem(TPL_KEY)||'[]'); }catch(e){ return []; } }
+function tplSaveAll(arr){ try{ localStorage.setItem(TPL_KEY, JSON.stringify(arr)); return true; }catch(e){ alert('저장 실패: 용량 초과(브라우저 5~10MB 한계). 이미지 줄이거나 JSON 다운로드를 사용하세요.'); return false; } }
+
+function tplSnapshot(name){
+  var pv=document.getElementById('preview'); if(!pv) return null;
+  // 오버레이 제거된 클린 HTML 추출
+  var clone=pv.cloneNode(true);
+  clone.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.tf-handle,.tf-dim,.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
+  return {
+    name:name||'무제',
+    font:(document.getElementById('font-sel')||{}).value||"'Pretendard',sans-serif",
+    width:parseInt(pv.style.width)||860,
+    html:clone.innerHTML,
+    savedAt:new Date().toISOString()
+  };
+}
+
+function rebindPreview(){
+  var pv=document.getElementById('preview'); if(!pv) return;
+  pv.querySelectorAll(':scope > .sec-wrap').forEach(function(sec){
+    var type=sec.dataset.secType;
+    var meta=(typeof SEC_META!=='undefined'&&SEC_META[type])||{label:type||''};
+    sec.querySelectorAll('.sec-ov').forEach(function(o){o.remove();});
+    sec.appendChild(buildSecOv(sec,meta));
+    sec.querySelectorAll('.iz').forEach(function(iz){
+      iz.querySelectorAll('.iz-ov').forEach(function(o){o.remove();});
+      buildIzOverlay(iz);
+      addBar(iz);
+      var tf=iz.querySelector('.tf-wrap');
+      if(tf) bindTF(tf,iz);
+    });
+    sec.querySelectorAll('[contenteditable]').forEach(function(el){ bindFT(el); });
+  });
+  document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
+}
+
+function tplApply(tpl){
+  if(!tpl||!tpl.html){ alert('템플릿 데이터가 비어있습니다'); return; }
+  var pv=document.getElementById('preview'); if(!pv) return;
+  pv.innerHTML=tpl.html;
+  if(tpl.width){ pv.style.width=tpl.width+'px'; }
+  if(tpl.font){
+    var sel=document.getElementById('font-sel');
+    if(sel){ sel.value=tpl.font; }
+    applyFont(tpl.font);
+  }
+  rebindPreview();
+  showHint('✅ '+(tpl.name||'템플릿')+' 불러옴');
+  closeTplModal();
+}
+
+function tplSaveCurrent(){
+  var input=document.getElementById('tpl-name-input');
+  var name=(input&&input.value||'').trim();
+  if(!name){ alert('템플릿 이름을 입력하세요'); return; }
+  var snap=tplSnapshot(name); if(!snap) return;
+  var arr=tplList();
+  var idx=arr.findIndex(function(t){return t.name===name;});
+  if(idx>=0){
+    if(!confirm('"'+name+'" 이름이 이미 있습니다. 덮어쓸까요?')) return;
+    arr[idx]=snap;
+  } else { arr.push(snap); }
+  if(tplSaveAll(arr)){
+    if(input) input.value='';
+    renderTplList();
+    showHint('✅ "'+name+'" 저장됨');
+  }
+}
+
+function tplDelete(name){
+  if(!confirm('"'+name+'" 삭제할까요?')) return;
+  var arr=tplList().filter(function(t){return t.name!==name;});
+  tplSaveAll(arr); renderTplList();
+}
+
+function tplExportJSON(name){
+  var arr=tplList(); var t=arr.find(function(x){return x.name===name;});
+  if(!t){ alert('템플릿 없음'); return; }
+  var b=new Blob([JSON.stringify(t,null,2)],{type:'application/json;charset=utf-8'});
+  var u=URL.createObjectURL(b);
+  var a=document.createElement('a'); a.href=u; a.download='template-'+name.replace(/[^a-z0-9가-힣_-]/gi,'_')+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u);
+}
+
+function tplImportFile(file){
+  if(!file){ return; }
+  var reader=new FileReader();
+  reader.onload=function(){
+    var txt=reader.result+'';
+    var tpl=null;
+    if(/\.json$/i.test(file.name)){
+      try{ tpl=JSON.parse(txt); }
+      catch(e){ alert('JSON 파싱 실패: '+e.message); return; }
+    } else if(/\.html?$/i.test(file.name)){
+      // saveHTML로 저장된 파일 → #preview 안 sec-wrap 추출
+      var doc=new DOMParser().parseFromString(txt,'text/html');
+      var srcPv=doc.getElementById('preview');
+      if(!srcPv){ alert('업로드한 HTML에 #preview 요소가 없습니다'); return; }
+      // 오버레이 제거
+      srcPv.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.tf-handle,.tf-dim').forEach(function(el){el.remove();});
+      tpl={
+        name:file.name.replace(/\.html?$/i,''),
+        font:"'Pretendard',sans-serif",
+        width:parseInt(srcPv.style.width)||860,
+        html:srcPv.innerHTML
+      };
+    } else {
+      alert('JSON 또는 HTML 파일만 지원합니다');
+      return;
+    }
+    if(!confirm('현재 작업을 덮어쓰고 "'+(tpl.name||'파일')+'"을 불러올까요?\n(저장 안 한 내용은 사라집니다)')) return;
+    tplApply(tpl);
+  };
+  reader.readAsText(file,'utf-8');
+}
+
+function _tplRowEsc(s){ return (s||'').replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); }
+function _tplFromRow(btn){
+  var row=btn.closest('.tpl-row'); if(!row) return null;
+  var arr=row.parentNode._tpls; if(!arr) return null;
+  return arr[+row.dataset.i];
+}
+function tplLoadByRow(btn){ var t=_tplFromRow(btn); if(t) tplApply(t); }
+function tplExportByRow(btn){ var t=_tplFromRow(btn); if(t) tplExportJSON(t.name); }
+function tplDeleteByRow(btn){ var t=_tplFromRow(btn); if(t) tplDelete(t.name); }
+function renderTplList(){
+  var box=document.getElementById('tpl-list'); if(!box) return;
+  var arr=tplList().slice().sort(function(a,b){return (b.savedAt||'').localeCompare(a.savedAt||'');});
+  box._tpls=arr;
+  if(arr.length===0){
+    box.innerHTML='<div style="padding:24px;text-align:center;color:#94a3b8;font-size:12px;">저장된 템플릿이 없습니다</div>';
+    return;
+  }
+  box.innerHTML=arr.map(function(t,i){
+    var when=(t.savedAt||'').slice(0,16).replace('T',' ');
+    return '<div class="tpl-row" data-i="'+i+'">'
+      +'<div class="tpl-row-info"><div class="tpl-row-name">'+_tplRowEsc(t.name)+'</div><div class="tpl-row-meta">'+when+' · '+(t.width||860)+'px</div></div>'
+      +'<div class="tpl-row-acts">'
+      +'<button class="tpl-row-btn load" onclick="tplLoadByRow(this)">불러오기</button>'
+      +'<button class="tpl-row-btn export" onclick="tplExportByRow(this)">JSON</button>'
+      +'<button class="tpl-row-btn del" onclick="tplDeleteByRow(this)">삭제</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function openTplModal(){
+  var m=document.getElementById('tpl-modal'); if(!m) return;
+  m.style.display='flex';
+  renderTplList();
+}
+function closeTplModal(){
+  var m=document.getElementById('tpl-modal'); if(m) m.style.display='none';
+}
+
 /*INIT_BEGIN*/(function(){
   var TYPES=['banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview');
