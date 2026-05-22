@@ -17,15 +17,21 @@
 <body>
 
 <div id="topbar">
-  <select class="tb-select" id="font-sel" onchange="applyFont(this.value)">
-    <option value="'Pretendard',sans-serif">Pretendard (쿠팡/토스 ★)</option>
-    <option value="'Noto Sans KR',sans-serif">Noto Sans KR (네이버)</option>
-    <option value="'Gothic A1',sans-serif">Gothic A1</option>
-    <option value="'Nanum Gothic',sans-serif">Nanum Gothic</option>
-    <option value="'Black Han Sans',sans-serif">Black Han Sans</option>
-    <option value="'Do Hyeon',sans-serif">Do Hyeon</option>
-    <option value="'Jua',sans-serif">Jua</option>
-  </select>
+  <div class="font-picker" style="position:relative;">
+    <button type="button" class="tb-select" id="font-picker-btn" onclick="fontPickerToggle(event)" style="display:flex;align-items:center;gap:6px;min-width:180px;justify-content:space-between;">
+      <span id="font-picker-label" style="font-family:'Pretendard',sans-serif;">Pretendard (쿠팡/토스 ★)</span>
+      <span style="font-size:9px;color:#888;">▾</span>
+    </button>
+    <div id="font-dropdown" onmouseleave="fontPickerRevert()" style="display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:240px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9990;padding:4px;">
+      <div class="font-opt" data-v="'Pretendard',sans-serif" data-l="Pretendard (쿠팡/토스 ★)" style="font-family:'Pretendard',sans-serif;">Pretendard <span style="opacity:.55;font-size:9px;">쿠팡 / 토스 ★</span></div>
+      <div class="font-opt" data-v="'Noto Sans KR',sans-serif" data-l="Noto Sans KR (네이버)" style="font-family:'Noto Sans KR',sans-serif;">Noto Sans KR <span style="opacity:.55;font-size:9px;">네이버</span></div>
+      <div class="font-opt" data-v="'Gothic A1',sans-serif" data-l="Gothic A1" style="font-family:'Gothic A1',sans-serif;">Gothic A1</div>
+      <div class="font-opt" data-v="'Nanum Gothic',sans-serif" data-l="Nanum Gothic" style="font-family:'Nanum Gothic',sans-serif;">Nanum Gothic</div>
+      <div class="font-opt" data-v="'Black Han Sans',sans-serif" data-l="Black Han Sans" style="font-family:'Black Han Sans',sans-serif;">Black Han Sans</div>
+      <div class="font-opt" data-v="'Do Hyeon',sans-serif" data-l="Do Hyeon" style="font-family:'Do Hyeon',sans-serif;">Do Hyeon</div>
+      <div class="font-opt" data-v="'Jua',sans-serif" data-l="Jua" style="font-family:'Jua',sans-serif;">Jua</div>
+    </div>
+  </div>
   <div class="tb-sep"></div>
   <button class="wb-btn" onclick="setW(480,this)">480px</button>
   <button class="wb-btn act" id="wb860" onclick="setW(860,this)">860px ★</button>

@@ -216,6 +216,48 @@ function showHint(msg){var h=document.getElementById('hint');h.textContent=msg;h
 function setW(w,btn){document.getElementById('preview').style.width=w+'px';document.querySelectorAll('.wb-btn').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 function switchTab(t){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('act',b.dataset.tab===t);});document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.toggle('act',p.id==='tab-'+t);});}
 function applyFont(v){var pv=document.getElementById('preview');if(pv){pv.style.fontFamily=v;pv.style.setProperty('--pf',v);}}
+
+// ── 커스텀 폰트 픽커 (호버 프리뷰) ────────────────────────────────────────
+var _fontCommitted = "'Pretendard',sans-serif";
+function fontPickerToggle(e){
+  e&&e.stopPropagation();
+  var dd=document.getElementById('font-dropdown'); if(!dd) return;
+  dd.style.display = (dd.style.display==='block') ? 'none' : 'block';
+  _markCommittedOpt();
+}
+function fontPickerRevert(){ applyFont(_fontCommitted); }
+function fontPickerClose(){
+  var dd=document.getElementById('font-dropdown'); if(dd) dd.style.display='none';
+}
+function _markCommittedOpt(){
+  document.querySelectorAll('.font-opt').forEach(function(o){
+    o.classList.toggle('committed', o.dataset.v===_fontCommitted);
+  });
+}
+document.addEventListener('click', function(e){
+  if(e.target.closest('#font-picker-btn')||e.target.closest('#font-dropdown')) return;
+  fontPickerClose();
+});
+function _initFontPicker(){
+  var dd=document.getElementById('font-dropdown'); if(!dd) return;
+  dd.addEventListener('mouseover', function(e){
+    var opt=e.target.closest('.font-opt'); if(!opt) return;
+    applyFont(opt.dataset.v);
+  });
+  dd.addEventListener('click', function(e){
+    var opt=e.target.closest('.font-opt'); if(!opt) return;
+    _fontCommitted = opt.dataset.v;
+    var lbl=document.getElementById('font-picker-label');
+    if(lbl){ lbl.textContent = opt.dataset.l||opt.textContent.trim(); lbl.style.fontFamily = opt.dataset.v; }
+    applyFont(_fontCommitted);
+    _markCommittedOpt();
+    fontPickerClose();
+    showHint('✅ 폰트: '+(opt.dataset.l||'').replace(/\s*\(.*\)$/,''));
+  });
+  _markCommittedOpt();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', _initFontPicker);
+else _initFontPicker();
 function openAddModal(){var m=document.getElementById('add-modal');if(m)m.classList.add('show');}
 function closeAddModal(){var m=document.getElementById('add-modal');if(m)m.classList.remove('show');}
 function setJpgScale(s,btn){_jpgScale=s+1;document.querySelectorAll('#jpg-1x,#jpg-2x').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
@@ -1853,7 +1895,7 @@ function tplSnapshot(name){
   clone.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.tf-handle,.tf-dim,.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
   return {
     name:name||'무제',
-    font:(document.getElementById('font-sel')||{}).value||"'Pretendard',sans-serif",
+    font: (typeof _fontCommitted!=='undefined' && _fontCommitted) || "'Pretendard',sans-serif",
     width:parseInt(pv.style.width)||860,
     html:clone.innerHTML,
     savedAt:new Date().toISOString()
@@ -1885,8 +1927,11 @@ function tplApply(tpl){
   pv.innerHTML=tpl.html;
   if(tpl.width){ pv.style.width=tpl.width+'px'; }
   if(tpl.font){
-    var sel=document.getElementById('font-sel');
-    if(sel){ sel.value=tpl.font; }
+    _fontCommitted = tpl.font;
+    var opt=document.querySelector('.font-opt[data-v="'+tpl.font.replace(/"/g,'\\"')+'"]');
+    var lbl=document.getElementById('font-picker-label');
+    if(lbl){ lbl.textContent = (opt&&opt.dataset.l)||tpl.font; lbl.style.fontFamily = tpl.font; }
+    if(typeof _markCommittedOpt==='function') _markCommittedOpt();
     applyFont(tpl.font);
   }
   rebindPreview();

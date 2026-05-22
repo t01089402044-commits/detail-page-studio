@@ -901,6 +901,11 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 .add-modal-btn{padding:12px;border:1.5px solid #e5e7eb;border-radius:10px;background:#fafafa;cursor:pointer;font-size:13px;font-weight:600;text-align:left;transition:all .15s;}
 .add-modal-btn:hover{background:#eff6ff;border-color:#93c5fd;}
 
+/* 커스텀 폰트 픽커 옵션 (호버 프리뷰) */
+.font-opt{padding:8px 12px;color:#ccc;font-size:13px;border-radius:5px;cursor:pointer;transition:background .1s;white-space:nowrap;}
+.font-opt:hover{background:#2a2a4a;color:#fff;}
+.font-opt.committed{background:#1e3a5f;color:#93c5fd;}
+
 /* 템플릿 모달 행 */
 .tpl-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid #f1f5f9;border-radius:9px;margin-bottom:6px;background:#fff;transition:border-color .12s;}
 .tpl-row:hover{border-color:#cbd5e1;}
