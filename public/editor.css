@@ -401,9 +401,9 @@ body{display:flex;flex-direction:column;font-family:'Noto Sans KR',sans-serif;fo
 .sec-kr{font-size:12px;color:#999;}
 .s-angle-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3px;}
 .s-angle-cell{position:relative;}
-.s-angle-label{padding:12px 0 6px;}
-.s-angle-label-en{font-size:9px;letter-spacing:2.5px;color:#bbb;text-transform:uppercase;}
-.s-angle-label-kr{font-size:12px;font-weight:700;color:#111;margin-top:3px;}
+.s-angle-label{padding:14px 16px 10px;text-align:center;}
+.s-angle-label-en{font-size:11px;letter-spacing:2.5px;color:#888;text-transform:uppercase;}
+.s-angle-label-kr{font-size:14px;font-weight:700;color:#111;margin-top:4px;}
 
 /* Mood */
 .s-mood{}

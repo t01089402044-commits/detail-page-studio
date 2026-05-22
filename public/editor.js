@@ -29,9 +29,6 @@ const SEC_TMPL = {
     <div class="s-feat-img-rows" id="feat-img-rows">
       <!-- 이미지 행 동적 추가 -->
     </div>
-    <div class="feat-add-img-row" id="feat-add-row-btn" title="이미지 행 추가">
-      + 이미지 슬롯 행 추가
-    </div>
   </div>`,
   compare:()=>`<div class="sec-wrap s-compare">
     <div><div class="sec-en" contenteditable>The Difference You Feel</div><div class="sec-kr" contenteditable>직접 비교해보세요</div></div>
@@ -686,27 +683,29 @@ function closeFT(){
   if(tb)tb.style.display='none';
   _ftEl=null;
 }
+// CSS의 !important 룰을 이기려면 inline 도 !important 로 설정해야 함
+function _camelToKebab(s){ return s.replace(/[A-Z]/g, function(m){return '-'+m.toLowerCase();}); }
 function ftSize(d){
   if(!_ftEl)return;
-  const n=Math.max(8,Math.min(120,parseFloat(getComputedStyle(_ftEl).fontSize)+d));
-  _ftEl.style.fontSize=n+'px';
-  document.getElementById('ft-sz').textContent=Math.round(n)+'px';
+  var n=Math.max(8,Math.min(200,parseFloat(getComputedStyle(_ftEl).fontSize)+d));
+  _ftEl.style.setProperty('font-size', n+'px', 'important');
+  var el=document.getElementById('ft-sz'); if(el) el.textContent=Math.round(n)+'px';
 }
 function ftToggle(prop,on,off){
   if(!_ftEl)return;
-  const cs=getComputedStyle(_ftEl);
-  const isOn=prop==='fontWeight'?parseFloat(cs[prop])>=600:cs[prop]===on;
-  _ftEl.style[prop]=isOn?off:on;
+  var cs=getComputedStyle(_ftEl);
+  var isOn = (prop==='fontWeight') ? parseFloat(cs[prop])>=600 : cs[prop]===on;
+  _ftEl.style.setProperty(_camelToKebab(prop), isOn?off:on, 'important');
   showFT(_ftEl);
 }
 function ftAlign(v){
   if(!_ftEl)return;
-  _ftEl.style.textAlign=v;
+  _ftEl.style.setProperty('text-align', v, 'important');
 }
 function ftColor(v){
   if(!_ftEl)return;
-  _ftEl.style.color=v;
-  document.getElementById('ft-color-hex').textContent=v;
+  _ftEl.style.setProperty('color', v, 'important');
+  var hex=document.getElementById('ft-color-hex'); if(hex) hex.textContent=v;
 }
 function rgbToHex(rgb){
   if(!rgb||rgb==='transparent')return'#000000';
@@ -1360,7 +1359,7 @@ function ftSz(delta){
   if(!_ftEl)return;
   var cur=parseInt(window.getComputedStyle(_ftEl).fontSize)||16;
   var next=Math.max(8,Math.min(200,cur+delta*2));
-  _ftEl.style.fontSize=next+'px';
+  _ftEl.style.setProperty('font-size', next+'px', 'important');
   var szEl=document.getElementById('ft-sz');
   if(szEl)szEl.textContent=next+'px';
 }
