@@ -683,9 +683,18 @@ function showFT(el){
       _diagBanner('❌ #ft 요소 못 찾음 — DOM에서 제거됨', '#dc2626');
       return;
     }
-    _diagBanner('✅ #ft 찾음, 표시 시도 중', '#2563eb');
+    // #ft 박스 자체가 렌더링 되는지 확인 — 큰 노란 박스로 표시 + 텍스트 강제 삽입
+    var ftRect_before = ft.getBoundingClientRect();
+    _diagBanner('✅ #ft 찾음 (현재크기 ' + Math.round(ftRect_before.width) + '×' + Math.round(ftRect_before.height) + 'px), 표시 시도 중', '#2563eb');
 
-    ft.setAttribute('style','display:flex !important; position:fixed !important; top:80px !important; left:50% !important; transform:translateX(-50%) !important; z-index:2147483646 !important; background:#0f172a !important; border:3px solid #ef4444 !important; border-radius:10px !important; padding:8px 12px !important; box-shadow:0 8px 32px rgba(0,0,0,.85) !important; flex-direction:row !important; align-items:center !important; gap:4px !important; opacity:1 !important; visibility:visible !important;');
+    ft.setAttribute('style','display:flex !important; position:fixed !important; top:80px !important; left:50% !important; transform:translateX(-50%) !important; z-index:2147483646 !important; background:#fbbf24 !important; color:#000 !important; border:5px solid #dc2626 !important; border-radius:10px !important; padding:20px !important; box-shadow:0 8px 32px rgba(0,0,0,.85) !important; flex-direction:row !important; align-items:center !important; gap:4px !important; opacity:1 !important; visibility:visible !important; width:auto !important; height:auto !important; min-width:300px !important; min-height:60px !important; font-size:20px !important; font-weight:900 !important;');
+
+    // setAttribute 직후 측정
+    setTimeout(function(){
+      var rect=ft.getBoundingClientRect();
+      var cs=getComputedStyle(ft);
+      _diagBanner('📐 적용후 — 크기:' + Math.round(rect.width) + '×' + Math.round(rect.height) + ', display:' + cs.display + ', visibility:' + cs.visibility + ', opacity:' + cs.opacity + ', position:' + cs.position, '#7c3aed');
+    }, 100);
 
     var cs=getComputedStyle(el);
     var szEl=document.getElementById('ft-sz');
