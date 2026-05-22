@@ -653,49 +653,21 @@ function initIzOverlays(){
 /* ══════════════════════════════════════════════════════════
    FLOATING TEXT TOOLBAR
 ══════════════════════════════════════════════════════════ */
-// 진단용 큰 빨간 배너 (DOM 직접 삽입, showHint 의존성 없음)
-function _diagBanner(msg, color){
-  var b=document.getElementById('_diag-banner');
-  if(!b){
-    b=document.createElement('div');
-    b.id='_diag-banner';
-    b.style.cssText='position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:2147483647!important;background:'+(color||'#dc2626')+'!important;color:#fff!important;font:bold 16px sans-serif!important;padding:14px!important;text-align:center!important;border-bottom:3px solid #fff!important;';
-    document.body.appendChild(b);
-  }
-  b.textContent=msg;
-  b.style.background=color||'#dc2626';
-  clearTimeout(b._t);
-  b._t=setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); },3000);
-}
-
 function showFT(el){
   if(!el)return;
   try{
-    _diagBanner('🎯 showFT 실행됨 — '+(el.className||el.tagName), '#16a34a');
-
     if(typeof _ftCancelHide==='function') _ftCancelHide();
     document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
     _ftEl=el;
     el.classList.add('ft-active');
-
     var ft=document.getElementById('ft');
-    if(!ft){
-      _diagBanner('❌ #ft 요소 못 찾음 — DOM에서 제거됨', '#dc2626');
-      return;
-    }
-    // #ft 박스 자체가 렌더링 되는지 확인 — 큰 노란 박스로 표시 + 텍스트 강제 삽입
-    var ftRect_before = ft.getBoundingClientRect();
-    _diagBanner('✅ #ft 찾음 (현재크기 ' + Math.round(ftRect_before.width) + '×' + Math.round(ftRect_before.height) + 'px), 표시 시도 중', '#2563eb');
-
-    ft.setAttribute('style','display:flex !important; position:fixed !important; top:80px !important; left:50% !important; transform:translateX(-50%) !important; z-index:2147483646 !important; background:#fbbf24 !important; color:#000 !important; border:5px solid #dc2626 !important; border-radius:10px !important; padding:20px !important; box-shadow:0 8px 32px rgba(0,0,0,.85) !important; flex-direction:row !important; align-items:center !important; gap:4px !important; opacity:1 !important; visibility:visible !important; width:auto !important; height:auto !important; min-width:300px !important; min-height:60px !important; font-size:20px !important; font-weight:900 !important;');
-
-    // setAttribute 직후 측정
-    setTimeout(function(){
-      var rect=ft.getBoundingClientRect();
-      var cs=getComputedStyle(ft);
-      _diagBanner('📐 적용후 — 크기:' + Math.round(rect.width) + '×' + Math.round(rect.height) + ', display:' + cs.display + ', visibility:' + cs.visibility + ', opacity:' + cs.opacity + ', position:' + cs.position, '#7c3aed');
-    }, 100);
-
+    if(!ft) return;
+    var r=el.getBoundingClientRect();
+    var ftH=44, ftW=420;
+    var topPos = r.top > ftH+10 ? r.top - ftH - 6 : r.bottom + 6;
+    topPos = Math.max(8, Math.min(topPos, window.innerHeight - ftH - 8));
+    var leftPos = Math.max(8, Math.min(r.left, window.innerWidth - ftW - 8));
+    ft.style.cssText = 'display:flex; position:fixed; top:'+topPos+'px; left:'+leftPos+'px; z-index:9999; background:#0f172a; border:1px solid #1e293b; border-radius:10px; padding:7px 10px; box-shadow:0 8px 32px rgba(0,0,0,.7); flex-direction:row; align-items:center; gap:4px;';
     var cs=getComputedStyle(el);
     var szEl=document.getElementById('ft-sz');
     if(szEl) szEl.textContent=Math.round(parseFloat(cs.fontSize))+'px';
@@ -706,12 +678,8 @@ function showFT(el){
     if(hexEl) hexEl.textContent=c;
   }catch(err){
     console.error('[showFT] error:', err);
-    _diagBanner('❌ 오류: '+err.message, '#dc2626');
   }
 }
-
-// 페이지 로드 즉시 한 번 배너 표시 — JS 실행 자체를 검증
-try{ _diagBanner('✅ editor.js 로드됨 — 텍스트 클릭해보세요', '#0891b2'); }catch(e){}
 function closeFT(){
   document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
   var tb=document.getElementById('ft');
