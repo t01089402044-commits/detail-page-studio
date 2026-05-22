@@ -655,23 +655,27 @@ function initIzOverlays(){
 ══════════════════════════════════════════════════════════ */
 function showFT(el){
   if(!el)return;
+  _ftCancelHide&&_ftCancelHide();
   // 모든 기존 하이라이트 제거
   document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
   _ftEl=el;
   el.classList.add('ft-active');
-  const ft=document.getElementById('ft');
+  var ft=document.getElementById('ft');
+  if(!ft) return;
   ft.style.display='flex';
-  const r=el.getBoundingClientRect();
-  // 요소 위 또는 아래에 표시 (화면 밖으로 나가지 않도록)
-  const ftH=54,ftW=330;
-  const top=r.top>ftH+8 ? r.top-ftH-4 : r.bottom+4;
+  var r=el.getBoundingClientRect();
+  var ftH=54,ftW=330;
+  var top=r.top>ftH+8 ? r.top-ftH-4 : r.bottom+4;
   ft.style.top=Math.max(4,Math.min(top,window.innerHeight-ftH-4))+'px';
   ft.style.left=Math.max(4,Math.min(r.left,window.innerWidth-ftW-4))+'px';
-  const cs=getComputedStyle(el);
-  document.getElementById('ft-sz').textContent=Math.round(parseFloat(cs.fontSize))+'px';
-  const c=rgbToHex(cs.color);
-  document.getElementById('ft-color').value=c;
-  document.getElementById('ft-color-hex').textContent=c;
+  var cs=getComputedStyle(el);
+  var szEl=document.getElementById('ft-sz');
+  if(szEl) szEl.textContent=Math.round(parseFloat(cs.fontSize))+'px';
+  var c=rgbToHex(cs.color);
+  var colEl=document.getElementById('ft-color');
+  if(colEl) colEl.value=c;
+  var hexEl=document.getElementById('ft-color-hex');
+  if(hexEl) hexEl.textContent=c;
 }
 function closeFT(){
   document.querySelectorAll('.ft-active').forEach(function(e){e.classList.remove('ft-active');});
@@ -1253,31 +1257,101 @@ function addSection(type){
   closeAddModal();
 }
 
-// ── 플로팅 텍스트 툴바 ────────────────────────────────────────────────────
-function bindFT(el){
-  el.addEventListener('focus',function(){
-    _ftEl=el;
+// ── 플로팅 텍스트 툴바: bindFT는 호환용 no-op (focusin/mouseover가 문서 레벨로 처리) ─
+var _ftHideTimer=null;
+function _ftScheduleHide(){
+  clearTimeout(_ftHideTimer);
+  _ftHideTimer=setTimeout(function(){
+    if(document.activeElement && document.activeElement.isContentEditable) return;
     var ft=document.getElementById('ft');
-    if(!ft)return;
-    var r=el.getBoundingClientRect();
-    ft.style.display='flex';
-    ft.style.top=Math.max(4,r.top-44)+'px';
-    ft.style.left=Math.max(4,Math.min(r.left,window.innerWidth-280))+'px';
-    // 현재 폰트 크기 표시
-    var sz=parseInt(window.getComputedStyle(el).fontSize)||16;
-    var szEl=document.getElementById('ft-sz');
-    if(szEl)szEl.textContent=sz+'px';
+    if(ft && ft.matches(':hover')) return;
+    closeFT();
+  },400);
+}
+function _ftCancelHide(){ clearTimeout(_ftHideTimer); }
+
+function bindFT(el){ /* no-op: 문서 레벨 위임으로 처리 (호환용 stub) */ }
+
+// ── #ft 안의 폰트 픽커 (per-element, 호버 프리뷰) ──────────────────────────
+var _FT_FONTS=[
+  ["'Pretendard',sans-serif","Pretendard","쿠팡 / 토스"],
+  ["'Noto Sans KR',sans-serif","Noto Sans KR","네이버"],
+  ["'Gothic A1',sans-serif","Gothic A1",""],
+  ["'Nanum Gothic',sans-serif","Nanum Gothic",""],
+  ["'Black Han Sans',sans-serif","Black Han Sans","굵은 헤딩"],
+  ["'Do Hyeon',sans-serif","Do Hyeon",""],
+  ["'Jua',sans-serif","Jua",""],
+  ["'Noto Serif KR',serif","Noto Serif KR","세리프"]
+];
+var _ftFontOrig=null;
+function _ftBuildFontDropdown(){
+  var dd=document.getElementById('ft-font-dropdown'); if(!dd) return;
+  if(dd.__built) return;
+  dd.__built=true;
+  dd.innerHTML=_FT_FONTS.map(function(f){
+    return '<div class="font-opt" data-v="'+f[0]+'" style="font-family:'+f[0]+';">'+f[1]+(f[2]?' <span style="opacity:.55;font-size:9px;">'+f[2]+'</span>':'')+'</div>';
+  }).join('');
+  dd.addEventListener('mouseover', function(e){
+    var opt=e.target.closest('.font-opt'); if(!opt||!_ftEl) return;
+    _ftEl.style.fontFamily=opt.dataset.v;
   });
-  el.addEventListener('blur',function(e){
-    // 툴바 클릭 시 포커스 잃어도 유지
-    setTimeout(function(){
-      var ft=document.getElementById('ft');
-      if(ft&&!ft.contains(document.activeElement)&&document.activeElement!==el){
-        closeFT();
-      }
-    },150);
+  dd.addEventListener('click', function(e){
+    var opt=e.target.closest('.font-opt'); if(!opt||!_ftEl) return;
+    _ftEl.style.fontFamily=opt.dataset.v;
+    _ftFontOrig=opt.dataset.v; // commit
+    ftFontPickerClose();
+    showHint('✅ 이 텍스트의 폰트: '+opt.textContent.trim().split(' ')[0]);
   });
 }
+function ftFontPickerToggle(e){
+  e&&e.stopPropagation();
+  if(!_ftEl){ showHint('먼저 편집할 텍스트에 마우스를 올리세요'); return; }
+  _ftBuildFontDropdown();
+  var dd=document.getElementById('ft-font-dropdown'); if(!dd) return;
+  if(dd.style.display==='block'){ ftFontPickerClose(); return; }
+  _ftFontOrig=_ftEl.style.fontFamily||window.getComputedStyle(_ftEl).fontFamily;
+  dd.style.display='block';
+}
+function ftFontPickerRevert(){
+  if(_ftEl && _ftFontOrig!=null) _ftEl.style.fontFamily=_ftFontOrig;
+}
+function ftFontPickerClose(){
+  var dd=document.getElementById('ft-font-dropdown'); if(dd) dd.style.display='none';
+}
+document.addEventListener('click', function(e){
+  if(e.target.closest('#ft-font-btn')||e.target.closest('#ft-font-dropdown')) return;
+  ftFontPickerClose();
+});
+
+// 문서 레벨 호버 위임: contenteditable 위 진입 시 toolbar 표시
+document.addEventListener('mouseover', function(e){
+  var ce=e.target.closest('[contenteditable]');
+  if(!ce || !ce.isContentEditable) return;
+  if(!document.getElementById('preview').contains(ce)) return;
+  _ftCancelHide();
+  showFT(ce);
+});
+document.addEventListener('mouseout', function(e){
+  var ce=e.target.closest('[contenteditable]');
+  if(!ce) return;
+  // 이동한 곳이 같은 ce 내부거나 #ft 위면 유지
+  var to=e.relatedTarget;
+  var ft=document.getElementById('ft');
+  if(to && (ce.contains(to) || (ft && ft.contains(to)))) return;
+  _ftScheduleHide();
+});
+
+// 툴바 자체에 마우스가 머무는 동안 숨김 취소
+(function(){
+  function attach(){
+    var ft=document.getElementById('ft'); if(!ft) return;
+    if(ft.__hoverBound) return; ft.__hoverBound=true;
+    ft.addEventListener('mouseenter',_ftCancelHide);
+    ft.addEventListener('mouseleave',_ftScheduleHide);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',attach);
+  else attach();
+})();
 
 function ftSz(delta){
   if(!_ftEl)return;
@@ -2040,6 +2114,20 @@ function openTplModal(){
 }
 function closeTplModal(){
   var m=document.getElementById('tpl-modal'); if(m) m.style.display='none';
+}
+
+// 기본 21개 섹션으로 새로 시작
+function tplNewDefault(){
+  if(!confirm('현재 작업이 사라지고 기본 템플릿으로 새로 시작합니다. 진행할까요?\n\n저장하지 않은 변경사항은 복구할 수 없습니다.')) return;
+  var TYPES=['banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
+  var preview=document.getElementById('preview'); if(!preview) return;
+  preview.innerHTML='';
+  for(var i=0;i<TYPES.length;i++){
+    try{ addSection(TYPES[i]); } catch(err){ console.error('Section error:',TYPES[i],err); }
+  }
+  document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
+  closeTplModal();
+  showHint('🆕 기본 템플릿으로 시작 (21개 섹션)');
 }
 
 /*INIT_BEGIN*/(function(){

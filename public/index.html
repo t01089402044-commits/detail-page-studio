@@ -56,6 +56,10 @@
       <div style="font-size:15px;font-weight:700;color:#111;">📑 템플릿 관리</div>
       <button onclick="closeTplModal()" style="background:none;border:none;font-size:18px;color:#888;cursor:pointer;">✕</button>
     </div>
+    <div style="padding:14px 20px;border-bottom:1px solid #f1f5f9;background:#fafbff;">
+      <button onclick="tplNewDefault()" style="width:100%;padding:11px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;">🆕 기본 템플릿으로 새로 시작 (21개 섹션)</button>
+      <div style="font-size:10px;color:#94a3b8;margin-top:6px;text-align:center;">현재 작업이 모두 사라집니다 — 미리 저장하세요</div>
+    </div>
     <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;">
       <div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;">현재 작업을 새 템플릿으로 저장</div>
       <div style="display:flex;gap:6px;">
@@ -117,19 +121,32 @@
 </div>
 
 <!-- 플로팅 텍스트 툴바 -->
-<div id="ft" style="display:none;position:fixed;z-index:9999;background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:5px 8px;display:none;align-items:center;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,.4);">
+<div id="ft" style="display:none;position:fixed;z-index:9999;background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:5px 8px;align-items:center;gap:4px;box-shadow:0 4px 20px rgba(0,0,0,.4);">
+  <!-- 폰트 종류 (호버 프리뷰 미니 픽커) -->
+  <button id="ft-font-btn" title="폰트 변경" onclick="ftFontPickerToggle(event)" style="background:#1e293b;border:1px solid #334155;color:#cbd5e1;border-radius:5px;cursor:pointer;height:26px;padding:0 8px;font-size:11px;font-weight:700;font-family:inherit;">Aa <span style="font-size:8px;opacity:.6;">▾</span></button>
+  <div id="ft-font-dropdown" onmouseleave="ftFontPickerRevert()" style="display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:220px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9991;padding:4px;"></div>
+  <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
+
+  <!-- 사이즈 -->
   <button id="ft-szm" title="글자 작게" onclick="ftSz(-1)" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:14px;">−</button>
-  <span id="ft-sz" style="color:#e2e8f0;font-size:11px;min-width:28px;text-align:center;">16px</span>
+  <span id="ft-sz" style="color:#e2e8f0;font-size:11px;min-width:34px;text-align:center;font-family:'DM Mono',monospace;">16px</span>
   <button id="ft-szp" title="글자 크게" onclick="ftSz(1)" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:14px;">+</button>
   <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
-  <button id="ft-b" title="굵게" onclick="ftToggle('bold')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-weight:700;font-size:13px;">B</button>
-  <button id="ft-i" title="기울임" onclick="ftToggle('italic')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-style:italic;font-size:13px;">I</button>
+
+  <!-- B / I -->
+  <button id="ft-b" title="굵게" onclick="ftToggle('fontWeight','700','400')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-weight:700;font-size:13px;">B</button>
+  <button id="ft-i" title="기울임" onclick="ftToggle('fontStyle','italic','normal')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-style:italic;font-size:13px;">I</button>
   <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
-  <button onclick="ftAlign('left')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">≡</button>
-  <button onclick="ftAlign('center')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">≡</button>
-  <button onclick="ftAlign('right')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;font-size:11px;">≡</button>
+
+  <!-- 정렬 -->
+  <button title="왼쪽 정렬" onclick="ftAlign('left')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-align-left"></i></button>
+  <button title="가운데 정렬" onclick="ftAlign('center')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-align-center"></i></button>
+  <button title="오른쪽 정렬" onclick="ftAlign('right')" style="background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:5px;cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;"><i class="ti ti-align-right"></i></button>
   <div style="width:1px;height:20px;background:#334155;margin:0 2px;"></div>
-  <input id="ft-color" type="color" value="#ffffff" onchange="ftColor(this.value)" style="width:26px;height:26px;border:1px solid #334155;border-radius:5px;cursor:pointer;padding:1px;background:#1e293b;" />
+
+  <!-- 색상 -->
+  <input id="ft-color" type="color" value="#222222" onchange="ftColor(this.value)" style="width:26px;height:26px;border:1px solid #334155;border-radius:5px;cursor:pointer;padding:1px;background:#1e293b;" />
+  <span id="ft-color-hex" style="color:#94a3b8;font-size:10px;font-family:'DM Mono',monospace;min-width:54px;">#222222</span>
 </div>
 
 <div id="hint" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(15,15,15,.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99999;white-space:nowrap;"></div>
