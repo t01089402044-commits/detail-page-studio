@@ -1830,6 +1830,17 @@ function showServerSplitGallery(chunks, width){
 // ── 저장 버튼 연결 ──────────────────────────────────────────────────────────
 function saveServer(opts){ captureViaServer(opts); }
 
+function toggleMobilePreview(btn){
+  var pv=document.getElementById('preview'); if(!pv) return;
+  var on=pv.classList.toggle('for-mobile-capture');
+  if(btn){
+    btn.style.background = on ? '#2563eb' : '';
+    btn.style.color = on ? '#fff' : '';
+    btn.style.borderColor = on ? '#2563eb' : '';
+  }
+  showHint(on ? '👁 모바일 최적화 미리보기 ON (저장 시 모습)' : '👁 일반 편집 모드');
+}
+
 // ── 템플릿 저장/불러오기 + HTML import ──────────────────────────────────────
 var TPL_KEY='dps_templates_v1';
 function tplList(){ try{ return JSON.parse(localStorage.getItem(TPL_KEY)||'[]'); }catch(e){ return []; } }

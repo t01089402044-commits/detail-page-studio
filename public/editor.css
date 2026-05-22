@@ -98,7 +98,7 @@ body{display:flex;flex-direction:column;font-family:'Noto Sans KR',sans-serif;fo
 .wb-btn:hover:not(.act){border-color:#aaa;background:#f5f5f5;}
 
 
-#preview{background:#fff;box-shadow:0 2px 32px rgba(0,0,0,.2);transition:width .25s;}
+#preview{--pf:'Pretendard','Noto Sans KR',sans-serif;background:#fff;box-shadow:0 2px 32px rgba(0,0,0,.2);transition:width .25s;}
 .sec-wrap{position:relative;transition:outline .1s;}
 /* 호버 시에만 파란 외곽선 */
 .sec-wrap:hover{outline:2px solid rgba(79,156,249,.5);outline-offset:-2px;z-index:1;}
@@ -306,15 +306,19 @@ body{display:flex;flex-direction:column;font-family:'Noto Sans KR',sans-serif;fo
 .modal-cancel:hover{background:#f0f0f0;}
 
 
-#preview, #preview [contenteditable]{font-family:var(--pf,'Noto Sans KR',sans-serif);}
+/* 사용자 선택 폰트(--pf)가 모든 #preview 콘텐츠에 적용되도록 통일.
+   Oswald/DM Mono/Noto Serif KR은 폰트 미선택 시 fallback으로만 유지. */
+#preview, #preview [contenteditable]{font-family:var(--pf,'Pretendard','Noto Sans KR',sans-serif);}
 /* 한글 큰 타이틀 */
-#preview .s-banner-kr,.s-copy-quote{font-family:var(--pf,'Noto Sans KR',sans-serif);}
-/* 영문 장식 헤딩 */
-#preview .sec-en,.s-wearing-en,.s-size-title,.s-info-title,.s-pd-hd-title,.s-proof-num{font-family:'Oswald',sans-serif;}
-/* 캡션/레이블 */
-#preview .s-banner-season,.s-copy-eye,.s-story-label,.s-pkg-label,.s-style-mood,.s-mood-sit,.sec-lbl,.s-angle-label-en,.iz-px,.tf-dim{font-family:'DM Mono',monospace;}
-/* 서체 */
-#preview .s-copy-quote,.s-pkg-title{font-family:'Noto Serif KR',serif!important;}
+#preview .s-banner-kr,#preview .s-copy-quote{font-family:var(--pf,'Pretendard','Noto Sans KR',sans-serif);}
+/* 영문 장식 헤딩 - 폰트 미선택 시 Oswald, 선택 시 사용자 폰트 */
+#preview .sec-en,#preview .s-wearing-en,#preview .s-size-title,#preview .s-info-title,#preview .s-pd-hd-title,#preview .s-proof-num{font-family:var(--pf,'Oswald',sans-serif);}
+/* 캡션/레이블 - 폰트 미선택 시 DM Mono, 선택 시 사용자 폰트 */
+#preview .s-banner-season,#preview .s-copy-eye,#preview .s-story-label,#preview .s-pkg-label,#preview .s-style-mood,#preview .s-mood-sit,#preview .sec-lbl,#preview .s-angle-label-en{font-family:var(--pf,'DM Mono',monospace);}
+/* 에디터 UI 오버레이는 미리보기 콘텐츠 아님 - 항상 DM Mono */
+.iz-px,.tf-dim{font-family:'DM Mono',monospace;}
+/* 서체 - !important 제거, 사용자 폰트가 우선 */
+#preview .s-pkg-title{font-family:var(--pf,'Pretendard','Noto Serif KR',serif);}
 
 /* Banner */
 .s-banner{background:#0c0c0c;padding:64px 48px 56px;text-align:center;}
