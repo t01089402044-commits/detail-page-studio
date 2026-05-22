@@ -685,12 +685,6 @@ function closeFT(){
 }
 // CSS의 !important 룰을 이기려면 inline 도 !important 로 설정해야 함
 function _camelToKebab(s){ return s.replace(/[A-Z]/g, function(m){return '-'+m.toLowerCase();}); }
-function ftSize(d){
-  if(!_ftEl)return;
-  var n=Math.max(8,Math.min(200,parseFloat(getComputedStyle(_ftEl).fontSize)+d));
-  _ftEl.style.setProperty('font-size', n+'px', 'important');
-  var el=document.getElementById('ft-sz'); if(el) el.textContent=Math.round(n)+'px';
-}
 function ftToggle(prop,on,off){
   if(!_ftEl)return;
   var cs=getComputedStyle(_ftEl);
@@ -758,8 +752,6 @@ const EP_CATS={
   '수치·지표':['📊','📈','🏆','🥇','🎯','💯','✨','💥','🔝','🆕','🆓','🆙','✔️','❤️','💙','💚'],
 };
 
-// 전역 상태
-var _uid=0,_jpgScale=1,_ftEl=null,_epEl=null,_aiResult=null;
 function addFeatItem(){
   var s=document.querySelector('.s-feat-grid');if(!s)return;
   var d=document.createElement('div');d.className='s-feat-item';d.style.position='relative';

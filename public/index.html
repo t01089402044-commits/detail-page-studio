@@ -154,7 +154,7 @@
 </div>
 
 <div id="hint" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(15,15,15,.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99999;white-space:nowrap;"></div>
-<div id="add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="add-modal">
   <div style="background:#fff;border-radius:16px;padding:28px;width:480px;max-width:90vw;max-height:80vh;overflow-y:auto;">
     <div style="font-size:18px;font-weight:800;margin-bottom:20px;">섹션 추가</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
@@ -172,8 +172,17 @@
       <button onclick="addSection('story')" class="add-modal-btn">📖 소재 스토리</button>
       <button onclick="addSection('infl')" class="add-modal-btn">📸 인플루언서</button>
       <button onclick="addSection('style')" class="add-modal-btn">👠 스타일</button>
-      <butt
-
+      <button onclick="addSection('pkg')" class="add-modal-btn">📦 패키지</button>
+      <button onclick="addSection('size')" class="add-modal-btn">📏 사이즈</button>
+      <button onclick="addSection('info')" class="add-modal-btn">ℹ️ 모델 정보</button>
+      <button onclick="addSection('wash')" class="add-modal-btn">🧺 세탁 / 관리</button>
+      <button onclick="addSection('pd')" class="add-modal-btn">📋 제품 정보 고시</button>
+      <button onclick="addSection('faq')" class="add-modal-btn">❓ FAQ</button>
+      <button onclick="addSection('footer')" class="add-modal-btn">📜 푸터</button>
+    </div>
+    <button onclick="closeAddModal()" style="width:100%;padding:12px;background:#f8f8f8;border:1px solid #e8e8e8;border-radius:9px;font-size:13px;color:#666;cursor:pointer;font-family:inherit;">취소</button>
+  </div>
+</div>
 
 <!-- 저장 버튼 (서버 API 연동) -->
 <script>
