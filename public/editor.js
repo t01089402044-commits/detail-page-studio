@@ -1285,7 +1285,9 @@ var _FT_FONTS=[
   ["'Black Han Sans',sans-serif","Black Han Sans","굵은 헤딩"],
   ["'Do Hyeon',sans-serif","Do Hyeon",""],
   ["'Jua',sans-serif","Jua",""],
-  ["'Noto Serif KR',serif","Noto Serif KR","세리프"]
+  ["'Noto Serif KR',serif","Noto Serif KR","세리프"],
+  ["'GmarketSans',sans-serif","Gmarket Sans","부드럽고 친근"],
+  ["'Nanum Myeongjo',serif","Nanum Myeongjo","고급 세리프"]
 ];
 var _ftFontOrig=null;
 function _ftBuildFontDropdown(){
