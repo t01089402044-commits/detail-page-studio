@@ -212,7 +212,17 @@ function nextId(){return 'sec_'+(++_uid);}
 function showHint(msg){var h=document.getElementById('hint');h.textContent=msg;h.style.opacity='1';clearTimeout(h._t);h._t=setTimeout(function(){h.style.opacity='0';},2500);}
 function setW(w,btn){document.getElementById('preview').style.width=w+'px';document.querySelectorAll('.wb-btn').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 function switchTab(t){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('act',b.dataset.tab===t);});document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.toggle('act',p.id==='tab-'+t);});}
-function applyFont(v){var pv=document.getElementById('preview');if(pv){pv.style.fontFamily=v;pv.style.setProperty('--pf',v);}}
+function applyFont(v){
+  if(!v) return;
+  var pv=document.getElementById('preview');
+  if(!pv) return;
+  // 부드러운 전환을 위한 transition 추가
+  if(!pv.style.transition.includes('font-family')){
+    pv.style.transition = (pv.style.transition||'') + ', font-family 0.2s ease';
+  }
+  pv.style.fontFamily=v;
+  pv.style.setProperty('--pf',v);
+}
 
 // ── 커스텀 폰트 픽커 (호버 프리뷰) ────────────────────────────────────────
 var _fontCommitted = "'Pretendard',sans-serif";
