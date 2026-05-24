@@ -931,15 +931,24 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 
 
 
-/* 모바일 가독성 개선 v2 */
-@media (max-width: 600px) {
-  #preview .s-feat-title { font-size: clamp(15px, 4vw, 18px) !important; }
-  #preview .s-feat-desc  { font-size: clamp(13px, 3.5vw, 15px) !important; }
-  #preview .s-banner-kr  { font-size: clamp(20px, 5.5vw, 34px) !important; }
-  #preview .s-copy-quote { font-size: clamp(18px, 5vw, 28px) !important; }
-  #preview .s-copy-body  { font-size: clamp(14px, 3.8vw, 17px) !important; }
-  #preview .s-trust-name { font-size: clamp(13px, 3.5vw, 16px) !important; }
-  #preview .s-trust-desc { font-size: clamp(12px, 3vw, 14px) !important; }
-  #preview .s-proof-num  { font-size: clamp(24px, 7vw, 36px) !important; }
-  #preview .s-proof-lbl  { font-size: clamp(11px, 3vw, 13px) !important; }
-} /* mobile-font-min */
+
+
+/* 모바일 가독성 v4 — transform scale 방식 */
+/* 사용자가 폰트/크기/컬러 변경해도 비율 유지 */
+#preview.mobile-scale {
+  transform-origin: top center;
+  transition: transform 0.2s ease;
+}
+/* mobile-font-min */
+
+/* jarvis-small-font: 작은 폰트 기본 Gmarket Sans */
+#preview .s-feat-desc,
+#preview .s-copy-body,
+#preview .s-trust-desc,
+#preview .s-faq-a,
+#preview .s-footer-text,
+#preview .s-banner-en,
+#preview .s-proof-lbl,
+#preview .s-size-row td {
+  font-family: 'GmarketSans', sans-serif;
+}
