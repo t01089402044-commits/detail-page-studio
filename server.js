@@ -20,68 +20,134 @@ async function getBrowser() {
   if (browser?.isConnected()) return browser;
   browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-gpu'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--font-render-hinting=none',        // ✅ 폰트 렌더링 개선
+      '--disable-font-subpixel-positioning', // ✅ 폰트 선명도 개선
+      '--enable-font-antialiasing',         // ✅ 폰트 안티앨리어싱
+    ],
   });
   return browser;
 }
 
+// ✅ 폰트 완전 로드 대기 함수
+async function waitForFonts(page) {
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    // 모든 폰트 face 로드 완료 대기
+    const fontPromises = Array.from(document.fonts).map(f => f.load().catch(() => {}));
+    await Promise.allSettled(fontPromises);
+  });
+  await new Promise(r => setTimeout(r, 1200)); // ✅ 외부 폰트(구글폰트 등) 추가 대기
+}
+
+// ✅ UI 요소 숨기기
+async function hideUIElements(page) {
+  await page.evaluate(() => {
+    ['#topbar','#right','.sec-ov','.iz-ov','.del-btn','.add-btn',
+     '.resize-bar','.iz-zone-del','#ep','#ft','#hint','#add-modal'
+    ].forEach(s => document.querySelectorAll(s).forEach(el => el.style.display = 'none'));
+    document.body.style.cssText = 'margin:0;padding:0;background:#fff;';
+  });
+}
+
+// 전체 캡처
 app.post('/api/capture', async (req, res) => {
-  const { html, width = 860, scale = 1, format = 'jpeg', quality = 95 } = req.body;
-  if (!html) return res.status(400).json({ error: 'html �ʿ�' });
+  // ✅ scale 기본값 2로 변경 (레티나 품질)
+  const { html, width = 860, scale = 2, format = 'jpeg', quality = 95 } = req.body;
+  if (!html) return res.status(400).json({ error: 'html 필요' });
   let page;
   try {
     const b = await getBrowser();
     page = await b.newPage();
     await page.setViewport({ width, height: 1080, deviceScaleFactor: scale });
-    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 30000 });
-    await page.evaluateHandle('document.fonts.ready');
-    await page.evaluate(() => {
-      ['#topbar','#right','.sec-ov','.iz-ov','.del-btn','.add-btn','.resize-bar','.iz-zone-del','#ep','#ft','#hint','#add-modal'].forEach(s => document.querySelectorAll(s).forEach(el => el.style.display='none'));
-      document.body.style.cssText = 'margin:0;padding:0;background:#fff;';
-    });
-    await new Promise(r => setTimeout(r, 500));
+    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
+
+    await waitForFonts(page);   // ✅ 폰트 완전 로드
+    await hideUIElements(page); // ✅ UI 숨기기
+    await new Promise(r => setTimeout(r, 300));
+
     const preview = await page.$('#preview');
-    if (!preview) throw new Error('#preview ����');
-    const buf = await preview.screenshot({ type: format==='png'?'png':'jpeg', quality: format==='jpeg'?quality:undefined });
-    res.set('Content-Type', format==='png'?'image/png':'image/jpeg');
+    if (!preview) throw new Error('#preview 없음');
+
+    const buf = await preview.screenshot({
+      type: format === 'png' ? 'png' : 'jpeg',
+      quality: format === 'jpeg' ? quality : undefined,
+      // ✅ 캡처 영역 내 이미지 로드 완료 보장
+    });
+
+    res.set('Content-Type', format === 'png' ? 'image/png' : 'image/jpeg');
     res.send(buf);
-  } catch(e) { res.status(500).json({ error: e.message }); }
-  finally { if (page) await page.close(); }
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (page) await page.close();
+  }
 });
 
+// 분할 캡처
 app.post('/api/capture/split', async (req, res) => {
-  const { html, width = 860, scale = 1, maxH = 3500, format = 'jpeg' } = req.body;
-  if (!html) return res.status(400).json({ error: 'html �ʿ�' });
+  // ✅ scale 기본값 2로 변경
+  const { html, width = 860, scale = 2, maxH = 3500, format = 'jpeg' } = req.body;
+  if (!html) return res.status(400).json({ error: 'html 필요' });
   let page;
   try {
     const b = await getBrowser();
     page = await b.newPage();
     await page.setViewport({ width, height: 1080, deviceScaleFactor: scale });
-    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 30000 });
-    await page.evaluateHandle('document.fonts.ready');
-    await page.evaluate(() => {
-      ['#topbar','#right','.sec-ov','.iz-ov','.del-btn','.add-btn','.resize-bar','#ep','#ft','#hint','#add-modal'].forEach(s => document.querySelectorAll(s).forEach(el => el.style.display='none'));
-      document.body.style.cssText = 'margin:0;padding:0;background:#fff;';
-    });
-    await new Promise(r => setTimeout(r, 500));
+    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
+
+    await waitForFonts(page);   // ✅ 폰트 완전 로드
+    await hideUIElements(page); // ✅ UI 숨기기
+    await new Promise(r => setTimeout(r, 300));
+
     const sections = await page.$$('#preview > .sec-wrap');
     const captured = [];
+
     for (const sec of sections) {
       const box = await sec.boundingBox();
       if (!box || box.height < 1) continue;
-      const buf = await sec.screenshot({ type: 'jpeg', quality: 95 });
+      const buf = await sec.screenshot({
+        type: 'jpeg',
+        quality: 95,  // ✅ 분할 캡처도 고품질 유지
+      });
       captured.push({ height: Math.round(box.height), buf: buf.toString('base64') });
     }
+
+    // 청크 분할
     const chunks = []; let group = [], groupH = 0;
     for (const s of captured) {
-      if (group.length > 0 && groupH + s.height > maxH) { chunks.push(group); group = []; groupH = 0; }
+      if (group.length > 0 && groupH + s.height > maxH) {
+        chunks.push(group); group = []; groupH = 0;
+      }
       group.push(s); groupH += s.height;
     }
     if (group.length > 0) chunks.push(group);
-    res.json({ ok: true, parts: chunks.length, chunks: chunks.map((ch,i) => ({ index:i+1, sections:ch.map(s=>({ height:s.height, data:s.buf })) })) });
-  } catch(e) { res.status(500).json({ error: e.message }); }
-  finally { if (page) await page.close(); }
+
+    res.json({
+      ok: true,
+      parts: chunks.length,
+      chunks: chunks.map((ch, i) => ({
+        index: i + 1,
+        sections: ch.map(s => ({ height: s.height, data: s.buf }))
+      }))
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (page) await page.close();
+  }
 });
 
-app.listen(PORT, () => { console.log('Detail Page Studio on port', PORT); getBrowser().catch(console.error); });
-process.on('SIGTERM', async () => { if (browser) await browser.close(); process.exit(0); });
+app.listen(PORT, () => {
+  console.log('Detail Page Studio on port', PORT);
+  getBrowser().catch(console.error);
+});
+
+process.on('SIGTERM', async () => {
+  if (browser) await browser.close();
+  process.exit(0);
+});
