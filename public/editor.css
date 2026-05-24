@@ -929,12 +929,17 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 .tpl-row-btn.del:hover{background:#fecaca;}
 
 
-/* 모바일 가독성 개선 */
+
+
+/* 모바일 가독성 개선 v2 */
 @media (max-width: 600px) {
-  #preview [contenteditable] { min-font-size: 14px !important; }
-  #preview .s-banner-kr { font-size: clamp(18px, 5vw, 32px) !important; }
-  #preview .s-copy-quote { font-size: clamp(16px, 4.5vw, 28px) !important; }
-  #preview .s-copy-body { font-size: clamp(13px, 3.5vw, 16px) !important; }
-  #preview .s-trust-name { font-size: clamp(12px, 3vw, 15px) !important; }
-  #preview .s-trust-desc { font-size: clamp(11px, 2.8vw, 13px) !important; }
+  #preview .s-feat-title { font-size: clamp(15px, 4vw, 18px) !important; }
+  #preview .s-feat-desc  { font-size: clamp(13px, 3.5vw, 15px) !important; }
+  #preview .s-banner-kr  { font-size: clamp(20px, 5.5vw, 34px) !important; }
+  #preview .s-copy-quote { font-size: clamp(18px, 5vw, 28px) !important; }
+  #preview .s-copy-body  { font-size: clamp(14px, 3.8vw, 17px) !important; }
+  #preview .s-trust-name { font-size: clamp(13px, 3.5vw, 16px) !important; }
+  #preview .s-trust-desc { font-size: clamp(12px, 3vw, 14px) !important; }
+  #preview .s-proof-num  { font-size: clamp(24px, 7vw, 36px) !important; }
+  #preview .s-proof-lbl  { font-size: clamp(11px, 3vw, 13px) !important; }
 } /* mobile-font-min */

@@ -1309,6 +1309,14 @@ function _ftBuildFontDropdown(){
 }
 function ftFontPickerToggle(e){
   if(!_ftEl){ showHint("⚠️ 텍스트를 먼저 클릭하세요"); return; }
+  var dd=document.getElementById('ft-font-dropdown');
+  if(dd && dd.style.display!=='block'){
+    var btn=document.getElementById('ft-font-btn');
+    var rect=btn.getBoundingClientRect();
+    dd.style.left=rect.left+'px';
+    dd.style.bottom=(window.innerHeight-rect.top+4)+'px';
+    dd.style.top='auto';
+  }
   e&&e.stopPropagation();
   if(!_ftEl){ showHint('먼저 편집할 텍스트에 마우스를 올리세요'); return; }
   _ftBuildFontDropdown();
