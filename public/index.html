@@ -8,10 +8,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>상세페이지 에디터</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&family=Oswald:wght@500;600;700&family=DM+Mono:wght@400&family=Gmarket+Sans:wght@300;500;700&family=SUIT:wght@300;400;500;700;900&family=Nanum+Myeongjo:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&family=Oswald:wght@500;600;700&family=DM+Mono:wght@400&family=Gothic+A1:wght@400;700;900&family=Nanum+Gothic:wght@400;700;800&family=Black+Han+Sans&family=Do+Hyeon&family=Jua&family=Nanum+Myeongjo:wght@400;700;800&family=Gmarket+Sans:wght@300;500;700&family=SUIT:wght@300;400;500;700;900&family=Nanum+Myeongjo:wght@400;700;800&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.1.0/dist/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+/* 모바일 가독성: 작은 폰트 사이즈 업 */
+#preview .sec-en { font-size: 13px !important; }
+#preview .s-banner-season { font-size: 14px !important; }
+#preview .s-banner-en { font-size: 15px !important; }
+#preview .s-proof-lbl { font-size: 13px !important; }
+#preview .s-trust-desc { font-size: 13px !important; }
+#preview .s-trust-name { font-size: 14px !important; }
+#preview .s-feat-desc { font-size: 14px !important; }
+#preview .s-faq-a { font-size: 14px !important; }
+#preview .s-story-spec { font-size: 13px !important; }
+#preview .s-infl-tag { font-size: 12px !important; }
+#preview .s-model-info-body { font-size: 13px !important; }
+#preview .s-size-note { font-size: 13px !important; }
+#preview .s-footer p { font-size: 13px !important; }
+#preview .s-wash-note { font-size: 14px !important; }
+</style>
   <link rel="stylesheet" href="/editor.css">
 </head>
 <body>
@@ -19,10 +36,13 @@
 <div id="topbar">
   <div class="font-picker" style="position:relative;">
     <button type="button" class="tb-select" id="font-picker-btn" onclick="fontPickerToggle(event)" style="display:flex;align-items:center;gap:6px;min-width:180px;justify-content:space-between;">
-      <span id="font-picker-label" style="font-family:'Pretendard',sans-serif;">Pretendard (쿠팡/토스 ★)</span>
+     <span id="font-picker-label" style="font-family:'Gmarket Sans',sans-serif;">Gmarket Sans (★ 기본)</span>
       <span style="font-size:9px;color:#888;">▾</span>
     </button>
     <div id="font-dropdown" onmouseleave="fontPickerRevert()" style="display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:240px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9990;padding:4px;">
+      <div class="font-opt committed" data-v="'Gmarket Sans',sans-serif" data-l="Gmarket Sans (★ 기본)" style="font-family:'Gmarket Sans',sans-serif;">Gmarket Sans <span style="opacity:.55;font-size:9px;">★ 기본</span></div>
+<div class="font-opt" data-v="'SUIT',sans-serif" data-l="SUIT" style="font-family:'SUIT',sans-serif;">SUIT</div>
+<div class="font-opt" data-v="'Nanum Myeongjo',serif" data-l="Nanum Myeongjo" style="font-family:'Nanum Myeongjo',serif;">Nanum Myeongjo <span style="opacity:.55;font-size:9px;">명조</span></div>
       <div class="font-opt" data-v="'Pretendard',sans-serif" data-l="Pretendard (쿠팡/토스 ★)" style="font-family:'Pretendard',sans-serif;">Pretendard <span style="opacity:.55;font-size:9px;">쿠팡 / 토스 ★</span></div>
       <div class="font-opt" data-v="'Noto Sans KR',sans-serif" data-l="Noto Sans KR (네이버)" style="font-family:'Noto Sans KR',sans-serif;">Noto Sans KR <span style="opacity:.55;font-size:9px;">네이버</span></div>
       <div class="font-opt" data-v="'Gothic A1',sans-serif" data-l="Gothic A1" style="font-family:'Gothic A1',sans-serif;">Gothic A1</div>
