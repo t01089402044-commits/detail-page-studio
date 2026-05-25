@@ -1422,10 +1422,24 @@ function makeFixed(orig){
     .replace('id="body"','id="body" style="min-height:calc(100vh - 48px)"');
 }
 function saveHTML(){
-  var fixed=makeFixed(document.documentElement.outerHTML);
-  var b=new Blob(['<!DOCTYPE html>'+fixed],{type:'text/html;charset=utf-8'});
+  var pv=document.getElementById('preview'); if(!pv) return;
+  var clone=pv.cloneNode(true);
+  clone.querySelectorAll('.sec-ov,.iz-ov,.del-btn,.add-btn,.ico-btn,.resize-bar,.iz-zone-del,.tf-border,.tf-handle,.tf-dim,.tf-lock-badge,.s-size-ctrl,.feat-row-add-wrap,input[type=file]').forEach(function(e){e.remove();});
+  clone.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');});
+  clone.querySelectorAll('.iz-in').forEach(function(e){e.style.display='none';});
+  var styleEl=document.querySelector('style');
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<link rel="preconnect" href="https://fonts.googleapis.com">'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Pretendard:wght@400;500;700&display=swap" rel="stylesheet">'
+    +'<style>'+(styleEl?styleEl.textContent:'')
+    +'body{margin:0;padding:0;background:#f0f0f0;}'
+    +'#preview{margin:0 auto;}'
+    +'</style></head><body>'
+    +'<div id="preview" style="'+pv.getAttribute('style')+'">'+clone.innerHTML+'</div>'
+    +'</body></html>';
+  var b=new Blob([html],{type:'text/html;charset=utf-8'});
   var u=URL.createObjectURL(b);
-  var a=document.createElement('a');a.href=u;a.download='detail-page-full.html';
+  var a=document.createElement('a');a.href=u;a.download='detail-page.html';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(u);showHint('✅ HTML 저장됨');
 }
