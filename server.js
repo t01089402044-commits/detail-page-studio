@@ -6,9 +6,15 @@ const path = require('path');
 const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 
 const R2_BUCKET = process.env.R2_BUCKET || 'dps-templates';
-const R2_ENDPOINT = (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, '');
+let R2_ENDPOINT = (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, '');
 const R2_ACCESS_KEY = (process.env.R2_ACCESS_KEY_ID||'').trim();
 const R2_SECRET_KEY = (process.env.R2_SECRET_ACCESS_KEY||'').trim();
+
+// AWS SDK endpoint는 버킷을 포함하면 안 됨 (버킷은 Bucket 파라미터로 전달)
+if (R2_ENDPOINT.includes(R2_BUCKET)) {
+  R2_ENDPOINT = R2_ENDPOINT.replace('/' + R2_BUCKET, '');
+  console.log('[R2] Endpoint에서 버킷 제거:', R2_ENDPOINT);
+}
 
 const s3 = new S3Client({
   region: 'auto',
@@ -20,14 +26,17 @@ const s3 = new S3Client({
 });
 
 async function r2Request(method, key, body, contentType) {
+  console.log('[R2 Request]', { method, key, bucket: R2_BUCKET, endpoint: R2_ENDPOINT, hasCredentials: !!(R2_ACCESS_KEY && R2_SECRET_KEY) });
   try {
     if (method === 'PUT') {
-      await s3.send(new PutObjectCommand({
+      const cmd = new PutObjectCommand({
         Bucket: R2_BUCKET,
         Key: key,
         Body: body,
         ContentType: contentType || 'application/octet-stream'
-      }));
+      });
+      console.log('[R2 PUT]', { Bucket: R2_BUCKET, Key: key, BodyLength: body?.length });
+      await s3.send(cmd);
       return { status: 200, body: '' };
     }
 
@@ -52,7 +61,8 @@ async function r2Request(method, key, body, contentType) {
 
     throw new Error('Unsupported method: ' + method);
   } catch (err) {
-    return { status: err.$metadata?.httpStatusCode || 500, body: err.message };
+    console.error('[R2 Error]', err);
+    return { status: err.$metadata?.httpStatusCode || 500, body: JSON.stringify({ name: err.name, message: err.message, code: err.Code }) };
   }
 }
 const fs = require('fs');
