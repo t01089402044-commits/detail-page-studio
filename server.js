@@ -17,7 +17,8 @@ function hash(str) {
 }
 async function r2Request(method, key, body, contentType) {
   const http = require('http'), https = require('https');
-  const url = new URL(`${R2_ENDPOINT}/${R2_BUCKET}/${key}`);
+  const baseUrl = R2_ENDPOINT.includes(R2_BUCKET) ? R2_ENDPOINT : `${R2_ENDPOINT}/${R2_BUCKET}`;
+  const url = new URL(`${baseUrl}/${key}`);
   const now = new Date();
   const date = now.toISOString().replace(/[:-]/g,'').replace(/\.\d{3}/,'');
   const dateShort = date.slice(0,8);
@@ -84,7 +85,7 @@ app.get('/api/debug-env', (req, res) => {
 // 템플릿 목록
 app.get('/api/templates', async (req, res) => {
   try{
-    const r = await r2Request('GET', '?list-type=2');
+    const r = await r2Request('GET', `?list-type=2&bucket=${R2_BUCKET}`);
     const matches = [...r.body.matchAll(/<Key>([^<]+)<\/Key>.*?<LastModified>([^<]+)<\/LastModified>.*?<Size>([^<]+)<\/Size>/gs)];
     const list = matches.map(m => ({
       name: decodeURIComponent(m[1].replace('.json','')),
