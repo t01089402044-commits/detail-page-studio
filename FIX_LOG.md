@@ -17,11 +17,17 @@
 
 ## 수정 이력
 
-### [2026-05-26] server.js — R2 AWS SDK로 최종 교체
+### [2026-05-26] server.js — Minio Client로 최종 교체 (진짜 마지막)
+- 파일: server.js, package.json
+- 수정: @aws-sdk/client-s3 → minio (S3 호환 전문 라이브러리)
+- 이유: AWS SDK로도 서명 오류 지속 → R2 전용 라이브러리 필요
+- 변경: putObject, getObject, removeObject, listObjectsV2 사용
+- 교훈: R2는 minio가 가장 확실함
+
+### [2026-05-26] server.js — R2 AWS SDK 시도 (실패)
 - 파일: server.js
 - 수정: aws4 → @aws-sdk/client-s3 (S3Client) 사용
-- 이유: aws4로도 서명 오류 지속 → 공식 SDK가 가장 확실
-- 변경: r2Request 함수 전체 재작성 (PutObject, GetObject, DeleteObject, ListObjectsV2)
+- 결과: forcePathStyle 등 모든 옵션 시도했으나 서명 오류 지속
 - 보호: API 엔드포인트 동일 (/api/templates/save 등)
 
 ### [2026-05-26] server.js — R2 서명 aws4 시도 (실패)
