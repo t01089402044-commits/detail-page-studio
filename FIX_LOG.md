@@ -17,12 +17,12 @@
 
 ## 수정 이력
 
-### [2026-05-26] server.js — Minio Client로 최종 교체 (진짜 마지막)
-- 파일: server.js, package.json
-- 수정: @aws-sdk/client-s3 → minio (S3 호환 전문 라이브러리)
-- 이유: AWS SDK로도 서명 오류 지속 → R2 전용 라이브러리 필요
-- 변경: putObject, getObject, removeObject, listObjectsV2 사용
-- 교훈: R2는 minio가 가장 확실함
+### [2026-05-26] server.js — AWS SDK region: us-east-1 시도
+- 파일: server.js
+- 수정: region: 'auto' → region: 'us-east-1'
+- 이유: R2 커뮤니티에서 us-east-1 사용 시 성공 사례 다수
+- 참고: Minio 시도했으나 region 변경이 근본 해결책일 수 있음
+- 보호: S3Client 초기화, PutObjectCommand 사용
 
 ### [2026-05-26] server.js — R2 AWS SDK 시도 (실패)
 - 파일: server.js

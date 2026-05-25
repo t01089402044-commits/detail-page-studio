@@ -3,65 +3,59 @@ const puppeteer = require('puppeteer');
 const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
-const Minio = require('minio');
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 
 const R2_BUCKET = process.env.R2_BUCKET || 'dps-templates';
-const R2_ENDPOINT = (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, '').replace(/^https?:\/\//, '');
+const R2_ENDPOINT = (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, '');
 const R2_ACCESS_KEY = (process.env.R2_ACCESS_KEY_ID||'').trim();
 const R2_SECRET_KEY = (process.env.R2_SECRET_ACCESS_KEY||'').trim();
 
-const minioClient = new Minio.Client({
-  endPoint: R2_ENDPOINT,
-  accessKey: R2_ACCESS_KEY,
-  secretKey: R2_SECRET_KEY,
-  useSSL: true
+const s3 = new S3Client({
+  region: 'us-east-1',
+  endpoint: R2_ENDPOINT,
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY,
+    secretAccessKey: R2_SECRET_KEY
+  }
 });
 
 async function r2Request(method, key, body, contentType) {
-  console.log('[R2 Request]', { method, key, bucket: R2_BUCKET });
+  console.log('[R2 Request]', { method, key, bucket: R2_BUCKET, region: 'us-east-1' });
   try {
     if (method === 'PUT') {
-      const buffer = Buffer.from(body, 'utf8');
-      const metadata = { 'Content-Type': contentType || 'application/json' };
-      await minioClient.putObject(R2_BUCKET, key, buffer, buffer.length, metadata);
+      await s3.send(new PutObjectCommand({
+        Bucket: R2_BUCKET,
+        Key: key,
+        Body: body,
+        ContentType: contentType || 'application/json'
+      }));
       console.log('[R2 PUT OK]', key);
       return { status: 200, body: '' };
     }
 
     if (method === 'GET') {
       if (key.startsWith('?list-type=2')) {
-        const stream = minioClient.listObjectsV2(R2_BUCKET, '', true);
-        const items = [];
-        await new Promise((resolve, reject) => {
-          stream.on('data', obj => items.push(obj));
-          stream.on('end', resolve);
-          stream.on('error', reject);
-        });
-        const xml = items.map(item =>
-          `<Contents><Key>${item.name}</Key><LastModified>${item.lastModified.toISOString()}</LastModified><Size>${item.size}</Size></Contents>`
+        const result = await s3.send(new ListObjectsV2Command({ Bucket: R2_BUCKET }));
+        const xml = (result.Contents || []).map(item =>
+          `<Contents><Key>${item.Key}</Key><LastModified>${item.LastModified.toISOString()}</LastModified><Size>${item.Size}</Size></Contents>`
         ).join('');
         return { status: 200, body: `<?xml version="1.0"?><ListBucketResult>${xml}</ListBucketResult>` };
       }
 
-      const stream = await minioClient.getObject(R2_BUCKET, key);
-      const chunks = [];
-      await new Promise((resolve, reject) => {
-        stream.on('data', chunk => chunks.push(chunk));
-        stream.on('end', resolve);
-        stream.on('error', reject);
-      });
-      return { status: 200, body: Buffer.concat(chunks).toString('utf8') };
+      const result = await s3.send(new GetObjectCommand({ Bucket: R2_BUCKET, Key: key }));
+      const body = await result.Body.transformToString();
+      return { status: 200, body };
     }
 
     if (method === 'DELETE') {
-      await minioClient.removeObject(R2_BUCKET, key);
+      await s3.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: key }));
       return { status: 204, body: '' };
     }
 
     throw new Error('Unsupported method: ' + method);
   } catch (err) {
     console.error('[R2 Error]', err);
-    return { status: 500, body: err.message };
+    return { status: err.$metadata?.httpStatusCode || 500, body: err.message };
   }
 }
 const fs = require('fs');
