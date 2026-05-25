@@ -108,7 +108,7 @@ app.post('/api/templates/save', async (req, res) => {
     const r = await r2Request('PUT', key, body, 'application/json');
     if(r.status >= 400) throw new Error('저장 실패: '+r.body);
     res.json({ ok: true });
-  }catch(e){ res.status(500).json({ error: e.message }); }
+ }catch(e){ console.error('SAVE ERROR:', e.message, e.stack); res.status(500).json({ error: e.message }); }
 });
 
 // 템플릿 불러오기
