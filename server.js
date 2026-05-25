@@ -27,6 +27,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/api/debug-env', (req, res) => {
+  res.json({
+    hasAccessKey: !!(process.env.R2_ACCESS_KEY_ID),
+    accessKeyLen: (process.env.R2_ACCESS_KEY_ID||'').length,
+    hasSecret: !!(process.env.R2_SECRET_ACCESS_KEY),
+    secretLen: (process.env.R2_SECRET_ACCESS_KEY||'').length,
+    endpoint: process.env.R2_ENDPOINT,
+    bucket: process.env.R2_BUCKET,
+  });
+});
 // 템플릿 목록
 app.get('/api/templates', async (req, res) => {
   try{
