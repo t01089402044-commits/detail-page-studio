@@ -129,3 +129,40 @@ app.delete('/api/templates/:name', async (req, res) => {
     res.json({ ok: true });
   }catch(e){ res.status(500).json({ error: e.message }); }
 });
+let browser = null;
+async function getBrowser() {
+  if (browser?.isConnected()) return browser;
+  browser = await puppeteer.launch({
+    headless: 'new',
+    args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-gpu'],
+  });
+  return browser;
+}
+
+app.post('/api/capture', async (req, res) => {
+  const { html, width = 860, scale = 2, format = 'jpeg', quality = 95 } = req.body;
+  if (!html) return res.status(400).json({ error: 'html 필요' });
+  let page;
+  try {
+    const b = await getBrowser();
+    page = await b.newPage();
+    await page.setViewport({ width, height: 1080, deviceScaleFactor: scale });
+    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
+    await new Promise(r => setTimeout(r, 1200));
+    const preview = await page.$('#preview');
+    if (!preview) throw new Error('#preview 없음');
+    const buf = await preview.screenshot({ type: format === 'png' ? 'png' : 'jpeg', quality: format === 'jpeg' ? quality : undefined });
+    res.set('Content-Type', format === 'png' ? 'image/png' : 'image/jpeg');
+    res.send(buf);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+  finally { if (page) await page.close(); }
+});
+
+app.listen(PORT, () => {
+  console.log('Detail Page Studio on port', PORT);
+});
+
+process.on('SIGTERM', async () => {
+  if (browser) await browser.close();
+  process.exit(0);
+});
