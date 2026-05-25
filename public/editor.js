@@ -2105,6 +2105,7 @@ function tplImportFile(file){
     }
     if(!confirm('현재 작업을 덮어쓰고 "'+(tpl.name||'파일')+'"을 불러올까요?\n(저장 안 한 내용은 사라집니다)')) return;
     tplApply(tpl);
+    rebindPreview();
   };
   reader.readAsText(file,'utf-8');
 }
