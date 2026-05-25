@@ -102,9 +102,9 @@ app.post('/api/templates/save', async (req, res) => {
   try{
     const tpl = req.body;
     if(!tpl||!tpl.name) return res.status(400).json({ error: '이름 필요' });
-    const key = encodeURIComponent(tpl.name) + '.json';
+    const key = tpl.name + '.json';
     tpl.savedAt = new Date().toISOString();
-    const body = JSON.stringify(tpl);
+    const body = Buffer.from(JSON.stringify(tpl), 'utf8');
     const r = await r2Request('PUT', key, body, 'application/json');
     if(r.status >= 400) throw new Error('저장 실패: '+r.body);
     res.json({ ok: true });
@@ -114,7 +114,7 @@ app.post('/api/templates/save', async (req, res) => {
 // 템플릿 불러오기
 app.get('/api/templates/:name', async (req, res) => {
   try{
-    const key = encodeURIComponent(req.params.name) + '.json';
+    const key = req.params.name + '.json';
     const r = await r2Request('GET', key);
     if(r.status >= 400) return res.status(404).json({ error: '없음' });
     res.json(JSON.parse(r.body));
@@ -124,7 +124,7 @@ app.get('/api/templates/:name', async (req, res) => {
 // 템플릿 삭제
 app.delete('/api/templates/:name', async (req, res) => {
   try{
-    const key = encodeURIComponent(req.params.name) + '.json';
+    const key = req.params.name + '.json';
     await r2Request('DELETE', key);
     res.json({ ok: true });
   }catch(e){ res.status(500).json({ error: e.message }); }

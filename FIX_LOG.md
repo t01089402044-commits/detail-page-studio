@@ -17,12 +17,12 @@
 
 ## 수정 이력
 
-### [2026-05-26] server.js — AWS SDK region: us-east-1 시도
+### [2026-05-26] server.js — Key 인코딩 제거 + Buffer 사용
 - 파일: server.js
-- 수정: region: 'auto' → region: 'us-east-1'
-- 이유: R2 커뮤니티에서 us-east-1 사용 시 성공 사례 다수
-- 참고: Minio 시도했으나 region 변경이 근본 해결책일 수 있음
-- 보호: S3Client 초기화, PutObjectCommand 사용
+- 수정: encodeURIComponent 제거, Body를 Buffer로 변환
+- 이유: AWS SDK가 Key 자동 인코딩 → 이중 인코딩 방지
+- 변경: 'test' → 'test.json' (직접), JSON.stringify → Buffer.from
+- 참고: region: 'us-east-1' 유지
 
 ### [2026-05-26] server.js — R2 AWS SDK 시도 (실패)
 - 파일: server.js
