@@ -6,7 +6,8 @@ const path = require('path');
 const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const r2 = new S3Client({
   region: 'auto',
-  endpoint: (process.env.R2_ENDPOINT||'').trim(),
+  endpoint: (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, ''),
+  forcePathStyle: true,
   credentials: {
     accessKeyId: (process.env.R2_ACCESS_KEY_ID||'').trim(),
     secretAccessKey: (process.env.R2_SECRET_ACCESS_KEY||'').trim(),
