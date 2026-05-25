@@ -17,12 +17,18 @@
 
 ## 수정 이력
 
-### [2026-05-26] server.js — R2 서명 aws4 패키지로 교체
+### [2026-05-26] server.js — R2 AWS SDK로 최종 교체
+- 파일: server.js
+- 수정: aws4 → @aws-sdk/client-s3 (S3Client) 사용
+- 이유: aws4로도 서명 오류 지속 → 공식 SDK가 가장 확실
+- 변경: r2Request 함수 전체 재작성 (PutObject, GetObject, DeleteObject, ListObjectsV2)
+- 보호: API 엔드포인트 동일 (/api/templates/save 등)
+
+### [2026-05-26] server.js — R2 서명 aws4 시도 (실패)
 - 파일: server.js, package.json
-- 수정: 직접 구현한 AWS Signature V4 코드 → aws4 패키지 사용
-- 추가: aws4 패키지 (npm install aws4)
-- 이유: R2 템플릿 저장 시 시그니처 오류 해결
-- 보호: r2Request 호출부 (템플릿 API) 동일 인터페이스 유지
+- 수정: 직접 구현한 AWS Signature V4 코드 → aws4 패키지 시도
+- 결과: 서명 오류 지속 (host/hostname 혼동 등)
+- 교훈: R2는 공식 AWS SDK 사용이 정답
 
 ### [2026-05-25] server.js — 이미지 품질 + 폰트 가독성
 - 파일: server.js

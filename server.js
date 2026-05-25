@@ -3,55 +3,57 @@ const puppeteer = require('puppeteer');
 const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
-const aws4 = require('aws4');
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+
 const R2_BUCKET = process.env.R2_BUCKET || 'dps-templates';
 const R2_ENDPOINT = (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, '');
 const R2_ACCESS_KEY = (process.env.R2_ACCESS_KEY_ID||'').trim();
 const R2_SECRET_KEY = (process.env.R2_SECRET_ACCESS_KEY||'').trim();
 
-async function r2Request(method, key, body, contentType) {
-  const http = require('http'), https = require('https');
-  const baseUrl = R2_ENDPOINT.includes(R2_BUCKET) ? R2_ENDPOINT : `${R2_ENDPOINT}/${R2_BUCKET}`;
-  const url = new URL(`${baseUrl}/${key}`);
-
-  const opts = {
-    host: url.hostname,
-    path: url.pathname + (url.search || ''),
-    method,
-    service: 's3',
-    region: 'auto',
-    headers: {
-      'Content-Type': contentType || 'application/octet-stream'
-    }
-  };
-
-  if (body) {
-    opts.body = body;
-  }
-
-  aws4.sign(opts, {
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: R2_ENDPOINT,
+  credentials: {
     accessKeyId: R2_ACCESS_KEY,
     secretAccessKey: R2_SECRET_KEY
-  });
+  }
+});
 
-  return new Promise((resolve, reject) => {
-    const requestOpts = {
-      hostname: url.hostname,
-      port: url.port || 443,
-      path: opts.path,
-      method: opts.method,
-      headers: opts.headers
-    };
+async function r2Request(method, key, body, contentType) {
+  try {
+    if (method === 'PUT') {
+      await s3.send(new PutObjectCommand({
+        Bucket: R2_BUCKET,
+        Key: key,
+        Body: body,
+        ContentType: contentType || 'application/octet-stream'
+      }));
+      return { status: 200, body: '' };
+    }
 
-    const req = (url.protocol === 'https:' ? https : http).request(requestOpts, res => {
-      const chunks = [];
-      res.on('data', c => chunks.push(c));
-      res.on('end', () => resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString('utf8') }));
-    });
-    req.on('error', reject);
-    if (body) req.write(body);
-    req.end();
-  });
+    if (method === 'GET') {
+      if (key.startsWith('?list-type=2')) {
+        const result = await s3.send(new ListObjectsV2Command({ Bucket: R2_BUCKET }));
+        const xml = result.Contents.map(item =>
+          `<Contents><Key>${item.Key}</Key><LastModified>${item.LastModified.toISOString()}</LastModified><Size>${item.Size}</Size></Contents>`
+        ).join('');
+        return { status: 200, body: `<?xml version="1.0"?><ListBucketResult>${xml}</ListBucketResult>` };
+      }
+
+      const result = await s3.send(new GetObjectCommand({ Bucket: R2_BUCKET, Key: key }));
+      const body = await result.Body.transformToString();
+      return { status: 200, body };
+    }
+
+    if (method === 'DELETE') {
+      await s3.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: key }));
+      return { status: 204, body: '' };
+    }
+
+    throw new Error('Unsupported method: ' + method);
+  } catch (err) {
+    return { status: err.$metadata?.httpStatusCode || 500, body: err.message };
+  }
 }
 const fs = require('fs');
 const TMPL_DIR = path.join(__dirname, 'templates');
