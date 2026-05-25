@@ -17,12 +17,13 @@
 
 ## 수정 이력
 
-### [2026-05-26] server.js — Key 인코딩 제거 + Buffer 사용
+### [2026-05-26] server.js — R2 연결 테스트 API + 상세 로그
 - 파일: server.js
-- 수정: encodeURIComponent 제거, Body를 Buffer로 변환
-- 이유: AWS SDK가 Key 자동 인코딩 → 이중 인코딩 방지
-- 변경: 'test' → 'test.json' (직접), JSON.stringify → Buffer.from
-- 참고: region: 'us-east-1' 유지
+- 추가: /api/test-r2 엔드포인트 (ListObjectsV2 테스트)
+- 추가: r2Request 함수 상세 에러 로그 (name, code, requestId, stack)
+- 추가: /api/debug-env에 credentials prefix 출력
+- 목적: 서명 오류 원인 정확히 파악
+- 참고: region: 'us-east-1', @aws-sdk/client-s3 사용 중
 
 ### [2026-05-26] server.js — R2 AWS SDK 시도 (실패)
 - 파일: server.js

@@ -20,16 +20,27 @@ const s3 = new S3Client({
 });
 
 async function r2Request(method, key, body, contentType) {
-  console.log('[R2 Request]', { method, key, bucket: R2_BUCKET, region: 'us-east-1' });
+  console.log('[R2 Request]', {
+    method,
+    key,
+    bucket: R2_BUCKET,
+    region: 'us-east-1',
+    endpoint: R2_ENDPOINT,
+    bodyLength: body ? (typeof body === 'string' ? body.length : body.length) : 0,
+    contentType: contentType || 'application/json'
+  });
+
   try {
     if (method === 'PUT') {
-      await s3.send(new PutObjectCommand({
+      const cmd = new PutObjectCommand({
         Bucket: R2_BUCKET,
         Key: key,
         Body: body,
         ContentType: contentType || 'application/json'
-      }));
-      console.log('[R2 PUT OK]', key);
+      });
+      console.log('[R2 PUT] Sending command...', { Bucket: R2_BUCKET, Key: key });
+      const result = await s3.send(cmd);
+      console.log('[R2 PUT OK]', { key, etag: result.ETag });
       return { status: 200, body: '' };
     }
 
@@ -54,8 +65,20 @@ async function r2Request(method, key, body, contentType) {
 
     throw new Error('Unsupported method: ' + method);
   } catch (err) {
-    console.error('[R2 Error]', err);
-    return { status: err.$metadata?.httpStatusCode || 500, body: err.message };
+    console.error('[R2 Error] 상세 정보:', {
+      name: err.name,
+      message: err.message,
+      code: err.Code || err.code,
+      statusCode: err.$metadata?.httpStatusCode,
+      requestId: err.$metadata?.requestId,
+      method,
+      key,
+      bucket: R2_BUCKET,
+      endpoint: R2_ENDPOINT,
+      credentialsPrefix: R2_ACCESS_KEY.substring(0, 4)
+    });
+    console.error('[R2 Error] Full stack:', err.stack);
+    return { status: err.$metadata?.httpStatusCode || 500, body: JSON.stringify({ name: err.name, message: err.message, code: err.Code || err.code }) };
   }
 }
 const fs = require('fs');
@@ -76,11 +99,72 @@ app.get('/api/debug-env', (req, res) => {
   res.json({
     hasAccessKey: !!(process.env.R2_ACCESS_KEY_ID),
     accessKeyLen: (process.env.R2_ACCESS_KEY_ID||'').length,
+    accessKeyPrefix: (process.env.R2_ACCESS_KEY_ID||'').substring(0, 4),
     hasSecret: !!(process.env.R2_SECRET_ACCESS_KEY),
     secretLen: (process.env.R2_SECRET_ACCESS_KEY||'').length,
+    secretPrefix: (process.env.R2_SECRET_ACCESS_KEY||'').substring(0, 4),
     endpoint: process.env.R2_ENDPOINT,
     bucket: process.env.R2_BUCKET,
+    region: 'us-east-1'
   });
+});
+
+app.get('/api/test-r2', async (req, res) => {
+  console.log('[R2 Test] Starting connection test...');
+  try {
+    console.log('[R2 Test] Config:', {
+      endpoint: R2_ENDPOINT,
+      bucket: R2_BUCKET,
+      region: 'us-east-1',
+      accessKeyPrefix: R2_ACCESS_KEY.substring(0, 4),
+      accessKeyLength: R2_ACCESS_KEY.length,
+      secretLength: R2_SECRET_KEY.length
+    });
+
+    const result = await s3.send(new ListObjectsV2Command({
+      Bucket: R2_BUCKET,
+      MaxKeys: 1
+    }));
+
+    console.log('[R2 Test] SUCCESS:', {
+      objectCount: result.KeyCount,
+      isTruncated: result.IsTruncated
+    });
+
+    res.json({
+      ok: true,
+      message: 'R2 연결 성공',
+      objectCount: result.KeyCount,
+      config: {
+        endpoint: R2_ENDPOINT,
+        bucket: R2_BUCKET,
+        region: 'us-east-1'
+      }
+    });
+  } catch (err) {
+    console.error('[R2 Test] FAILED:', {
+      name: err.name,
+      message: err.message,
+      code: err.Code || err.code,
+      statusCode: err.$metadata?.httpStatusCode,
+      requestId: err.$metadata?.requestId,
+      stack: err.stack
+    });
+
+    res.status(500).json({
+      ok: false,
+      error: err.message,
+      name: err.name,
+      code: err.Code || err.code,
+      statusCode: err.$metadata?.httpStatusCode,
+      details: {
+        endpoint: R2_ENDPOINT,
+        bucket: R2_BUCKET,
+        region: 'us-east-1',
+        credentialsOk: !!(R2_ACCESS_KEY && R2_SECRET_KEY)
+      }
+    });
+  }
 });
 // 템플릿 목록
 app.get('/api/templates', async (req, res) => {
