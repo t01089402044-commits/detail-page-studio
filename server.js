@@ -6,10 +6,10 @@ const path = require('path');
 const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const r2 = new S3Client({
   region: 'auto',
-  endpoint: process.env.R2_ENDPOINT,
+  endpoint: (process.env.R2_ENDPOINT||'').trim(),
   credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+    accessKeyId: (process.env.R2_ACCESS_KEY_ID||'').trim(),
+    secretAccessKey: (process.env.R2_SECRET_ACCESS_KEY||'').trim(),
   },
 });
 const R2_BUCKET = process.env.R2_BUCKET || 'dps-templates';
