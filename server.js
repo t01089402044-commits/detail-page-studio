@@ -26,14 +26,14 @@ async function r2Request(method, key, body, contentType) {
   const service = 's3';
   const bodyHash = body ? hash(typeof body==='string'?body:body.toString()) : hash('');
   const headers = {
+    'content-type': contentType || 'application/octet-stream',
     'host': url.host,
-    'x-amz-date': date,
     'x-amz-content-sha256': bodyHash,
-    ...(contentType ? {'content-type': contentType} : {}),
+    'x-amz-date': date,
   };
   const signedHeaders = Object.keys(headers).sort().join(';');
   const canonicalHeaders = Object.keys(headers).sort().map(k=>`${k}:${headers[k]}\n`).join('');
-  const canonicalRequest = [method, url.pathname, url.search.slice(1)||'', canonicalHeaders, signedHeaders, bodyHash].join('\n');
+  const canonicalRequest = [method, url.pathname, url.search ? url.search.slice(1) : '', canonicalHeaders, signedHeaders, bodyHash].join('\n');
   const credentialScope = `${dateShort}/${region}/${service}/aws4_request`;
   const stringToSign = ['AWS4-HMAC-SHA256', date, credentialScope, hash(canonicalRequest)].join('\n');
   const signingKey = hmac(hmac(hmac(hmac('AWS4'+R2_SECRET_KEY, dateShort), region), service), 'aws4_request');
