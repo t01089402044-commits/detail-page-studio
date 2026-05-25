@@ -2035,7 +2035,6 @@ function tplSaveCurrent(){
   var arr=tplList();
   var idx=arr.findIndex(function(t){return t.name===name;});
   if(idx>=0){
-    if(!confirm('"'+name+'" 이름이 이미 있습니다. 덮어쓸까요?')) return;
     arr[idx]=snap;
   } else { arr.push(snap); }
   if(tplSaveAll(arr)){
