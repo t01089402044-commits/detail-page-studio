@@ -3,6 +3,9 @@ const puppeteer = require('puppeteer');
 const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
+const fs = require('fs');
+const TMPL_DIR = path.join(__dirname, 'templates');
+if (!fs.existsSync(TMPL_DIR)) fs.mkdirSync(TMPL_DIR);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +17,42 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/api/health', (req, res) => res.json({ ok: true }));
+// 템플릿 목록
+app.get('/api/templates', (req, res) => {
+  const files = fs.readdirSync(TMPL_DIR).filter(f => f.endsWith('.json'));
+  const list = files.map(f => {
+    const t = JSON.parse(fs.readFileSync(path.join(TMPL_DIR, f), 'utf8'));
+    return { name: t.name, savedAt: t.savedAt, width: t.width, font: t.font };
+  });
+  list.sort((a, b) => (b.savedAt || '').localeCompare(a.savedAt || ''));
+  res.json(list);
+});
+
+// 템플릿 저장
+app.post('/api/templates/save', (req, res) => {
+  const tpl = req.body;
+  if (!tpl || !tpl.name) return res.status(400).json({ error: '이름 필요' });
+  const fname = tpl.name.replace(/[^a-z0-9가-힣_-]/gi, '_') + '.json';
+  tpl.savedAt = new Date().toISOString();
+  fs.writeFileSync(path.join(TMPL_DIR, fname), JSON.stringify(tpl), 'utf8');
+  res.json({ ok: true });
+});
+
+// 템플릿 불러오기
+app.get('/api/templates/:name', (req, res) => {
+  const fname = req.params.name.replace(/[^a-z0-9가-힣_-]/gi, '_') + '.json';
+  const fpath = path.join(TMPL_DIR, fname);
+  if (!fs.existsSync(fpath)) return res.status(404).json({ error: '없음' });
+  res.json(JSON.parse(fs.readFileSync(fpath, 'utf8')));
+});
+
+// 템플릿 삭제
+app.delete('/api/templates/:name', (req, res) => {
+  const fname = req.params.name.replace(/[^a-z0-9가-힣_-]/gi, '_') + '.json';
+  const fpath = path.join(TMPL_DIR, fname);
+  if (fs.existsSync(fpath)) fs.unlinkSync(fpath);
+  res.json({ ok: true });
+});
 
 let browser = null;
 async function getBrowser() {
