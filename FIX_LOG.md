@@ -17,6 +17,13 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js — R2 서명 aws4 패키지로 교체
+- 파일: server.js, package.json
+- 수정: 직접 구현한 AWS Signature V4 코드 → aws4 패키지 사용
+- 추가: aws4 패키지 (npm install aws4)
+- 이유: R2 템플릿 저장 시 시그니처 오류 해결
+- 보호: r2Request 호출부 (템플릿 API) 동일 인터페이스 유지
+
 ### [2026-05-25] server.js — 이미지 품질 + 폰트 가독성
 - 파일: server.js
 - 수정: scale 기본값 1→2, 폰트 대기 시간 500ms→1200ms

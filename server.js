@@ -3,58 +3,47 @@ const puppeteer = require('puppeteer');
 const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
-const crypto = require('crypto');
+const aws4 = require('aws4');
 const R2_BUCKET = process.env.R2_BUCKET || 'dps-templates';
 const R2_ENDPOINT = (process.env.R2_ENDPOINT||'').trim().replace(/\/$/, '');
 const R2_ACCESS_KEY = (process.env.R2_ACCESS_KEY_ID||'').trim();
 const R2_SECRET_KEY = (process.env.R2_SECRET_ACCESS_KEY||'').trim();
 
-function hmac(key, str, enc) {
-  return crypto.createHmac('sha256', key).update(str, 'utf8').digest(enc||'buffer');
-}
-function hash(str) {
-  return crypto.createHash('sha256').update(str, 'utf8').digest('hex');
-}
 async function r2Request(method, key, body, contentType) {
   const http = require('http'), https = require('https');
   const baseUrl = R2_ENDPOINT.includes(R2_BUCKET) ? R2_ENDPOINT : `${R2_ENDPOINT}/${R2_BUCKET}`;
   const url = new URL(`${baseUrl}/${key}`);
-  const now = new Date();
-  const date = now.toISOString().replace(/[:-]/g,'').replace(/\.\d{3}/,'');
-  const dateShort = date.slice(0,8);
-  const region = 'auto';
-  const service = 's3';
-  const bodyHash = body ? hash(typeof body==='string'?body:body.toString()) : hash('');
-  const headers = {
-    'content-type': contentType || 'application/octet-stream',
-    'host': url.host,
-    'x-amz-content-sha256': bodyHash,
-    'x-amz-date': date,
+
+  const opts = {
+    host: url.hostname,
+    port: url.port || 443,
+    path: url.pathname + (url.search || ''),
+    method,
+    service: 's3',
+    region: 'auto',
+    headers: {
+      'Content-Type': contentType || 'application/octet-stream'
+    }
   };
-  const signedHeaders = Object.keys(headers).sort().join(';');
-  const canonicalHeaders = Object.keys(headers).sort().map(k=>`${k}:${headers[k]}\n`).join('');
-  const canonicalRequest = [method, url.pathname, url.search ? url.search.slice(1) : '', canonicalHeaders, signedHeaders, bodyHash].join('\n');
-  const credentialScope = `${dateShort}/${region}/${service}/aws4_request`;
-  const stringToSign = ['AWS4-HMAC-SHA256', date, credentialScope, hash(canonicalRequest)].join('\n');
-  const signingKey = hmac(hmac(hmac(hmac('AWS4'+R2_SECRET_KEY, dateShort), region), service), 'aws4_request');
-  const signature = hmac(signingKey, stringToSign, 'hex');
-  const authorization = `AWS4-HMAC-SHA256 Credential=${R2_ACCESS_KEY}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+
+  if (body) {
+    opts.body = body;
+    opts.headers['Content-Length'] = Buffer.byteLength(body);
+  }
+
+  aws4.sign(opts, {
+    accessKeyId: R2_ACCESS_KEY,
+    secretAccessKey: R2_SECRET_KEY
+  });
 
   return new Promise((resolve, reject) => {
-    const opts = {
-      hostname: url.hostname,
-      port: url.port||443,
-      path: url.pathname + (url.search||''),
-      method,
-      headers: { ...headers, 'Authorization': authorization, ...(body?{'content-length':Buffer.byteLength(body)}:{}) },
-    };
-    const req = (url.protocol==='https:'?https:http).request(opts, res => {
+    const req = (url.protocol === 'https:' ? https : http).request(opts, res => {
       const chunks = [];
       res.on('data', c => chunks.push(c));
       res.on('end', () => resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString('utf8') }));
     });
     req.on('error', reject);
-    if(body) req.write(body);
+    if (body) req.write(body);
     req.end();
   });
 }
