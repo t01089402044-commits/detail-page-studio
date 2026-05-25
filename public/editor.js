@@ -1995,8 +1995,34 @@ function toggleMobilePreview(btn){
 
 // ── 템플릿 저장/불러오기 + HTML import ──────────────────────────────────────
 var TPL_KEY='dps_templates_v1';
+// 서버 API 기반 템플릿 저장
+async function tplServerSave(snap){
+  try{
+    const res=await fetch('/api/templates/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(snap)});
+    return res.ok;
+  }catch(e){return false;}
+}
+async function tplServerList(){
+  try{
+    const res=await fetch('/api/templates');
+    return await res.json();
+  }catch(e){return[];}
+}
+async function tplServerLoad(name){
+  try{
+    const fname=name.replace(/[^a-z0-9가-힣_-]/gi,'_');
+    const res=await fetch('/api/templates/'+encodeURIComponent(fname));
+    return await res.json();
+  }catch(e){return null;}
+}
+async function tplServerDelete(name){
+  try{
+    const fname=name.replace(/[^a-z0-9가-힣_-]/gi,'_');
+    await fetch('/api/templates/'+encodeURIComponent(fname),{method:'DELETE'});
+  }catch(e){}
+}
 function tplList(){ try{ return JSON.parse(localStorage.getItem(TPL_KEY)||'[]'); }catch(e){ return []; } }
-function tplSaveAll(arr){ try{ localStorage.setItem(TPL_KEY, JSON.stringify(arr)); return true; }catch(e){ alert('저장 실패: 용량 초과(브라우저 5~10MB 한계). 이미지 줄이거나 JSON 다운로드를 사용하세요.'); return false; } }
+function tplSaveAll(arr){ try{ localStorage.setItem(TPL_KEY, JSON.stringify(arr)); return true; }catch(e){ return false; } }
 
 function tplSnapshot(name){
   var pv=document.getElementById('preview'); if(!pv) return null;
@@ -2049,24 +2075,19 @@ function tplApply(tpl){
   closeTplModal();
 }
 
-function tplSaveCurrent(){
+async function tplSaveCurrent(){
   var input=document.getElementById('tpl-name-input');
   var name=(input&&input.value||'').trim();
   if(!name){ alert('템플릿 이름을 입력하세요'); return; }
   var snap=tplSnapshot(name); if(!snap) return;
-  var arr=tplList();
-  var idx=arr.findIndex(function(t){return t.name===name;});
-  if(idx>=0){
-    arr[idx]=snap;
-  } else { arr.push(snap); }
-  var snapSize=JSON.stringify(snap).length;
-  if(snapSize>3*1024*1024){
-    if(!confirm('템플릿 크기 '+Math.round(snapSize/1024/1024*10)/10+'MB — 이미지 포함 시 저장 실패할 수 있어요. 계속할까요?')) return;
-  }
-  if(tplSaveAll(arr)){
+  showHint('⏳ 저장 중...');
+  var ok=await tplServerSave(snap);
+  if(ok){
     if(input) input.value='';
-    renderTplList();
+    await renderTplList();
     showHint('✅ "'+name+'" 저장됨');
+  } else {
+    showHint('❌ 저장 실패');
   }
 }
 
@@ -2124,12 +2145,23 @@ function _tplFromRow(btn){
   var arr=row.parentNode._tpls; if(!arr) return null;
   return arr[+row.dataset.i];
 }
-function tplLoadByRow(btn){ var t=_tplFromRow(btn); if(t) tplApply(t); }
+async function tplLoadByRow(btn){
+  var t=_tplFromRow(btn); if(!t) return;
+  showHint('⏳ 불러오는 중...');
+  var full=await tplServerLoad(t.name);
+  if(full) tplApply(full);
+  else showHint('❌ 불러오기 실패');
+}
 function tplExportByRow(btn){ var t=_tplFromRow(btn); if(t) tplExportJSON(t.name); }
-function tplDeleteByRow(btn){ var t=_tplFromRow(btn); if(t) tplDelete(t.name); }
-function renderTplList(){
+async function tplDeleteByRow(btn){
+  var t=_tplFromRow(btn); if(!t) return;
+  if(!confirm('"'+t.name+'" 삭제할까요?')) return;
+  await tplServerDelete(t.name);
+  await renderTplList();
+}
+async function renderTplList(){
   var box=document.getElementById('tpl-list'); if(!box) return;
-  var arr=tplList().slice().sort(function(a,b){return (b.savedAt||'').localeCompare(a.savedAt||'');});
+  var arr=await tplServerList();
   box._tpls=arr;
   if(arr.length===0){
     box.innerHTML='<div style="padding:24px;text-align:center;color:#94a3b8;font-size:12px;">저장된 템플릿이 없습니다</div>';
@@ -2147,10 +2179,10 @@ function renderTplList(){
   }).join('');
 }
 
-function openTplModal(){
+async function openTplModal(){
   var m=document.getElementById('tpl-modal'); if(!m) return;
   m.style.display='flex';
-  renderTplList();
+  await renderTplList();
 }
 function closeTplModal(){
   var m=document.getElementById('tpl-modal'); if(m) m.style.display='none';
