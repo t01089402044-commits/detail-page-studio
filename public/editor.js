@@ -2059,6 +2059,10 @@ function tplSaveCurrent(){
   if(idx>=0){
     arr[idx]=snap;
   } else { arr.push(snap); }
+  var snapSize=JSON.stringify(snap).length;
+  if(snapSize>3*1024*1024){
+    if(!confirm('템플릿 크기 '+Math.round(snapSize/1024/1024*10)/10+'MB — 이미지 포함 시 저장 실패할 수 있어요. 계속할까요?')) return;
+  }
   if(tplSaveAll(arr)){
     if(input) input.value='';
     renderTplList();
