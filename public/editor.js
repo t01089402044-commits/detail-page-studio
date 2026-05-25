@@ -24,7 +24,7 @@ const SEC_TMPL = {
   feat:()=>`<div class="sec-wrap s-feat">
     <div class="sec-lbl" contenteditable>Feature</div>
     <div class="s-feat-grid">
-    ${[['🌿','특징 1 제목','상품의 핵심 특징을 입력하세요.'],['💪','특징 2 제목','소재, 내구성, 착용감 등을 강조합니다.'],['✂️','특징 3 제목','디자인, 핏, 실루엣 등을 설명합니다.'],['🌊','특징 4 제목','관리 편의성, 실용성을 강조합니다.'],['🎯','특징 5 제목','계절성, 활용도를 설명합니다.'],['🔄','특징 6 제목','품질 인증 등 신뢰 내용을 담습니다.']].map(([ico,nm,desc])=>`<div class="s-feat-item" style="position:relative"><button class="del-btn" onclick="delItem('s-feat-item',this)">✕</button><button class="add-btn" onclick="addFeatItem()">+</button><div class="s-feat-ico-wrap"><div class="s-feat-ico icon-editable" onclick="openEP(this,event)">${ico}</div><button class="s-feat-ico-del" onclick="event.stopPropagation();this.previousElementSibling.textContent=''" title="아이콘 삭제">✕</button></div><div class="s-feat-name" contenteditable>${nm}</div><div class="s-feat-desc" contenteditable>${desc}</div>${izNew('특징 이미지','430 × 480px',437)}</div>`).join('')}
+    ${[['🌿','특징 1 제목','상품의 핵심 특징을 입력하세요.'],['💪','특징 2 제목','소재, 내구성, 착용감 등을 강조합니다.'],['✂️','특징 3 제목','디자인, 핏, 실루엣 등을 설명합니다.'],['🌊','특징 4 제목','관리 편의성, 실용성을 강조합니다.'],['🎯','특징 5 제목','계절성, 활용도를 설명합니다.'],['🔄','특징 6 제목','품질 인증 등 신뢰 내용을 담습니다.']].map(([ico,nm,desc])=>`<div class="s-feat-item" style="position:relative"><button class="del-btn" onclick="delItem('s-feat-item',this)">✕</button><button class="add-btn" onclick="addFeatItem()">+</button><div class="s-feat-ico-wrap"><div class="s-feat-ico icon-editable" onclick="openEP(this,event)">${ico}</div><button class="s-feat-ico-del" onclick="event.stopPropagation();this.previousElementSibling.textContent=''" title="아이콘 삭제">✕</button></div><div class="s-feat-name" contenteditable>${nm}</div><div class="s-feat-desc" contenteditable>${desc}</div>${izNew('특징 이미지','860 × 960px',437)}</div>`).join('')}
     </div>
     <div class="s-feat-img-rows" id="feat-img-rows">
       <!-- 이미지 행 동적 추가 -->
@@ -50,8 +50,8 @@ const SEC_TMPL = {
     ${izNew('메인 착용 풀컷','860 × 960px',546)}
   </div>`,
   duo:()=>`<div class="sec-wrap s-duo">
-    ${izNew('착용컷 1','430 × 680px',400)}
-    ${izNew('착용컷 2','430 × 680px',400)}
+    ${izNew('착용컷 1','50% × 680px',400)}
+    ${izNew('착용컷 2','50% × 680px',400)}
   </div>`,
   angle:()=>`<div class="sec-wrap s-angle">
     <div class="sec-hd-wrap"><div class="sec-en" contenteditable>360° View</div><div class="sec-kr" contenteditable>앞면 · 뒷면 · 측면 · 디테일</div></div>
@@ -210,7 +210,7 @@ var BG_COLORS=['#ffffff','#0c0c0c','#f8f8f8','#f5f5f5','#f9f9f9','#1a1a2e','#162
 // 유틸
 function nextId(){return 'sec_'+(++_uid);}
 function showHint(msg){var h=document.getElementById('hint');h.textContent=msg;h.style.opacity='1';clearTimeout(h._t);h._t=setTimeout(function(){h.style.opacity='0';},2500);}
-function setW(w,btn){document.getElementById('preview').style.width=w+'px';setTimeout(applyMobileScale,50);document.querySelectorAll('.wb-btn').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
+function setW(w,btn){document.getElementById('preview').style.width=w+'px';document.querySelectorAll('.wb-btn').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 function switchTab(t){document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('act',b.dataset.tab===t);});document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.toggle('act',p.id==='tab-'+t);});}
 function applyFont(v){
   if(!v) return;
@@ -225,7 +225,7 @@ function applyFont(v){
 }
 
 // ── 커스텀 폰트 픽커 (호버 프리뷰) ────────────────────────────────────────
-var _fontCommitted = "'Pretendard',sans-serif";
+var _fontCommitted = "'Gmarket Sans',sans-serif";
 function fontPickerToggle(e){
   e&&e.stopPropagation();
   var dd=document.getElementById('font-dropdown'); if(!dd) return;
@@ -773,7 +773,7 @@ function addFeatItem(){
     +'</div>'
     +'<div class="s-feat-name" contenteditable>특징 제목</div>'
     +'<div class="s-feat-desc" contenteditable>설명을 입력하세요.</div>'
-    +izNew('특징 이미지','430 × 480px',437);
+    +izNew('특징 이미지','860 × 960px',437);
   s.appendChild(d);
   d.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
   showHint('✅ 특징 항목 추가됨');
@@ -819,10 +819,7 @@ function delSlot(btn){var iz=btn.closest?btn.closest('.iz'):btn.parentElement;if
 
 /* IZ helpers for each section type */
 function izNew(label,px,h=''){
-  // 860px 캔버스 기준 실제 px 표시
-  // 50% → 실제 px 변환 표시
-  var pxDisplay=px.replace(/^50%/,'430px').replace(/^33%/,'287px').replace(/^(\d+)%/,function(m,p){ return Math.round(860*parseInt(p)/100)+'px'; });
-  return `<div class="iz"${h?' style="height:'+h+'px"':''} onclick="izClickOpen(this,event)"><button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">${label}</div><div class="iz-px">${pxDisplay||px}</div></div><input type="file" accept="image/*" onchange="pv(this)"></div>`;
+  return `<div class="iz"${h?' style="height:'+h+'px"':''} onclick="izClickOpen(this,event)"><button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">${label}</div><div class="iz-px">${px}</div></div><input type="file" accept="image/*" onchange="pv(this)"></div>`;
 }
 function addTrustItem(){
   const s=document.querySelector('.s-trust');if(!s)return;
@@ -1281,70 +1278,46 @@ function bindFT(el){ /* no-op: 문서 레벨 위임으로 처리 (호환용 stub
 
 // ── #ft 안의 폰트 픽커 (per-element, 호버 프리뷰) ──────────────────────────
 var _FT_FONTS=[
+  ["'Gmarket Sans',sans-serif","Gmarket Sans","★ 기본"],
   ["'Pretendard',sans-serif","Pretendard","쿠팡 / 토스"],
+  ["'SUIT',sans-serif","SUIT",""],
   ["'Noto Sans KR',sans-serif","Noto Sans KR","네이버"],
   ["'Gothic A1',sans-serif","Gothic A1",""],
   ["'Nanum Gothic',sans-serif","Nanum Gothic",""],
+  ["'Nanum Myeongjo',serif","Nanum Myeongjo","명조"],
   ["'Black Han Sans',sans-serif","Black Han Sans","굵은 헤딩"],
   ["'Do Hyeon',sans-serif","Do Hyeon",""],
   ["'Jua',sans-serif","Jua",""],
-  ["'Noto Serif KR',serif","Noto Serif KR","세리프"],
-  ["'GmarketSans',sans-serif","Gmarket Sans","부드럽고 친근"],
-  ["'Nanum Myeongjo',serif","Nanum Myeongjo","고급 세리프"]
 ];
 var _ftFontOrig=null;
 function _ftBuildFontDropdown(){
   var dd=document.getElementById('ft-font-dropdown'); if(!dd) return;
-  if(dd.__built) return;
-  dd.__built=true;
-  dd.innerHTML=_FT_FONTS.map(function(f){
-    return '<div class="font-opt" data-v="'+f[0]+'" style="font-family:'+f[0]+';">'+f[1]+(f[2]?' <span style="opacity:.55;font-size:9px;">'+f[2]+'</span>':'')+'</div>';
-  }).join('');
-  dd.addEventListener('mouseover', function(e){
-    var opt=e.target.closest('.font-opt'); if(!opt||!_ftEl) return;
-    _ftEl.style.fontFamily=opt.dataset.v;
+  if(dd.children.length>0) return;
+  dd.innerHTML='';
+  _FT_FONTS.forEach(function(f){
+    var opt=document.createElement('div');
+    opt.className='font-opt';
+    opt.dataset.v=f[0]; opt.dataset.l=f[1];
+    opt.style.cssText='font-family:'+f[0]+';padding:7px 10px;cursor:pointer;font-size:13px;border-radius:5px;';
+    opt.innerHTML=f[1]+(f[2]?'<span style="opacity:.5;font-size:9px;margin-left:6px;">'+f[2]+'</span>':'');
+    opt.addEventListener('mouseenter',function(){opt.style.background='rgba(255,255,255,.08)';});
+    opt.addEventListener('mouseleave',function(){opt.style.background='';});
+    dd.appendChild(opt);
   });
-  dd.addEventListener('click', function(e){
+  dd.addEventListener('mouseover',function(e){
+    var opt=e.target.closest('.font-opt');
+    if(!opt||!_ftEl||!opt.dataset||!opt.dataset.v) return;
+    try{ _ftEl.style.fontFamily=opt.dataset.v; } catch(err){}
+  });
+  dd.addEventListener('click',function(e){
     var opt=e.target.closest('.font-opt'); if(!opt||!_ftEl) return;
     _ftEl.style.fontFamily=opt.dataset.v;
-    _ftFontOrig=opt.dataset.v; // commit
+    _ftFontOrig=opt.dataset.v;
     ftFontPickerClose();
     showHint('✅ 이 텍스트의 폰트: '+opt.textContent.trim().split(' ')[0]);
   });
 }
 function ftFontPickerToggle(e){
-  if(!_ftEl){ showHint("⚠️ 텍스트를 먼저 클릭하세요"); return; }
-  var dd2=document.getElementById('ft-font-dropdown');
-  if(dd2&&dd2.style.display!=='block'){
-    _ftBuildFontDropdown();
-    var btn2=document.getElementById('ft-font-btn');
-    var r=btn2.getBoundingClientRect();
-    var dw=230;
-    var lx=r.left;
-    if(lx+dw>window.innerWidth) lx=window.innerWidth-dw-8;
-    dd2.style.left=lx+'px';
-    var dh=Math.min(300,14*36+8);
-    if(r.top>dh+8){ dd2.style.top='auto'; dd2.style.bottom=(window.innerHeight-r.top+4)+'px'; }
-    else { dd2.style.top=(r.bottom+4)+'px'; dd2.style.bottom='auto'; }
-    var cur=_ftEl?(_ftEl.style.fontFamily||window.getComputedStyle(_ftEl).fontFamily):'';
-    Array.from(dd2.children).forEach(function(opt){
-      var clean=opt.innerHTML.replace(/ ✓/g,'');
-      opt.innerHTML=clean;
-      opt.style.background='';
-      if(cur&&opt.dataset.v&&cur.includes(opt.dataset.v.replace(/'/g,'').split(',')[0])){
-        opt.style.background='rgba(99,102,241,.35)';
-        opt.innerHTML=clean+' ✓';
-      }
-    });
-  }
-  var dd=document.getElementById('ft-font-dropdown');
-  if(dd && dd.style.display!=='block'){
-    var btn=document.getElementById('ft-font-btn');
-    var rect=btn.getBoundingClientRect();
-    dd.style.left=rect.left+'px';
-    dd.style.bottom=(window.innerHeight-rect.top+4)+'px';
-    dd.style.top='auto';
-  }
   e&&e.stopPropagation();
   if(!_ftEl){ showHint('먼저 편집할 텍스트에 마우스를 올리세요'); return; }
   _ftBuildFontDropdown();
@@ -1394,14 +1367,6 @@ document.addEventListener('mouseout', function(e){
   else attach();
 })();
 
-/* jarvis-small-font-default */
-function applySmallFontDefault(el){
-  if(!el) return;
-  var sz=parseInt(window.getComputedStyle(el).fontSize)||16;
-  if(sz<=16 && !el.style.fontFamily){
-    el.style.fontFamily="'GmarketSans',sans-serif";
-  }
-}
 function ftSz(delta){
   if(!_ftEl)return;
   var cur=parseInt(window.getComputedStyle(_ftEl).fontSize)||16;
@@ -1995,24 +1960,6 @@ function showServerSplitGallery(chunks, width){
 // ── 저장 버튼 연결 ──────────────────────────────────────────────────────────
 function saveServer(opts){ captureViaServer(opts); }
 
-/* jarvis-mobile-scale */
-function applyMobileScale(){
-  var pv=document.getElementById('preview');
-  if(!pv) return;
-  var isMobile=pv.style.width&&parseInt(pv.style.width)<600;
-  if(isMobile){
-    var containerW=document.getElementById('center').offsetWidth||window.innerWidth-200;
-    var pvW=parseInt(pv.style.width)||480;
-    var scale=Math.min(1, (containerW-32)/pvW);
-    pv.style.transform='scale('+scale+')';
-    pv.style.transformOrigin='top center';
-    pv.classList.add('mobile-scale');
-  } else {
-    pv.style.transform='';
-    pv.style.transformOrigin='';
-    pv.classList.remove('mobile-scale');
-  }
-}
 function toggleMobilePreview(btn){
   var pv=document.getElementById('preview'); if(!pv) return;
   var on=pv.classList.toggle('for-mobile-capture');
@@ -2186,7 +2133,7 @@ function closeTplModal(){
 // 기본 21개 섹션으로 새로 시작
 function tplNewDefault(){
   if(!confirm('현재 작업이 사라지고 기본 템플릿으로 새로 시작합니다. 진행할까요?\n\n저장하지 않은 변경사항은 복구할 수 없습니다.')) return;
-  var TYPES=['banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
+  var TYPES=['hero','hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview'); if(!preview) return;
   preview.innerHTML='';
   for(var i=0;i<TYPES.length;i++){
@@ -2198,7 +2145,7 @@ function tplNewDefault(){
 }
 
 /*INIT_BEGIN*/(function(){
-  var TYPES=['banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
+  var TYPES=['hero','hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview');
   if(!preview){alert('❌ #preview 요소를 찾을 수 없습니다');return;}
   preview.innerHTML='';
