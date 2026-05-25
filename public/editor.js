@@ -2133,7 +2133,7 @@ function closeTplModal(){
 // 기본 21개 섹션으로 새로 시작
 function tplNewDefault(){
   if(!confirm('현재 작업이 사라지고 기본 템플릿으로 새로 시작합니다. 진행할까요?\n\n저장하지 않은 변경사항은 복구할 수 없습니다.')) return;
-  var TYPES=['hero','hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
+  var TYPES=['hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview'); if(!preview) return;
   preview.innerHTML='';
   for(var i=0;i<TYPES.length;i++){
@@ -2145,7 +2145,7 @@ function tplNewDefault(){
 }
 
 /*INIT_BEGIN*/(function(){
-  var TYPES=['hero','hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
+  var TYPES=['hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview');
   if(!preview){alert('❌ #preview 요소를 찾을 수 없습니다');return;}
   preview.innerHTML='';
