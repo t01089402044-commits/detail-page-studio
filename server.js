@@ -16,7 +16,6 @@ async function r2Request(method, key, body, contentType) {
 
   const opts = {
     host: url.hostname,
-    port: url.port || 443,
     path: url.pathname + (url.search || ''),
     method,
     service: 's3',
@@ -28,7 +27,6 @@ async function r2Request(method, key, body, contentType) {
 
   if (body) {
     opts.body = body;
-    opts.headers['Content-Length'] = Buffer.byteLength(body);
   }
 
   aws4.sign(opts, {
@@ -37,7 +35,15 @@ async function r2Request(method, key, body, contentType) {
   });
 
   return new Promise((resolve, reject) => {
-    const req = (url.protocol === 'https:' ? https : http).request(opts, res => {
+    const requestOpts = {
+      hostname: url.hostname,
+      port: url.port || 443,
+      path: opts.path,
+      method: opts.method,
+      headers: opts.headers
+    };
+
+    const req = (url.protocol === 'https:' ? https : http).request(requestOpts, res => {
       const chunks = [];
       res.on('data', c => chunks.push(c));
       res.on('end', () => resolve({ status: res.statusCode, body: Buffer.concat(chunks).toString('utf8') }));
