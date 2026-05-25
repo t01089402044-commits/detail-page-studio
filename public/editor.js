@@ -1057,10 +1057,10 @@ function aiApply(){
   setTxt('.s-story-label',r.storyLabel);
   if(r.storyTitle){var st=pv.querySelector('.s-story-title');if(st)st.innerHTML=r.storyTitle.replace(/\n/g,'<br>');}
   setTxt('.s-story-body',r.storyBody);
-  var specs=pv.querySelectorAll('.s-story-spec');
-  if(specs[0]&&r.storySpec1)specs[0].textContent=r.storySpec1;
-  if(specs[1]&&r.storySpec2)specs[1].textContent=r.storySpec2;
-  if(specs[2]&&r.storySpec3)specs[2].textContent=r.storySpec3;
+  var specEl=pv.querySelector('.s-story-spec');
+  if(specEl&&r.storySpec1){
+    specEl.innerHTML=(r.storySpec1||'')+'<br>'+(r.storySpec2||'')+'<br>'+(r.storySpec3||'');
+  }
 
   // 스타일 가이드
   var styleSec=pv.querySelector('.s-style');
