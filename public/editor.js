@@ -1427,7 +1427,11 @@ function saveHTML(){
   clone.querySelectorAll('.sec-ov,.iz-ov,.del-btn,.add-btn,.ico-btn,.resize-bar,.iz-zone-del,.tf-border,.tf-handle,.tf-dim,.tf-lock-badge,.s-size-ctrl,.feat-row-add-wrap,input[type=file]').forEach(function(e){e.remove();});
   clone.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');});
   clone.querySelectorAll('.iz-in').forEach(function(e){e.style.display='none';});
-  var styleEl=document.querySelector('style');
+  var styleEls=document.querySelectorAll('style,link[rel="stylesheet"]');
+  var allCss='';
+  styleEls.forEach(function(el){
+    if(el.tagName==='STYLE') allCss+=el.textContent;
+  });
   var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gothic+A1:wght@400;700;900&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700&family=Black+Han+Sans&family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">'
@@ -1435,7 +1439,7 @@ function saveHTML(){
 +'<link href="https://cdn.jsdelivr.net/npm/suit-fonts@1.0.0/dist/suit.css" rel="stylesheet">'
 +'<link href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.css" rel="stylesheet">'
 +'<style>@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");font-weight:500;}@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");font-weight:700;}</style>'
-    +'<style>'+(styleEl?styleEl.textContent:'')
+    +'<style>'+allCss
     +'body{margin:0;padding:0;background:#f0f0f0;}'
     +'#preview{margin:0 auto;}'
     +'</style></head><body>'
