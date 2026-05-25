@@ -22,7 +22,8 @@ const s3 = new S3Client({
   credentials: {
     accessKeyId: R2_ACCESS_KEY,
     secretAccessKey: R2_SECRET_KEY
-  }
+  },
+  forcePathStyle: true
 });
 
 async function r2Request(method, key, body, contentType) {
