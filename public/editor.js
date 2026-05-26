@@ -2027,8 +2027,9 @@ function tplSaveAll(arr){ try{ localStorage.setItem(TPL_KEY, JSON.stringify(arr)
 function tplSnapshot(name){
   var pv=document.getElementById('preview'); if(!pv) return null;
   // 오버레이 제거된 클린 HTML 추출
+  // ⚠ .tf-handle,.tf-border,.tf-dim,.tf-lock-badge는 보존 → 복원 시 크기 조절 핸들 유지
   var clone=pv.cloneNode(true);
-  clone.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.tf-handle,.tf-dim,.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
+  clone.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
   return {
     name:name||'무제',
     font: (typeof _fontCommitted!=='undefined' && _fontCommitted) || "'Pretendard',sans-serif",
@@ -2050,7 +2051,14 @@ function rebindPreview(){
       buildIzOverlay(iz);
       addBar(iz);
       var tf=iz.querySelector('.tf-wrap');
-      if(tf) bindTF(tf,iz);
+      if(tf){
+        bindTF(tf,iz);
+        // tf-wrap이 있는 iz: iz-ov(z-index:30)가 마우스 이벤트 가로채지 않도록 숨김
+        iz.querySelectorAll('.iz-ov').forEach(function(o){o.style.display='none';});
+        // file input도 비활성화 (initTF와 동일한 처리)
+        var fi=iz.querySelector('input[type=file]');
+        if(fi){fi.style.pointerEvents='none';fi.style.opacity='0';}
+      }
     });
     sec.querySelectorAll('[contenteditable]').forEach(function(el){ bindFT(el); });
   });
