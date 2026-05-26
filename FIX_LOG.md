@@ -47,6 +47,20 @@
 
 ## 수정 이력
 
+### [2026-05-26] editor.js — 템플릿 관련 깨진 한글 메시지 영어로 교체
+- **문제**: 템플릿 목록 UI에서 깨진 한글로 인해 빈 화면처럼 보임
+- **해결**: 
+  - "No saved templates" 메시지 영어 교체
+  - 버튼 텍스트 "Load", "Delete" 영어 교체
+  - confirm 메시지 'Delete "..."?' 영어 교체
+- **커밋**: `0ae29a6 fix: editor.js 템플릿 관련 깨진 한글 메시지 영어로 교체`
+
+### [2026-05-26] server.js — FTP 환경변수 없을 때 fallback 처리
+- **문제**: Railway에서 FTP 환경변수 미설정 시 `/api/templates` 500 에러
+- **해결**: FTP 환경변수 없으면 빈 배열 반환 (에러 대신 graceful degradation)
+- **테스트**: Railway API 호출 200 OK 확인
+- **커밋**: `bbf332a fix: FTP 환경변수 없을 때 fallback 처리`
+
 ### [2026-05-26] server.js — 템플릿 저장을 FTP로 변경
 - **문제**: Railway는 ephemeral filesystem → 재배포 시 로컬 `templates/` 폴더 사라짐
 - **해결**: 템플릿 저장/불러오기를 FTP로 변경 (이미지 업로드와 동일한 방식)
