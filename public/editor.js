@@ -288,28 +288,15 @@ function uploadToFTP(dataURL){
   });
 }
 
-// 이미지 자동 압축: 너비 860px 초과 시 Canvas로 리사이즈, JPEG 0.8로 인코딩
-// 작거나 같으면 원본 dataURL 그대로 사용. 이후 FTP에 업로드해 URL을 콜백으로 전달
-// 업로드 실패 시 dataURL을 fallback으로 콜백
+// 이미지 처리: 원본 그대로 FTP에 업로드 (해상도 100% 유지, 리사이즈/재인코딩 없음)
+// naturalWidth/Height만 측정해서 initTF에 전달. 업로드 실패 시 dataURL을 fallback으로 사용
 function compressImage(file, cb){
   var reader=new FileReader();
   reader.onload=function(e){
+    var src=e.target.result;
     var img=new Image();
     img.onload=function(){
-      var MAX_W=860;
-      var src, w, h;
-      if(img.naturalWidth<=MAX_W){
-        src=e.target.result; w=img.naturalWidth; h=img.naturalHeight;
-      } else {
-        w=MAX_W;
-        h=Math.round(MAX_W*(img.naturalHeight/img.naturalWidth));
-        var canvas=document.createElement('canvas');
-        canvas.width=w; canvas.height=h;
-        var ctx=canvas.getContext('2d');
-        ctx.drawImage(img,0,0,w,h);
-        try{ src=canvas.toDataURL('image/jpeg',0.8); }
-        catch(err){ src=e.target.result; w=img.naturalWidth; h=img.naturalHeight; }
-      }
+      var w=img.naturalWidth, h=img.naturalHeight;
       showHint('⏳ 이미지 업로드 중...');
       uploadToFTP(src).then(function(url){
         showHint('✅ 업로드 완료');
@@ -320,7 +307,7 @@ function compressImage(file, cb){
         cb(src, w, h);
       });
     };
-    img.src=e.target.result;
+    img.src=src;
   };
   reader.readAsDataURL(file);
 }

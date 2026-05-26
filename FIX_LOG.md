@@ -47,6 +47,13 @@
 
 ## 수정 이력
 
+### [2026-05-26] editor.js — 이미지 해상도 100% (압축 제거)
+- 파일: public/editor.js
+- 수정: `compressImage()`에서 Canvas 리사이즈 + JPEG 0.8 재인코딩 로직 제거
+- 결과: 원본 파일을 그대로 base64 → FTP 업로드. naturalWidth/Height만 측정해서 initTF에 전달
+- 영향: 파일 용량은 커지지만 해상도/품질 100% 유지 (express.json 100mb 한도 내)
+- 교훈: 상세페이지는 retina/캡처용 고해상도 필수. 클라이언트 압축은 오버 엔지니어링이었음
+
 ### [2026-05-26] server.js — FTP 업로드 한글 경로/인코딩 디버깅 및 수정
 - 파일: server.js, package.json (iconv-lite 추가)
 - 증상: 업로드는 200 OK + URL 반환되지만 브라우저에서 액박. `/api/uploads` 목록은 항상 `[]`
