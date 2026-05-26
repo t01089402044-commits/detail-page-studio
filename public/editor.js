@@ -2404,9 +2404,9 @@ async function uploadsDeleteDuplicates(){
   }
 }
 
-// 기본 21�??�션?�로 ?�로 ?�작
+// Start fresh with default 21-section template
 function tplNewDefault(){
-  if(!confirm('?�재 ?�업???�라지�?기본 ?�플릿으�??�로 ?�작?�니?? 진행?�까??\n\n?�?�하지 ?��? 변경사??? 복구?????�습?�다.')) return;
+  if(!confirm('Reset current work and start fresh with default template (21 sections)?\n\nUnsaved changes will be lost.')) return;
   var TYPES=['hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview'); if(!preview) return;
   preview.innerHTML='';
@@ -2415,13 +2415,13 @@ function tplNewDefault(){
   }
   document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
   closeTplModal();
-  showHint('?�� 기본 ?�플릿으�??�작 (21�??�션)');
+  showHint('Reset to default template (21 sections)');
 }
 
 /*INIT_BEGIN*/(function(){
   var TYPES=['hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview');
-  if(!preview){alert('??#preview ?�소�?찾을 ???�습?�다');return;}
+  if(!preview){alert('Error: #preview element not found');return;}
   preview.innerHTML='';
   var ok=0, fail=[];
   for(var i=0;i<TYPES.length;i++){
@@ -2434,18 +2434,18 @@ function tplNewDefault(){
     }
   }
   if(ok===0){
-    // ?�체 ?�패 ???�면???�시
+    // All sections failed to load - show error
     preview.innerHTML='<div style="padding:40px;color:#dc2626;font-family:sans-serif;">'
-      +'<h2>?�️ ?�션 로드 ?�패</h2>'
+      +'<h2>Section Load Failed</h2>'
       +'<p>'+fail.join('<br>')+'</p>'
-      +'<button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;background:#4f9cf9;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;">?�� ?�로고침</button>'
+      +'<button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;background:#4f9cf9;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;">Reload Page</button>'
       +'</div>';
   } else if(fail.length>0){
-    console.warn('?��? ?�션 ?�패:', fail);
+    console.warn('Some sections failed:', fail);
   }
-  try{renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){console.warn('EP 초기???�류:',e);}
+  try{renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){console.warn('EP init error:',e);}
   document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
-  // ?�체 ?�스???�바 ?�결
+  // Bind text formatting toolbar to all contenteditable
   setTimeout(function(){
     document.querySelectorAll('#preview [contenteditable]').forEach(function(el){
       if(typeof bindFT==='function')bindFT(el);
