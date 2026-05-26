@@ -267,7 +267,7 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 else _initFontPicker();
 function openAddModal(){var m=document.getElementById('add-modal');if(m)m.classList.add('show');}
 function closeAddModal(){var m=document.getElementById('add-modal');if(m)m.classList.remove('show');}
-function setJpgScale(s,btn){_jpgScale=s+1;document.querySelectorAll('#jpg-1x,#jpg-2x').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
+function setJpgScale(s,btn){_jpgScale=s;document.querySelectorAll('#jpg-1x,#jpg-2x').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 const TF={active:null,drag:null};
 
 // 압축된 dataURL을 서버(/api/upload)로 보내 FTP에 저장 → public URL 반환
@@ -1151,7 +1151,7 @@ function buildClean(){
   return clone;
 }
 
-async function saveJPG(){await doSave(_jpgScale||3,'jpg');}
+async function saveJPG(){await doSave(_jpgScale||1,'jpg');}
 async function savePNG(){await doSave(3,'png');}
 function dlTrigger(url,name){
   // 1차: 직접 다운로드 시도
@@ -1181,16 +1181,18 @@ async function doSave(scale, fmt){
   if(API){
     try{
       const html = document.documentElement.outerHTML;
+      // scale=1: 860px, scale=2: 1720px, scale=3: 2580px (width * scale, deviceScaleFactor=1)
+      const targetWidth = 860 * (scale || 1);
       const res = await fetch(API + '/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 95, scale })
+        body: JSON.stringify({ html, width: targetWidth, scale: 1, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98 })
       });
       if(!res.ok) throw new Error('서버 오류: ' + res.status);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       showImgModal(url, fmt, true);
-      showHint('✅ 서버 고화질 캡처 완료! 우클릭 → 저장');
+      showHint(`✅ ${targetWidth}px 고화질 캡처 완료! 우클릭 → 저장`);
       return;
     } catch(err){
       console.warn('서버 캡처 실패, html2canvas로 폴백:', err);

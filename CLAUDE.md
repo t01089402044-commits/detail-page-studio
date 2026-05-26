@@ -67,6 +67,39 @@ node server.js
 - 잘못하면 한글 전체 깨져서 SyntaxError 발생
 - **파일 수정은 Edit tool 사용 권장** (PowerShell 대신)
 
+## 서브 에이전트 역할
+### Dev Agent (개발)
+- 코드 수정 (Edit tool)
+- 파일 구조 변경
+- git add, commit, push
+
+### QA Agent (품질 검증)
+- `node -c` 문법 체크
+- UTF-8 인코딩 확인
+- API 엔드포인트 로컬 테스트
+- 로그 확인
+
+### Deploy Agent (배포)
+- Railway 배포 대기 (2분)
+- URL 헬스체크 (`/api/health`)
+- API 응답 확인
+
+### Monitor Agent (모니터링)
+- 실제 브라우저 동작 확인 요청
+- 사용자 피드백 수집
+- 버그 리포트 정리
+
+## 작업 흐름
+```
+Dev → QA → Deploy → Monitor → 총괄 보고
+```
+
+1. **Dev**: 코드 수정 완료
+2. **QA**: 문법/인코딩/로컬 테스트 통과 ✓
+3. **Deploy**: git push → Railway 배포 → 헬스체크 ✓
+4. **Monitor**: 브라우저 실제 동작 확인 요청
+5. **총괄**: 모든 단계 완료 후 최종 보고
+
 ## 문제 해결 순서
 1. **증거 수집** (git log, 코드 확인)
 2. **원인 특정** (어느 커밋, 어느 줄)

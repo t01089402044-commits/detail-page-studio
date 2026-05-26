@@ -47,7 +47,40 @@
 
 ## 수정 이력
 
-### [2026-05-26] editor.js — 템플릿 관련 깨진 한글 메시지 영어로 교체
+### [2026-05-26] editor.js — 2× 고화질 버튼 해상도 수정
+- **문제**: 2× 버튼 클릭 시 860px로 저장됨 (1720px 아님)
+- **원인**: 
+  - `setJpgScale(s,btn)` → `_jpgScale = s+1` (불필요한 +1)
+  - `doSave(scale)` → `deviceScaleFactor=scale` (픽셀 밀도만 높임, 실제 해상도 증가 없음)
+- **해결**:
+  - `setJpgScale` → s+1 제거, `_jpgScale = s`
+  - `doSave` → `width = 860 * scale`, `deviceScaleFactor = 1`
+  - 2× 버튼 → 1720px 실제 출력
+- **변경**:
+  - scale=1: 860px
+  - scale=2: 1720px
+  - scale=3: 2580px
+- **검증**: `node -c public/editor.js` ✓
+
+### [2026-05-26] CLAUDE.md — 서브 에이전트 구성 추가
+- Dev Agent (개발)
+- QA Agent (품질 검증)
+- Deploy Agent (배포)
+- Monitor Agent (모니터링)
+- 작업 흐름: Dev → QA → Deploy → Monitor → 총괄 보고
+
+### [2026-05-26] editor.js — 한글 깨짐 수정 (SyntaxError 해결)
+- **문제**: PowerShell이 UTF-8 인코딩 없이 파일 저장 → 한글 전체 깨짐 → SyntaxError
+- **증상**: 브라우저에서 editor.js 로드 실패, #preview 빈 화면
+- **해결**: 
+  - ce39657 커밋(한글 정상)으로 editor.js 복원
+  - quality 0.97→0.98만 UTF-8 인코딩으로 재적용
+  - `(Get-Content -Encoding UTF8) | Set-Content -Encoding UTF8` 사용
+- **교훈**: PowerShell 파일 수정 시 반드시 `-Encoding UTF8` 필수
+- **확인**: `node -c public/editor.js` SyntaxError 없음 ✓
+- **커밋**: `1467ac9 fix: editor.js 한글 깨짐 수정`
+
+### [2026-05-26] editor.js — 템플릿 관련 깨진 한글 메시지 영어로 교체 (REVERTED)
 - **문제**: 템플릿 목록 UI에서 깨진 한글로 인해 빈 화면처럼 보임
 - **해결**: 
   - "No saved templates" 메시지 영어 교체
