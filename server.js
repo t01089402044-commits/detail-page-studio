@@ -14,6 +14,7 @@ const FTP_USER = process.env.FTP_USER || '';
 const FTP_PASS = process.env.FTP_PASS || '';
 // This hosting's documentroot is FTP /public/, so FTP path must include /public/
 const FTP_REMOTE_DIR = process.env.FTP_REMOTE_DIR || '/public/SE2/upload/detail-page/';
+const FTP_TEMPLATE_DIR = process.env.FTP_TEMPLATE_DIR || '/public/SE2/upload/templates/';
 // FTP server path encoding (Korean hosting typically uses cp949/euc-kr)
 const FTP_PATH_ENCODING = process.env.FTP_PATH_ENCODING || 'cp949';
 // Public URL base - calculated below from FTP_REMOTE_DIR if not set
@@ -53,9 +54,6 @@ if (!FTP_PUBLIC_BASE) {
   FTP_PUBLIC_BASE = 'https://xngolf.co.kr' + encodedPath;
 }
 
-const TMPL_DIR = path.join(__dirname, 'templates');
-if (!fs.existsSync(TMPL_DIR)) fs.mkdirSync(TMPL_DIR);
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -71,51 +69,87 @@ function safeName(name) {
   return name.replace(/[^\w]/gi, '_');
 }
 
-// Template list
-app.get('/api/templates', (req, res) => {
+// Template list (from FTP)
+app.get('/api/templates', async (req, res) => {
+  let client;
   try {
-    const files = fs.readdirSync(TMPL_DIR).filter(f => f.endsWith('.json'));
-    const list = files.map(f => {
+    client = await ftpConnect();
+    await client.ensureDir(encPath(FTP_TEMPLATE_DIR));
+    const items = await client.list(encPath(FTP_TEMPLATE_DIR));
+    const list = [];
+    for (const it of items) {
+      if (!it.isFile || !/\.json$/i.test(it.name)) continue;
       try {
-        const t = JSON.parse(fs.readFileSync(path.join(TMPL_DIR, f), 'utf8'));
-        return { name: t.name, savedAt: t.savedAt, width: t.width, font: t.font };
-      } catch { return null; }
-    }).filter(Boolean);
+        const content = await client.downloadToBuffer(encPath(FTP_TEMPLATE_DIR.replace(/\/$/, '') + '/' + it.name));
+        const t = JSON.parse(content.toString('utf8'));
+        list.push({ name: t.name, savedAt: t.savedAt, width: t.width, font: t.font });
+      } catch (e) {
+        console.error('[FTP template list] Failed to parse', it.name, e.message);
+      }
+    }
     list.sort((a, b) => (b.savedAt || '').localeCompare(a.savedAt || ''));
     res.json(list);
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) {
+    console.error('[FTP template list error]', e.message);
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
 });
 
-// Save template
-app.post('/api/templates/save', (req, res) => {
+// Save template (to FTP)
+app.post('/api/templates/save', async (req, res) => {
+  let client;
   try {
     const tpl = req.body;
     if (!tpl || !tpl.name) return res.status(400).json({ error: 'name required' });
     const fname = safeName(tpl.name) + '.json';
     tpl.savedAt = new Date().toISOString();
-    fs.writeFileSync(path.join(TMPL_DIR, fname), JSON.stringify(tpl), 'utf8');
+    const content = JSON.stringify(tpl, null, 2);
+
+    client = await ftpConnect();
+    await client.ensureDir(encPath(FTP_TEMPLATE_DIR));
+    await client.uploadFrom(Readable.from(Buffer.from(content, 'utf8')), encPath(FTP_TEMPLATE_DIR.replace(/\/$/, '') + '/' + fname));
     res.json({ ok: true });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) {
+    console.error('[FTP template save error]', e.message);
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
 });
 
-// Load template
-app.get('/api/templates/:name', (req, res) => {
+// Load template (from FTP)
+app.get('/api/templates/:name', async (req, res) => {
+  let client;
   try {
     const fname = safeName(req.params.name) + '.json';
-    const fpath = path.join(TMPL_DIR, fname);
-    if (!fs.existsSync(fpath)) return res.status(404).json({ error: 'not found' });
-    res.json(JSON.parse(fs.readFileSync(fpath, 'utf8')));
-  } catch (e) { res.status(500).json({ error: e.message }); }
+    client = await ftpConnect();
+    const content = await client.downloadToBuffer(encPath(FTP_TEMPLATE_DIR.replace(/\/$/, '') + '/' + fname));
+    res.json(JSON.parse(content.toString('utf8')));
+  } catch (e) {
+    console.error('[FTP template load error]', e.message);
+    if (e.code === 550) return res.status(404).json({ error: 'not found' });
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
 });
 
-// Delete template
-app.delete('/api/templates/:name', (req, res) => {
+// Delete template (from FTP)
+app.delete('/api/templates/:name', async (req, res) => {
+  let client;
   try {
     const fname = safeName(req.params.name) + '.json';
-    const fpath = path.join(TMPL_DIR, fname);
-    if (fs.existsSync(fpath)) fs.unlinkSync(fpath);
+    client = await ftpConnect();
+    await client.remove(encPath(FTP_TEMPLATE_DIR.replace(/\/$/, '') + '/' + fname));
     res.json({ ok: true });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) {
+    console.error('[FTP template delete error]', e.message);
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
 });
 
 // Create FTP client and ensure remote directory exists
