@@ -1189,9 +1189,12 @@ async function doSave(scale, fmt){
       // 프리뷰를 목표 너비로 임시 조정 (container query 반영 위해)
       pv.style.width = targetWidth + 'px';
       console.log('[DEBUG] Resized preview to:', targetWidth, 'px');
+      console.log('[DEBUG] Preview offsetWidth before wait:', pv.offsetWidth);
 
       // 폰트 리스케일 및 레이아웃 재계산 대기 (html2canvas와 동일한 로직)
       await new Promise(r => setTimeout(r, 700));
+
+      console.log('[DEBUG] Preview offsetWidth after wait:', pv.offsetWidth);
 
       // CSS 수집
       const styleEls = document.querySelectorAll('style,link[rel="stylesheet"]');
@@ -1206,6 +1209,8 @@ async function doSave(scale, fmt){
         +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>';
       const fullHtml = html + '<div id="preview" style="width:'+targetWidth+'px">'+pv.innerHTML+'</div></body></html>';
 
+      console.log('[DEBUG] Sending to server - width:', targetWidth, 'html length:', fullHtml.length);
+
       const res = await fetch(API + '/api/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1215,11 +1220,14 @@ async function doSave(scale, fmt){
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       showImgModal(url, fmt, true);
+      console.log('[DEBUG] Capture success! Blob size:', blob.size);
       showHint(`✅ ${targetWidth}px 고화질 캡처 완료! 우클릭 → 저장`);
       return;
     } catch(err){
+      console.error('[DEBUG] Puppeteer 캡처 실패:', err);
       console.warn('서버 캡처 실패, html2canvas로 폴백:', err);
     } finally {
+      console.log('[DEBUG] Restoring original width:', origW);
       pv.style.width = origW;  // 원본 너비 복원
     }
   }
