@@ -1207,7 +1207,9 @@ async function doSave(scale, fmt){
         +'<link href="https://cdn.jsdelivr.net/npm/suit-fonts@1.0.0/dist/suit.css" rel="stylesheet">'
         +'<style>@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");font-weight:500;}@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");font-weight:700;}</style>'
         +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>';
-      const fullHtml = html + '<div id="preview" style="width:'+targetWidth+'px">'+pv.innerHTML+'</div></body></html>';
+
+      // outerHTML 사용 (전체 #preview 태그 포함, width 이미 targetWidth로 설정됨)
+      const fullHtml = html + pv.outerHTML + '</body></html>';
 
       console.log('[DEBUG] Sending to server - width:', targetWidth, 'html length:', fullHtml.length);
 
