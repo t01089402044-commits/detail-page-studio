@@ -1629,22 +1629,49 @@ async function saveSplit(targetW, scale, maxH){
   showHint('⏳ 0 / ' + sections.length + ' 캡처 중...');
 
   try{
-    // ── 1. 섹션별 개별 캡처 ─────────────────────────────────────────────
+    // ── 1. 섹션별 개별 캡처 (보이지 않거나 크기 0인 섹션은 건너뜀) ─────────
     const captured = [];
+    let skippedN = 0;
     for(let i = 0; i < sections.length; i++){
+      const sec = sections[i];
       showHint('⏳ ' + (i+1) + ' / ' + sections.length + ' 캡처 중...');
-      const cv = await html2canvas(sections[i], {
-        scale        : scale,
-        useCORS      : true,
-        allowTaint   : true,
-        backgroundColor: null,   // 섹션 배경색 유지
-        logging      : false,
-        imageTimeout : 12000,
-        ignoreElements: skipEl,
-      });
+      // 가시성 + 크기 검사
+      const rect = sec.getBoundingClientRect();
+      const visible = sec.offsetParent !== null && rect.width > 0 && rect.height > 0;
+      if(!visible){
+        skippedN++;
+        console.warn('[saveSplit] skip section', i, 'visible=', visible, 'w=', rect.width, 'h=', rect.height);
+        continue;
+      }
+      let cv;
+      try {
+        cv = await html2canvas(sec, {
+          scale        : scale,
+          useCORS      : true,
+          allowTaint   : true,
+          backgroundColor: null,   // 섹션 배경색 유지
+          logging      : false,
+          imageTimeout : 12000,
+          ignoreElements: skipEl,
+        });
+      } catch(e) {
+        skippedN++;
+        console.warn('[saveSplit] html2canvas threw on section', i, e.message);
+        continue;
+      }
+      if(!cv || !cv.width || !cv.height){
+        skippedN++;
+        console.warn('[saveSplit] zero-size canvas, section', i, 'w=', cv && cv.width, 'h=', cv && cv.height);
+        continue;
+      }
       captured.push(cv);
       await new Promise(r => setTimeout(r, 30)); // 브라우저 숨 고르기
     }
+
+    if(!captured.length){
+      throw new Error('캡처할 수 있는 섹션이 없습니다 (전부 비어있거나 숨김 상태).');
+    }
+    if(skippedN > 0) console.info('[saveSplit] 스킵된 섹션:', skippedN, '/', sections.length);
 
     // ── 2. 3500px 기준으로 그룹핑 ───────────────────────────────────────
     const chunks = [];
@@ -1666,8 +1693,12 @@ async function saveSplit(targetW, scale, maxH){
     const results = [];
     for(let ci = 0; ci < chunks.length; ci++){
       const chunk = chunks[ci];
-      const w = chunk[0].width;
+      const w = Math.max.apply(null, chunk.map(function(c){ return c.width; }));
       const h = chunk.reduce(function(s, cv){ return s + cv.height; }, 0);
+      if(!w || !h){
+        console.warn('[saveSplit] empty chunk skipped, idx=', ci);
+        continue;
+      }
 
       const final = document.createElement('canvas');
       final.width  = w;
@@ -1678,6 +1709,7 @@ async function saveSplit(targetW, scale, maxH){
 
       let y = 0;
       for(const cv of chunk){
+        if(!cv.width || !cv.height) continue; // 0 canvas 최종 가드
         ctx.drawImage(cv, 0, y);
         y += cv.height;
       }
@@ -1828,16 +1860,41 @@ async function saveOptimizedSplit(){
   var sections = Array.from(document.querySelectorAll('#preview > .sec-wrap'));
   var captured = [];
   try{
+    var skippedN = 0;
     for(var i=0;i<sections.length;i++){
       showHint('⏳ '+(i+1)+'/'+sections.length+' 캡처 중 (모바일 최적화)...');
-      var cv = await html2canvas(sections[i],{
-        scale:1, useCORS:true, allowTaint:true,
-        backgroundColor:null, logging:false, imageTimeout:12000,
-        ignoreElements:skipEl,
-      });
+      var rect = sections[i].getBoundingClientRect();
+      var visible = sections[i].offsetParent !== null && rect.width > 0 && rect.height > 0;
+      if(!visible){
+        skippedN++;
+        console.warn('[saveOptimizedSplit] skip section', i, 'w=', rect.width, 'h=', rect.height);
+        continue;
+      }
+      var cv;
+      try{
+        cv = await html2canvas(sections[i],{
+          scale:1, useCORS:true, allowTaint:true,
+          backgroundColor:null, logging:false, imageTimeout:12000,
+          ignoreElements:skipEl,
+        });
+      } catch(e){
+        skippedN++;
+        console.warn('[saveOptimizedSplit] html2canvas threw on section', i, e.message);
+        continue;
+      }
+      if(!cv || !cv.width || !cv.height){
+        skippedN++;
+        console.warn('[saveOptimizedSplit] zero-size canvas, section', i);
+        continue;
+      }
       captured.push(cv);
       await new Promise(r=>setTimeout(r,30));
     }
+    if(!captured.length){
+      throw new Error('캡처할 수 있는 섹션이 없습니다 (전부 비어있거나 숨김 상태).');
+    }
+    if(skippedN > 0) console.info('[saveOptimizedSplit] 스킵된 섹션:', skippedN, '/', sections.length);
+
     var chunks=[], group=[], groupH=0;
     for(var ci=0;ci<captured.length;ci++){
       if(group.length>0 && groupH+captured[ci].height>3500){
@@ -1849,14 +1906,18 @@ async function saveOptimizedSplit(){
 
     var results=[];
     for(var k=0;k<chunks.length;k++){
-      var w=chunks[k][0].width;
+      var w=Math.max.apply(null, chunks[k].map(function(c){ return c.width; }));
       var h=chunks[k].reduce(function(s,v){return s+v.height;},0);
+      if(!w || !h){ console.warn('[saveOptimizedSplit] empty chunk skipped, idx=', k); continue; }
       var final=document.createElement('canvas');
       final.width=w; final.height=h;
       var ctx=final.getContext('2d');
       ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
       var y=0;
-      for(var j=0;j<chunks[k].length;j++){ ctx.drawImage(chunks[k][j],0,y); y+=chunks[k][j].height; }
+      for(var j=0;j<chunks[k].length;j++){
+        if(!chunks[k][j].width || !chunks[k][j].height) continue; // 0 canvas 최종 가드
+        ctx.drawImage(chunks[k][j],0,y); y+=chunks[k][j].height;
+      }
       results.push({dataUrl:final.toDataURL('image/jpeg',0.97),w:w,h:h,idx:k+1,total:chunks.length});
     }
     showSplitGallery(results,860,2);

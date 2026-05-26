@@ -206,6 +206,33 @@ app.delete('/api/uploads/:name', async (req, res) => {
   }
 });
 
+// 외부 이미지를 same-origin으로 proxy (html2canvas의 CORS taint 회피용)
+// SSRF 방지: 환경변수 IMG_PROXY_ALLOW (콤마 구분) 또는 기본 xngolf.co.kr 만 허용
+const IMG_PROXY_ALLOW = (process.env.IMG_PROXY_ALLOW || 'xngolf.co.kr').split(',').map(s => s.trim()).filter(Boolean);
+app.get('/api/img-proxy', async (req, res) => {
+  try {
+    const url = req.query.url;
+    if (!url) return res.status(400).send('url required');
+    let parsed;
+    try { parsed = new URL(url); } catch (e) { return res.status(400).send('bad url'); }
+    if (!IMG_PROXY_ALLOW.includes(parsed.host)) {
+      return res.status(403).send('forbidden host');
+    }
+    const r = await fetch(url, { redirect: 'follow' });
+    if (!r.ok) return res.status(r.status).send('upstream ' + r.status);
+    const ct = r.headers.get('content-type') || 'image/jpeg';
+    if (!ct.startsWith('image/')) return res.status(415).send('not image');
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.set('Content-Type', ct);
+    const buf = Buffer.from(await r.arrayBuffer());
+    res.send(buf);
+  } catch (e) {
+    console.error('[img-proxy]', e.message);
+    res.status(500).send(e.message);
+  }
+});
+
 let browser = null;
 async function getBrowser() {
   if (browser?.isConnected()) return browser;

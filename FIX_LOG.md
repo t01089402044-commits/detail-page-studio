@@ -47,6 +47,20 @@
 
 ## 수정 이력
 
+### [2026-05-26] editor.js + server.js — JPG 분할 저장 0-canvas 오류 + 이미지 proxy 추가
+- 파일: public/editor.js (saveSplit, saveOptimizedSplit), server.js
+- 증상: 분할 저장 시 alert "Failed to execute 'drawImage' on 'CanvasRenderingContext2D': The image argument is a canvas element with a width or height of 0."
+- 원인: 빈/숨김 섹션에서 html2canvas가 width=0 또는 height=0 canvas를 반환 → 후속 `ctx.drawImage(cv, ...)` 단계에서 throw
+- 수정 (editor.js):
+  - 캡처 직전 섹션의 `offsetParent !== null` + `getBoundingClientRect()` width/height 양수 검사 (보이지 않는 섹션 스킵)
+  - html2canvas 호출 자체를 try/catch로 감싸 캡처 실패 섹션은 captured에서 제외
+  - 결과 canvas의 width/height 0이면 captured에서 제외
+  - chunk 합치기 시 max-width 사용 (한 섹션 누락돼도 폭 계산 안정)
+  - `ctx.drawImage` 직전 한 번 더 0-가드
+  - 모든 섹션이 스킵되면 명확한 에러 throw
+- 추가 (server.js): `/api/img-proxy?url=...` — 외부 이미지를 same-origin으로 반환 (html2canvas CORS taint 대비). 화이트리스트 `IMG_PROXY_ALLOW`(기본 `xngolf.co.kr`)로 SSRF 차단
+- 교훈: html2canvas는 비가시/0-size 요소에서 무조건 에러가 아닌 0-canvas를 돌려줘서 후속 drawImage에서 터짐. 캡처 파이프라인의 모든 단계에 0-가드 필요
+
 ### [2026-05-26] editor.js — 이미지 해상도 100% (압축 제거)
 - 파일: public/editor.js
 - 수정: `compressImage()`에서 Canvas 리사이즈 + JPEG 0.8 재인코딩 로직 제거
