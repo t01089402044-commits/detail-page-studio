@@ -17,6 +17,16 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js — R2 전체 제거, 파일시스템 템플릿으로 복원
+- 파일: server.js, package.json
+- 제거: @aws-sdk/client-s3 import, S3Client, r2Request 함수
+- 제거: /api/debug-env, /api/test-r2 엔드포인트
+- 제거: package.json 의존성 @aws-sdk/client-s3, minio
+- 수정: /api/templates, /api/templates/save, /api/templates/:name (GET/DELETE) 모두 fs 기반으로 복원 (templates/ 디렉토리)
+- 추가: safeName() 헬퍼 + 모든 API에 try/catch
+- 보호: getBrowser(), /api/capture 라우트 유지
+- 교훈: R2 서명 오류 해결 시도 반복 → 파일시스템 단순화가 더 안정적
+
 ### [2026-05-26] server.js — R2 연결 테스트 API + 상세 로그
 - 파일: server.js
 - 추가: /api/test-r2 엔드포인트 (ListObjectsV2 테스트)
