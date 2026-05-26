@@ -1182,6 +1182,7 @@ async function doSave(scale, fmt){
     try{
       const pv = document.getElementById('preview');
       if(!pv) throw new Error('#preview not found');
+      console.log('[DEBUG] Original preview width:', pv.style.width, 'offsetWidth:', pv.offsetWidth);
       // CSS 수집
       const styleEls = document.querySelectorAll('style,link[rel="stylesheet"]');
       let allCss = '';
