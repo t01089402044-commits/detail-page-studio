@@ -1181,20 +1181,10 @@ async function doSave(scale, fmt){
   if(API){
     const pv = document.getElementById('preview');
     if(!pv) throw new Error('#preview not found');
-    const origW = pv.style.width;  // 원본 너비 저장
     try{
-      // scale=1: 860px, scale=2: 1720px, scale=3: 2580px
-      const targetWidth = 860 * (scale || 1);
-
-      // 프리뷰를 목표 너비로 임시 조정 (container query 반영 위해)
-      pv.style.width = targetWidth + 'px';
-      console.log('[DEBUG] Resized preview to:', targetWidth, 'px');
-      console.log('[DEBUG] Preview offsetWidth before wait:', pv.offsetWidth);
-
-      // 폰트 리스케일 및 레이아웃 재계산 대기 (html2canvas와 동일한 로직)
-      await new Promise(r => setTimeout(r, 700));
-
-      console.log('[DEBUG] Preview offsetWidth after wait:', pv.offsetWidth);
+      // deviceScaleFactor 방식: viewport는 항상 860px, scale로 해상도 배수 조정
+      // scale=1: 860px, scale=2: 1720px (860×2), scale=3: 2580px (860×3)
+      const s = scale || 1;
 
       // CSS 수집
       const styleEls = document.querySelectorAll('style,link[rel="stylesheet"]');
@@ -1208,29 +1198,27 @@ async function doSave(scale, fmt){
         +'<style>@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");font-weight:500;}@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");font-weight:700;}</style>'
         +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>';
 
-      // outerHTML 사용 (전체 #preview 태그 포함, width 이미 targetWidth로 설정됨)
+      // preview outerHTML 그대로 (860px 상태 유지)
       const fullHtml = html + pv.outerHTML + '</body></html>';
 
-      console.log('[DEBUG] Sending to server - width:', targetWidth, 'html length:', fullHtml.length);
+      console.log('[DEBUG] Sending - width: 860, scale:', s, 'output:', 860 * s, 'px');
 
       const res = await fetch(API + '/api/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html: fullHtml, width: targetWidth, scale: 1, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98 })
+        body: JSON.stringify({ html: fullHtml, width: 860, scale: s, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98 })
       });
       if(!res.ok) throw new Error('서버 오류: ' + res.status);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       showImgModal(url, fmt, true);
       console.log('[DEBUG] Capture success! Blob size:', blob.size);
-      showHint(`✅ ${targetWidth}px 고화질 캡처 완료! 우클릭 → 저장`);
+      const outputPx = 860 * s;
+      showHint(`✅ ${outputPx}px 고화질 캡처 완료! 우클릭 → 저장`);
       return;
     } catch(err){
       console.error('[DEBUG] Puppeteer 캡처 실패:', err);
       console.warn('서버 캡처 실패, html2canvas로 폴백:', err);
-    } finally {
-      console.log('[DEBUG] Restoring original width:', origW);
-      pv.style.width = origW;  // 원본 너비 복원
     }
   }
 
