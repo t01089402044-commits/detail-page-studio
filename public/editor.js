@@ -1192,14 +1192,14 @@ async function doSave(scale, fmt){
         +'<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">'
         +'<link href="https://cdn.jsdelivr.net/npm/suit-fonts@1.0.0/dist/suit.css" rel="stylesheet">'
         +'<style>@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");font-weight:500;}@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");font-weight:700;}</style>'
-        +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>'
-        +'<div id="preview" style="'+pv.getAttribute('style')+'">'+pv.innerHTML+'</div></body></html>';
+        +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>';
       // scale=1: 860px, scale=2: 1720px, scale=3: 2580px (width * scale, deviceScaleFactor=1)
       const targetWidth = 860 * (scale || 1);
+      const fullHtml = html + '<div id="preview" style="width:'+targetWidth+'px">'+pv.innerHTML+'</div></body></html>';
       const res = await fetch(API + '/api/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html, width: targetWidth, scale: 1, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98 })
+        body: JSON.stringify({ html: fullHtml, width: targetWidth, scale: 1, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98 })
       });
       if(!res.ok) throw new Error('서버 오류: ' + res.status);
       const blob = await res.blob();
