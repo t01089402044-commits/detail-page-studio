@@ -314,6 +314,10 @@ app.post('/api/capture', async (req, res) => {
     page = await b.newPage();
     await page.setViewport({ width, height: 1080, deviceScaleFactor: scale });
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
+    const loadedHTML = await page.content();
+    console.log('[DEBUG] HTML length:', loadedHTML.length);
+    console.log('[DEBUG] Has #preview:', loadedHTML.includes('id="preview"'));
+    console.log('[DEBUG] viewport width:', width);
     await new Promise(r => setTimeout(r, 1200));
     const preview = await page.$('#preview');
     if (!preview) throw new Error('#preview not found');
