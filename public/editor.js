@@ -1180,7 +1180,20 @@ async function doSave(scale, fmt){
   // ── 서버가 연결된 경우: Puppeteer 고화질 캡처 ──────────────────────────
   if(API){
     try{
-      const html = document.getElementById('preview').outerHTML;
+      const pv = document.getElementById('preview');
+      if(!pv) throw new Error('#preview not found');
+      // CSS 수집
+      const styleEls = document.querySelectorAll('style,link[rel="stylesheet"]');
+      let allCss = '';
+      styleEls.forEach(el => { if(el.tagName==='STYLE') allCss += el.textContent; });
+      // 완전한 HTML document 생성
+      const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+        +'<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gothic+A1:wght@400;700;900&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700&family=Black+Han+Sans&family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">'
+        +'<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">'
+        +'<link href="https://cdn.jsdelivr.net/npm/suit-fonts@1.0.0/dist/suit.css" rel="stylesheet">'
+        +'<style>@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");font-weight:500;}@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");font-weight:700;}</style>'
+        +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>'
+        +'<div id="preview" style="'+pv.getAttribute('style')+'">'+pv.innerHTML+'</div></body></html>';
       // scale=1: 860px, scale=2: 1720px, scale=3: 2580px (width * scale, deviceScaleFactor=1)
       const targetWidth = 860 * (scale || 1);
       const res = await fetch(API + '/capture', {
