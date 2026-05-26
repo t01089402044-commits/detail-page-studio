@@ -47,6 +47,18 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js — 템플릿 저장을 FTP로 변경
+- **문제**: Railway는 ephemeral filesystem → 재배포 시 로컬 `templates/` 폴더 사라짐
+- **해결**: 템플릿 저장/불러오기를 FTP로 변경 (이미지 업로드와 동일한 방식)
+- **변경 내역**:
+  - `GET /api/templates` → FTP에서 templates/*.json 목록 읽기
+  - `POST /api/templates/save` → FTP에 JSON 업로드
+  - `GET /api/templates/:name` → FTP에서 JSON 다운로드
+  - `DELETE /api/templates/:name` → FTP에서 JSON 삭제
+- **저장 경로**: `FTP_TEMPLATE_DIR=/public/SE2/upload/templates/`
+- **확인**: `node server.js` 정상 시작 (문법 오류 없음)
+- **커밋**: `4087ff3 feat: 템플릿 저장을 FTP로 변경 (Railway ephemeral filesystem 대응)`
+
 ### [2026-05-26] server.js — 한글 문자열 인코딩 깨짐 수정
 - **문제**: server.js 전체에 깨진 한글 주석/에러 메시지로 인한 SyntaxError
 - **해결**: 모든 한글 주석과 에러 메시지를 영어로 교체
