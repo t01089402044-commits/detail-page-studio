@@ -69,7 +69,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.ht
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 function safeName(name) {
-  return name.replace(/[^a-z0-9媛-??-]/gi, '_');
+  return name.replace(/[^\w가-힣]/gi, '_');
 }
 
 // ?쒗뵆由?紐⑸줉
@@ -270,5 +270,6 @@ process.on('SIGTERM', async () => {
   if (browser) await browser.close();
   process.exit(0);
 });
+
 
 
