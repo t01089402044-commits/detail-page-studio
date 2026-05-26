@@ -1196,7 +1196,7 @@ async function doSave(scale, fmt){
         +'<div id="preview" style="'+pv.getAttribute('style')+'">'+pv.innerHTML+'</div></body></html>';
       // scale=1: 860px, scale=2: 1720px, scale=3: 2580px (width * scale, deviceScaleFactor=1)
       const targetWidth = 860 * (scale || 1);
-      const res = await fetch(API + '/capture', {
+      const res = await fetch(API + '/api/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ html, width: targetWidth, scale: 1, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98 })
