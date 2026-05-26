@@ -154,6 +154,12 @@ Dev → QA → Deploy → Monitor → 총괄 보고
 5. **Railway 실제 확인**
 6. **완료 보고**
 
+## 버그 디버깅 원칙
+- 버그 접수 시 조각 코드 요청 금지
+- 항상 관련 파일 전체(editor.js, server.js 등)를 한 번에 읽고 분석 후 수정
+- viewport 설정과 HTML 인라인 스타일 충돌 주의 (pv.getAttribute('style') 그대로 복사하면 width 고정됨 → targetWidth로 덮어써야 함)
+- 수정 후 반드시 문법 체크 → git push까지 한 번에
+
 ---
 
 ## 주요 작업 내역 (요약)
