@@ -69,7 +69,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.ht
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 function safeName(name) {
-  return name.replace(/[^\w가-힣]/gi, '_');
+  return name.replace(/[^\w]/gi, '_');
 }
 
 // ?쒗뵆由?紐⑸줉
