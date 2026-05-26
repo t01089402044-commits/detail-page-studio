@@ -67,7 +67,7 @@ node server.js
 - 잘못하면 한글 전체 깨져서 SyntaxError 발생
 - **파일 수정은 Edit tool 사용 권장** (PowerShell 대신)
 
-## 서브 에이전트 역할
+## 서브 에이전트 구조
 ### Dev Agent (개발)
 - 코드 수정 (Edit tool)
 - 파일 구조 변경
@@ -78,27 +78,61 @@ node server.js
 - UTF-8 인코딩 확인
 - API 엔드포인트 로컬 테스트
 - 로그 확인
+- **스크립트**: `.\scripts\qa-check.ps1`
 
 ### Deploy Agent (배포)
 - Railway 배포 대기 (2분)
 - URL 헬스체크 (`/api/health`)
 - API 응답 확인
+- **스크립트**: `.\scripts\deploy-check.ps1`
 
 ### Monitor Agent (모니터링)
 - 실제 브라우저 동작 확인 요청
 - 사용자 피드백 수집
-- 버그 리포트 정리
+- 이미지 해상도 검증
+- **스크립트**: `.\scripts\monitor-check.ps1`
 
 ## 작업 흐름
 ```
 Dev → QA → Deploy → Monitor → 총괄 보고
 ```
 
+### 단계별 체크리스트
 1. **Dev**: 코드 수정 완료
-2. **QA**: 문법/인코딩/로컬 테스트 통과 ✓
-3. **Deploy**: git push → Railway 배포 → 헬스체크 ✓
-4. **Monitor**: 브라우저 실제 동작 확인 요청
-5. **총괄**: 모든 단계 완료 후 최종 보고
+   ```powershell
+   # 수정 완료 후
+   git add .
+   git commit -m "feat: ..."
+   ```
+
+2. **QA**: 품질 검증 **필수 실행**
+   ```powershell
+   .\scripts\qa-check.ps1
+   # ✓ PASSED 확인 후 다음 단계
+   ```
+
+3. **Deploy**: 배포 검증 **필수 실행**
+   ```powershell
+   git push
+   .\scripts\deploy-check.ps1  # 2분 대기 포함
+   # ✓ PASSED 확인 후 다음 단계
+   ```
+
+4. **Monitor**: 실제 동작 확인
+   ```powershell
+   # Railway에서 이미지 저장 후
+   .\scripts\monitor-check.ps1
+   # 또는 특정 파일 지정
+   .\scripts\monitor-check.ps1 -ImagePath "경로\파일.jpg"
+   ```
+
+5. **총괄**: 모든 체크 통과 시에만 "완료" 보고 가능
+
+### ⚠️ 필수 규칙
+- 코드 수정 후 → `qa-check.ps1` 반드시 실행
+- git push 후 → `deploy-check.ps1` 반드시 실행
+- 이미지 저장 후 → `monitor-check.ps1` 실행 권장
+- **모든 체크 통과 전까지 "완료" 보고 금지**
 
 ## 문제 해결 순서
 1. **증거 수집** (git log, 코드 확인)
