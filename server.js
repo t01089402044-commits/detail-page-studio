@@ -307,24 +307,34 @@ async function getBrowser() {
 
 app.post('/api/capture', async (req, res) => {
   const { html, width = 860, scale = 2, format = 'jpeg', quality = 98 } = req.body;
+  console.log('[SERVER DEBUG] Received width:', width, 'scale:', scale, 'format:', format);
   if (!html) return res.status(400).json({ error: 'html required' });
   let page;
   try {
     const b = await getBrowser();
     page = await b.newPage();
     await page.setViewport({ width, height: 1080, deviceScaleFactor: scale });
+    console.log('[SERVER DEBUG] Viewport set to:', width, 'x 1080, deviceScaleFactor:', scale);
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
     const loadedHTML = await page.content();
-    console.log('[DEBUG] HTML length:', loadedHTML.length);
-    console.log('[DEBUG] Has #preview:', loadedHTML.includes('id="preview"'));
-    console.log('[DEBUG] viewport width:', width);
+    console.log('[SERVER DEBUG] HTML length:', loadedHTML.length);
+    console.log('[SERVER DEBUG] Has #preview:', loadedHTML.includes('id="preview"'));
     await new Promise(r => setTimeout(r, 1200));
     const preview = await page.$('#preview');
     if (!preview) throw new Error('#preview not found');
+
+    // Check actual rendered dimensions
+    const box = await preview.boundingBox();
+    console.log('[SERVER DEBUG] #preview boundingBox:', box);
+
     const buf = await preview.screenshot({ type: format === 'png' ? 'png' : 'jpeg', quality: format === 'jpeg' ? quality : undefined });
+    console.log('[SERVER DEBUG] Screenshot buffer size:', buf.length, 'bytes');
     res.set('Content-Type', format === 'png' ? 'image/png' : 'image/jpeg');
     res.send(buf);
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) {
+    console.error('[SERVER ERROR]', e.message);
+    res.status(500).json({ error: e.message });
+  }
   finally { if (page) await page.close(); }
 });
 
