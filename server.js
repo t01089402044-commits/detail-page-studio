@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
 const compression = require('compression');
@@ -8,19 +8,18 @@ const { Readable } = require('stream');
 const ftp = require('basic-ftp');
 const iconv = require('iconv-lite');
 
-// FTP ?ㅼ젙 ???먭꺽利앸챸? 肄붾뱶/repo??諛뺤? ?딄퀬 ?섍꼍蹂?섎쭔 ?ъ슜
+// FTP credentials from env vars only - never hardcode in code/repo
 const FTP_HOST = process.env.FTP_HOST || '';
 const FTP_USER = process.env.FTP_USER || '';
 const FTP_PASS = process.env.FTP_PASS || '';
-// ???꾨찓??xngolf.co.kr??documentroot媛 FTP??/public/ ?대?濡??ㅼ젣 FTP 寃쎈줈??/public/ ?묐몢???꾩슂
-const FTP_REMOTE_DIR = process.env.FTP_REMOTE_DIR || '/public/SE2/upload/?곸꽭?섏씠吏/';
-// FTP ?쒕쾭媛 ?붾젆?좊━/?뚯씪紐낆뿉 ?ъ슜?섎뒗 ?몄퐫??(?쒓뎅 ?몄뒪?낆? 蹂댄넻 cp949/euc-kr)
+// This hosting's documentroot is FTP /public/, so FTP path must include /public/
+const FTP_REMOTE_DIR = process.env.FTP_REMOTE_DIR || '/public/SE2/upload/detail-page/';
+// FTP server path encoding (Korean hosting typically uses cp949/euc-kr)
 const FTP_PATH_ENCODING = process.env.FTP_PATH_ENCODING || 'cp949';
-// 怨듦컻 URL??踰좎씠?? ?쒓뎅???붾젆?좊━??cp949 URL-encoded濡?諛뺤븘??redirect ?놁씠 諛붾줈 200 ?묐떟
-// 湲곕낯媛?怨꾩궛? 紐⑤뱢 濡쒕뱶 ?꾩뿉 (urlEncodeCp949 ?⑥닔 ?좎뼵 ?댄썑 ?꾩슂) ???꾨옒?먯꽌 泥섎━
+// Public URL base - calculated below from FTP_REMOTE_DIR if not set
 let FTP_PUBLIC_BASE = process.env.FTP_PUBLIC_BASE || '';
 
-// JS 臾몄옄?댁쓣 FTP ?쒕쾭 ?몄퐫??cp949)?쇰줈 蹂????latin1 string (basic-ftp媛 byte-perfect ?꾩넚)
+// Convert JS string to FTP server encoding (cp949) as latin1 string (basic-ftp sends byte-perfect)
 function encPath(s){
   if (FTP_PATH_ENCODING === 'utf8' || FTP_PATH_ENCODING === 'utf-8') return s;
   return iconv.encode(s, FTP_PATH_ENCODING).toString('binary');
@@ -29,12 +28,12 @@ function decName(latin1){
   if (FTP_PATH_ENCODING === 'utf8' || FTP_PATH_ENCODING === 'utf-8') return latin1;
   return iconv.decode(Buffer.from(latin1, 'binary'), FTP_PATH_ENCODING);
 }
-// 怨듦컻 URL?? JS 臾몄옄?댁쓽 ?쒓???cp949 諛붿씠?몃줈 蹂????%XX ?쒗?ㅻ줈 (Apache媛 cp949 寃쎈줈濡??몄떇?섎룄濡?
+// Encode JS string to cp949 bytes then percent-encode for public URL (so Apache reads as cp949 path)
 function urlEncodeCp949(s){
   const bytes = iconv.encode(s, FTP_PATH_ENCODING);
   let out = '';
   for (const b of bytes) {
-    // ASCII ?덉쟾臾몄옄(?곸닽?? -_.~)??洹몃?濡?
+    // Safe ASCII characters (alphanumeric + -_.~)
     if ((b>=0x30&&b<=0x39)||(b>=0x41&&b<=0x5A)||(b>=0x61&&b<=0x7A)||b===0x2D||b===0x5F||b===0x2E||b===0x7E) {
       out += String.fromCharCode(b);
     } else {
@@ -44,12 +43,12 @@ function urlEncodeCp949(s){
   return out;
 }
 
-// FTP_PUBLIC_BASE 湲곕낯媛??먮룞 怨꾩궛
-// ??URL: https://xngolf.co.kr + (FTP_REMOTE_DIR?먯꽌 /public ?쒓굅??寃쎈줈) ???쒓뎅??遺遺꾩? cp949 URL-encoded
+// Auto-calculate FTP_PUBLIC_BASE default
+// Public URL: https://xngolf.co.kr + (FTP_REMOTE_DIR without /public prefix) with Korean parts cp949 URL-encoded
 if (!FTP_PUBLIC_BASE) {
   let webPath = FTP_REMOTE_DIR.replace(/^\/public(\/|$)/, '/');
   if (!webPath.endsWith('/')) webPath += '/';
-  // 寃쎈줈 ?멸렇癒쇳듃蹂꾨줈 cp949 URL ?몄퐫??(?щ옒?쒕뒗 蹂댁〈)
+  // Encode each path segment separately (slash preserved)
   const encodedPath = webPath.split('/').map(seg => seg ? urlEncodeCp949(seg) : seg).join('/');
   FTP_PUBLIC_BASE = 'https://xngolf.co.kr' + encodedPath;
 }
@@ -72,7 +71,7 @@ function safeName(name) {
   return name.replace(/[^\w]/gi, '_');
 }
 
-// ?쒗뵆由?紐⑸줉
+// Template list
 app.get('/api/templates', (req, res) => {
   try {
     const files = fs.readdirSync(TMPL_DIR).filter(f => f.endsWith('.json'));
@@ -87,11 +86,11 @@ app.get('/api/templates', (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ?쒗뵆由????
+// Save template
 app.post('/api/templates/save', (req, res) => {
   try {
     const tpl = req.body;
-    if (!tpl || !tpl.name) return res.status(400).json({ error: '?대쫫 ?꾩슂' });
+    if (!tpl || !tpl.name) return res.status(400).json({ error: 'name required' });
     const fname = safeName(tpl.name) + '.json';
     tpl.savedAt = new Date().toISOString();
     fs.writeFileSync(path.join(TMPL_DIR, fname), JSON.stringify(tpl), 'utf8');
@@ -99,17 +98,17 @@ app.post('/api/templates/save', (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ?쒗뵆由?遺덈윭?ㅺ린
+// Load template
 app.get('/api/templates/:name', (req, res) => {
   try {
     const fname = safeName(req.params.name) + '.json';
     const fpath = path.join(TMPL_DIR, fname);
-    if (!fs.existsSync(fpath)) return res.status(404).json({ error: '?놁쓬' });
+    if (!fs.existsSync(fpath)) return res.status(404).json({ error: 'not found' });
     res.json(JSON.parse(fs.readFileSync(fpath, 'utf8')));
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ?쒗뵆由???젣
+// Delete template
 app.delete('/api/templates/:name', (req, res) => {
   try {
     const fname = safeName(req.params.name) + '.json';
@@ -119,36 +118,36 @@ app.delete('/api/templates/:name', (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// FTP ?대씪?댁뼵???앹꽦 + ?붾젆?좊━ 吏꾩엯
-// basic-ftp??socket I/O??utf8/binary/utf16le留?吏?? ?쒓뎅 ?몄뒪??cp949 ?붾젆?좊━)
-// ?명솚???꾪빐 encoding??'binary'(latin1)濡??먭퀬, ?곕━媛 吏곸젒 iconv濡?蹂?섑븳 諛붿씠?몃? ?꾨떖
+// Create FTP client and ensure remote directory exists
+// basic-ftp socket I/O only supports utf8/binary/utf16le (not cp949 directly)
+// So we use encoding='binary'(latin1) and manually convert strings via iconv
 async function ftpConnect() {
   if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
-    throw new Error('FTP ?섍꼍蹂??誘몄꽕??(FTP_HOST/FTP_USER/FTP_PASS)');
+    throw new Error('FTP env vars not configured (FTP_HOST/FTP_USER/FTP_PASS)');
   }
   const client = new ftp.Client(15000);
   client.ftp.encoding = 'binary';
   await client.access({ host: FTP_HOST, user: FTP_USER, password: FTP_PASS, secure: false });
-  // ensureDir: cp949 諛붿씠?몃줈 ?몄퐫?⑸맂 寃쎈줈. 議댁옱?섏? ?딆쑝硫??앹꽦, ?덉쑝硫?cd
+  // ensureDir: cp949-encoded path. Creates if not exists, cd if exists
   await client.ensureDir(encPath(FTP_REMOTE_DIR));
   return client;
 }
 
-// ?대?吏 ?낅줈?? dataURL ??FTP ??public URL 諛섑솚
+// Upload image from dataURL to FTP, return public URL
 app.post('/api/upload', async (req, res) => {
   let client;
   try {
     const { dataURL } = req.body || {};
-    if (!dataURL) return res.status(400).json({ error: 'dataURL ?꾩슂' });
+    if (!dataURL) return res.status(400).json({ error: 'dataURL required' });
     const m = dataURL.match(/^data:image\/([a-z0-9+]+);base64,(.+)$/i);
-    if (!m) return res.status(400).json({ error: '?섎せ??dataURL ?뺤떇' });
+    if (!m) return res.status(400).json({ error: 'invalid dataURL format' });
     const extRaw = m[1].toLowerCase();
     const ext = extRaw === 'jpeg' ? 'jpg' : extRaw;
     const buf = Buffer.from(m[2], 'base64');
     const fname = Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
 
     client = await ftpConnect();
-    // 紐낆떆?곸쑝濡??덈? 寃쎈줈 + ?뚯씪紐?(cwd ?섏〈 ????
+    // Upload with explicit path + filename (not relying on cwd)
     await client.uploadFrom(Readable.from(buf), encPath(FTP_REMOTE_DIR.replace(/\/$/, '') + '/' + fname));
     res.json({ url: FTP_PUBLIC_BASE + encodeURIComponent(fname), name: fname, size: buf.length });
   } catch (e) {
@@ -159,14 +158,14 @@ app.post('/api/upload', async (req, res) => {
   }
 });
 
-// ?낅줈?쒕맂 ?대?吏 紐⑸줉
+// List uploaded images
 app.get('/api/uploads', async (req, res) => {
   let client;
   try {
     client = await ftpConnect();
-    // 紐낆떆??path濡?list (cwd ?섏〈?섏? ?딆쓬)
+    // List with explicit path (not relying on cwd)
     const items = await client.list(encPath(FTP_REMOTE_DIR));
-    // 二쇱쓽: basic-ftp??FileInfo??isFile/isDirectory媛 getter??spread濡??껋뼱踰꾨┝. ?먮낯 媛앹껜?먯꽌 吏곸젒 ?됯?
+    // Note: basic-ftp FileInfo.isFile/isDirectory are getters - can't spread. Access directly
     const list = items
       .filter(it => it.isFile)
       .map(it => ({
@@ -186,12 +185,12 @@ app.get('/api/uploads', async (req, res) => {
   }
 });
 
-// ?낅줈?쒕맂 ?대?吏 ??젣
+// Delete uploaded image
 app.delete('/api/uploads/:name', async (req, res) => {
   let client;
   try {
     const raw = req.params.name || '';
-    // 寃쎈줈 ?대룞 李⑤떒
+    // Block path traversal
     if (raw.includes('/') || raw.includes('\\') || raw.includes('..')) {
       return res.status(400).json({ error: 'invalid filename' });
     }
@@ -206,8 +205,8 @@ app.delete('/api/uploads/:name', async (req, res) => {
   }
 });
 
-// ?몃? ?대?吏瑜?same-origin?쇰줈 proxy (html2canvas??CORS taint ?뚰뵾??
-// SSRF 諛⑹?: ?섍꼍蹂??IMG_PROXY_ALLOW (肄ㅻ쭏 援щ텇) ?먮뒗 湲곕낯 xngolf.co.kr 留??덉슜
+// Proxy external images as same-origin (avoid html2canvas CORS taint)
+// SSRF protection: only allow IMG_PROXY_ALLOW hostnames (comma-separated), default xngolf.co.kr
 const IMG_PROXY_ALLOW = (process.env.IMG_PROXY_ALLOW || 'xngolf.co.kr').split(',').map(s => s.trim()).filter(Boolean);
 app.get('/api/img-proxy', async (req, res) => {
   try {
@@ -245,7 +244,7 @@ async function getBrowser() {
 
 app.post('/api/capture', async (req, res) => {
   const { html, width = 860, scale = 2, format = 'jpeg', quality = 98 } = req.body;
-  if (!html) return res.status(400).json({ error: 'html ?꾩슂' });
+  if (!html) return res.status(400).json({ error: 'html required' });
   let page;
   try {
     const b = await getBrowser();
@@ -254,7 +253,7 @@ app.post('/api/capture', async (req, res) => {
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
     await new Promise(r => setTimeout(r, 1200));
     const preview = await page.$('#preview');
-    if (!preview) throw new Error('#preview ?놁쓬');
+    if (!preview) throw new Error('#preview not found');
     const buf = await preview.screenshot({ type: format === 'png' ? 'png' : 'jpeg', quality: format === 'jpeg' ? quality : undefined });
     res.set('Content-Type', format === 'png' ? 'image/png' : 'image/jpeg');
     res.send(buf);
@@ -270,6 +269,3 @@ process.on('SIGTERM', async () => {
   if (browser) await browser.close();
   process.exit(0);
 });
-
-
-
