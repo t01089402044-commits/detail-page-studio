@@ -47,7 +47,32 @@
 
 ## 수정 이력
 
-### [2026-05-27] editor.js — 2× 해상도 container query 반영 수정
+### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
+- **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
+- **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
+  - 이 방식은 레이아웃을 1720px로 키우려 했지만 container query 등 부작용 다수
+- **최종 해결**: **deviceScaleFactor 방식** (Retina 디스플레이와 동일 원리)
+  ```javascript
+  // Before: viewport 확대 방식
+  { width: 860 * scale, scale: 1 }  // ❌ 1720px viewport, 1x 밀도
+  
+  // After: deviceScaleFactor 방식
+  { width: 860, scale: scale }       // ✅ 860px viewport, 2x 밀도
+  ```
+- **장점**:
+  - viewport 항상 860px → container query 정상 동작
+  - 레이아웃/폰트/비율 1×과 완전 동일
+  - deviceScaleFactor=2 → 출력만 1720px (고밀도)
+  - 리사이징 로직 불필요 (20줄 삭제)
+  - 네이버/사방넷 압축 대응 최적 (860px 레이아웃을 고해상도로 저장)
+- **변경**:
+  - scale=1: 860px (1x 밀도)
+  - scale=2: 1720px (860px × 2x 밀도)
+  - scale=3: 2580px (860px × 3x 밀도)
+- **검증**: `node -c public/editor.js` ✓
+- **커밋**: `e464336 fix: deviceScaleFactor 방식으로 변경 (viewport 860 고정, scale로 해상도 배수)`
+
+### [2026-05-27] editor.js — 2× 해상도 container query 반영 수정 (폐기)
 - **문제**: 2× JPG 저장 시 최종 출력 이미지가 여전히 860px로 나옴 (1720px 아님)
 - **원인**: 
   - `doSave()`에서 `pv.innerHTML`을 캡처할 때, 원본 #preview가 860px 상태
