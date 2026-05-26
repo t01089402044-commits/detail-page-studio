@@ -60,6 +60,13 @@ node server.js
 - ❌ 원인 커밋 특정 전 코드 변경 금지
 - ❌ 로컬 테스트만 하고 Railway 확인 없이 완료 보고 금지
 
+## PowerShell 파일 수정 시 필수
+⚠️ **인코딩 문제로 한글 깨짐 방지**
+- `Set-Content` 사용 시 반드시 `-Encoding UTF8` 옵션 추가
+- `Get-Content` 사용 시 반드시 `-Encoding UTF8` 옵션 추가
+- 잘못하면 한글 전체 깨져서 SyntaxError 발생
+- **파일 수정은 Edit tool 사용 권장** (PowerShell 대신)
+
 ## 문제 해결 순서
 1. **증거 수집** (git log, 코드 확인)
 2. **원인 특정** (어느 커밋, 어느 줄)

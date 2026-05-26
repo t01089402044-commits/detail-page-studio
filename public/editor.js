@@ -1,115 +1,115 @@
-
+﻿
 const SEC_TMPL = {
   banner:()=>`<div class="sec-wrap s-banner">
-    <div class="s-banner-season" contenteditable data-ph="?�즌 ?�스??>2025 SS NEW ARRIVAL</div>
-    <div class="s-banner-kr" contenteditable data-ph="?�품�? style="font-family:var(--pf,'Noto Sans KR',sans-serif)">?�품명을 ?�기???�력?�주?�요</div>
-    <div class="s-banner-en" contenteditable data-ph="?�문 부??>Crafted for everyday excellence.</div>
+    <div class="s-banner-season" contenteditable data-ph="시즌 텍스트">2025 SS NEW ARRIVAL</div>
+    <div class="s-banner-kr" contenteditable data-ph="제품명" style="font-family:var(--pf,'Noto Sans KR',sans-serif)">상품명을 여기에 입력해주세요</div>
+    <div class="s-banner-en" contenteditable data-ph="영문 부제">Crafted for everyday excellence.</div>
   </div>`,
-  hero:()=>`<div class="sec-wrap s-hero">${izNew('메인 ?�어�??��?지','860 × 1000px',700)}</div>`,
+  hero:()=>`<div class="sec-wrap s-hero">${izNew('메인 히어로 이미지','860 × 1000px',700)}</div>`,
   trust:()=>`<div class="sec-wrap s-trust">
-    ${['?��,무료배송,5만원 ?�상<br>???�품 무료','???�일출발,?�후 2???�전<br>주문 ?�일 발송','?��,무료 교환·반품,?�령 ??14???�내<br>무료 처리','?��?��,�?�� ?�산,Made in Korea<br>�?�� ?�조·관�?].map(s=>{
+    ${['🚚,무료배송,5만원 이상<br>전 상품 무료','⚡,당일출발,오후 2시 이전<br>주문 당일 발송','🔄,무료 교환·반품,수령 후 14일 이내<br>무료 처리','🇰🇷,국내 생산,Made in Korea<br>국내 제조·관리'].map(s=>{
       const[ico,nm,desc]=s.split(',');
-      return`<div class="s-trust-item" style="position:relative"><button class="del-btn" onclick="delItem('s-trust-item',this)">??/button><button class="add-btn" onclick="addTrustItem()">+</button><button class="ico-btn" onclick="openEP(this.closest('.s-trust-item').querySelector('.icon-editable'),event)">?�� ?�이�?/button><div class="s-trust-ico icon-editable" onclick="openEP(this,event)">${ico}</div><div class="s-trust-name" contenteditable>${nm}</div><div class="s-trust-desc" contenteditable>${desc}</div></div>`;
+      return`<div class="s-trust-item" style="position:relative"><button class="del-btn" onclick="delItem('s-trust-item',this)">✕</button><button class="add-btn" onclick="addTrustItem()">+</button><button class="ico-btn" onclick="openEP(this.closest('.s-trust-item').querySelector('.icon-editable'),event)">🎨 아이콘</button><div class="s-trust-ico icon-editable" onclick="openEP(this,event)">${ico}</div><div class="s-trust-name" contenteditable>${nm}</div><div class="s-trust-desc" contenteditable>${desc}</div></div>`;
     }).join('')}
   </div>`,
   copy:()=>`<div class="sec-wrap s-copy">
     <div class="s-copy-eye" contenteditable>Brand Story</div>
-    <div class="s-copy-quote" contenteditable>"??�??�으�??�게 ?�는<br><em>�?차이</em>"</div>
+    <div class="s-copy-quote" contenteditable>"한 번 입으면 알게 되는<br><em>그 차이</em>"</div>
     <div class="s-copy-line"></div>
-    <div class="s-copy-body" contenteditable>매일 꺼내 ?�고 ?�어지???�이 ?�습?�다. ?�별?��? ?�아?? ?�려?��? ?�아?????�는 ?�간 ???�걸 골랐?��? ?�게 ?�는 그런 ?? 좋�? ?�재?� ?�직???�작??만든 결과?�니??</div>
+    <div class="s-copy-body" contenteditable>매일 꺼내 입고 싶어지는 옷이 있습니다. 특별하지 않아도, 화려하지 않아도 — 입는 순간 왜 이걸 골랐는지 알게 되는 그런 옷. 좋은 소재와 정직한 제작이 만든 결과입니다.</div>
   </div>`,
   proof:()=>`<div class="sec-wrap s-proof">
-    ${[['4.9??,'Rating'],['2,841�?,'Review'],['71%','Repurchase'],['12K+','Sold']].map(([n,l])=>`<div class="s-proof-item" style="position:relative"><button class="del-btn" onclick="delItem('s-proof-item',this)">??/button><button class="add-btn" onclick="addProofItem()">+</button><div class="s-proof-num" contenteditable>${n}</div><div class="s-proof-lbl" contenteditable>${l}</div></div>`).join('')}
+    ${[['4.9★','Rating'],['2,841개','Review'],['71%','Repurchase'],['12K+','Sold']].map(([n,l])=>`<div class="s-proof-item" style="position:relative"><button class="del-btn" onclick="delItem('s-proof-item',this)">✕</button><button class="add-btn" onclick="addProofItem()">+</button><div class="s-proof-num" contenteditable>${n}</div><div class="s-proof-lbl" contenteditable>${l}</div></div>`).join('')}
   </div>`,
   feat:()=>`<div class="sec-wrap s-feat">
     <div class="sec-lbl" contenteditable>Feature</div>
     <div class="s-feat-grid">
-    ${[['?��','?�징 1 ?�목','?�품???�심 ?�징???�력?�세??'],['?��','?�징 2 ?�목','?�재, ?�구?? 착용�??�을 강조?�니??'],['?�️','?�징 3 ?�목','?�자?? ?? ?�루???�을 ?�명?�니??'],['?��','?�징 4 ?�목','관�??�의?? ?�용?�을 강조?�니??'],['?��','?�징 5 ?�목','계절?? ?�용?��? ?�명?�니??'],['?��','?�징 6 ?�목','?�질 ?�증 ???�뢰 ?�용???�습?�다.']].map(([ico,nm,desc])=>`<div class="s-feat-item" style="position:relative"><button class="del-btn" onclick="delItem('s-feat-item',this)">??/button><button class="add-btn" onclick="addFeatItem()">+</button><div class="s-feat-ico-wrap"><div class="s-feat-ico icon-editable" onclick="openEP(this,event)">${ico}</div><button class="s-feat-ico-del" onclick="event.stopPropagation();this.previousElementSibling.textContent=''" title="?�이�???��">??/button></div><div class="s-feat-name" contenteditable>${nm}</div><div class="s-feat-desc" contenteditable>${desc}</div>${izNew('?�징 ?��?지','860 × 960px',437)}</div>`).join('')}
+    ${[['🌿','특징 1 제목','상품의 핵심 특징을 입력하세요.'],['💪','특징 2 제목','소재, 내구성, 착용감 등을 강조합니다.'],['✂️','특징 3 제목','디자인, 핏, 실루엣 등을 설명합니다.'],['🌊','특징 4 제목','관리 편의성, 실용성을 강조합니다.'],['🎯','특징 5 제목','계절성, 활용도를 설명합니다.'],['🔄','특징 6 제목','품질 인증 등 신뢰 내용을 담습니다.']].map(([ico,nm,desc])=>`<div class="s-feat-item" style="position:relative"><button class="del-btn" onclick="delItem('s-feat-item',this)">✕</button><button class="add-btn" onclick="addFeatItem()">+</button><div class="s-feat-ico-wrap"><div class="s-feat-ico icon-editable" onclick="openEP(this,event)">${ico}</div><button class="s-feat-ico-del" onclick="event.stopPropagation();this.previousElementSibling.textContent=''" title="아이콘 삭제">✕</button></div><div class="s-feat-name" contenteditable>${nm}</div><div class="s-feat-desc" contenteditable>${desc}</div>${izNew('특징 이미지','860 × 960px',437)}</div>`).join('')}
     </div>
     <div class="s-feat-img-rows" id="feat-img-rows">
-      <!-- ?��?지 ???�적 추�? -->
+      <!-- 이미지 행 동적 추가 -->
     </div>
   </div>`,
   compare:()=>`<div class="sec-wrap s-compare">
-    <div><div class="sec-en" contenteditable>The Difference You Feel</div><div class="sec-kr" contenteditable>직접 비교?�보?�요</div></div>
+    <div><div class="sec-en" contenteditable>The Difference You Feel</div><div class="sec-kr" contenteditable>직접 비교해보세요</div></div>
     <div class="s-cmp-wrap">
-      <div class="s-cmp-col" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-col',this)">??/button>${izNew('?�반 ?�재','430 × 560px',500)}<div class="s-cmp-badge b" contenteditable>?�반 ?�품</div></div>
-      <div class="s-cmp-col" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-col',this)">??/button>${izNew('�??�품 ?�재','430 × 560px',500)}<div class="s-cmp-badge a" contenteditable>�??�품</div></div>
+      <div class="s-cmp-col" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-col',this)">✕</button>${izNew('일반 소재','430 × 560px',500)}<div class="s-cmp-badge b" contenteditable>일반 제품</div></div>
+      <div class="s-cmp-col" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-col',this)">✕</button>${izNew('본 제품 소재','430 × 560px',500)}<div class="s-cmp-badge a" contenteditable>본 제품</div></div>
       <div class="s-cmp-vs">VS</div>
     </div>
     <div class="s-cmp-desc">
-      <div class="s-cmp-desc-item" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-desc-item',this)">??/button><div class="s-cmp-desc-name" contenteditable>?�반 ?�품</div><div class="s-cmp-desc-txt" contenteditable>비교 ?�???�품 ?�명???�력?�세??</div></div>
-      <div class="s-cmp-desc-item" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-desc-item',this)">??/button><div class="s-cmp-desc-name" contenteditable>�??�품</div><div class="s-cmp-desc-txt" contenteditable>�??�품???�수???�을 ?�명?�세??</div></div>
+      <div class="s-cmp-desc-item" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-desc-item',this)">✕</button><div class="s-cmp-desc-name" contenteditable>일반 제품</div><div class="s-cmp-desc-txt" contenteditable>비교 대상 제품 설명을 입력하세요.</div></div>
+      <div class="s-cmp-desc-item" style="position:relative"><button class="del-btn" onclick="delItem('s-cmp-desc-item',this)">✕</button><div class="s-cmp-desc-name" contenteditable>본 제품</div><div class="s-cmp-desc-txt" contenteditable>본 제품의 우수한 점을 설명하세요.</div></div>
     </div>
     <div class="feat-row-add-wrap">
-      <button class="feat-row-add-btn" onclick="addFeatItem();addFeatItem()">�???추�? (2�?</button>
+      <button class="feat-row-add-btn" onclick="addFeatItem();addFeatItem()">＋ 행 추가 (2개)</button>
     </div>
   </div>`,
   wearing:()=>`<div class="sec-wrap s-wearing">
-    <div class="s-wearing-lbl"><div class="s-wearing-en" contenteditable>Wearing Shot</div><div class="s-wearing-kr" contenteditable>착용�?/div></div>
-    ${izNew('메인 착용 ?��?,'860 × 960px',546)}
+    <div class="s-wearing-lbl"><div class="s-wearing-en" contenteditable>Wearing Shot</div><div class="s-wearing-kr" contenteditable>착용컷</div></div>
+    ${izNew('메인 착용 풀컷','860 × 960px',546)}
   </div>`,
   duo:()=>`<div class="sec-wrap s-duo">
-    ${izNew('착용�?1','50% × 680px',400)}
-    ${izNew('착용�?2','50% × 680px',400)}
+    ${izNew('착용컷 1','50% × 680px',400)}
+    ${izNew('착용컷 2','50% × 680px',400)}
   </div>`,
   angle:()=>`<div class="sec-wrap s-angle">
-    <div class="sec-hd-wrap"><div class="sec-en" contenteditable>360° View</div><div class="sec-kr" contenteditable>?�면 · ?�면 · 측면 · ?�테??/div></div>
+    <div class="sec-hd-wrap"><div class="sec-en" contenteditable>360° View</div><div class="sec-kr" contenteditable>앞면 · 뒷면 · 측면 · 디테일</div></div>
     <div class="s-angle-grid">
-    ${[['?�면 (Front)','Front','?�면'],['?�면 (Back)','Back','?�면'],['측면 (Side)','Side','측면'],['?�테??,'Detail','?�테??]].map(([lbl,en,kr])=>`<div class="s-angle-cell" style="position:relative"><button class="del-btn" onclick="delItem('s-angle-cell',this)">??/button>${izNew(lbl,'430 × 520px',260)}<div class="s-angle-label"><div class="s-angle-label-en" contenteditable>${en}</div><div class="s-angle-label-kr" contenteditable>${kr}</div></div></div>`).join('')}
+    ${[['전면 (Front)','Front','앞면'],['후면 (Back)','Back','뒷면'],['측면 (Side)','Side','측면'],['디테일','Detail','디테일']].map(([lbl,en,kr])=>`<div class="s-angle-cell" style="position:relative"><button class="del-btn" onclick="delItem('s-angle-cell',this)">✕</button>${izNew(lbl,'430 × 520px',260)}<div class="s-angle-label"><div class="s-angle-label-en" contenteditable>${en}</div><div class="s-angle-label-kr" contenteditable>${kr}</div></div></div>`).join('')}
     </div>
   </div>`,
   mood:()=>`<div class="sec-wrap s-mood">
-    <div class="s-mood-hd" style="padding:48px 40px 0 40px;"><div class="sec-en" contenteditable>Wear it everywhere.</div><div class="sec-kr" contenteditable>?�디?�든, ?�떤 ?�에??/div></div>
+    <div class="s-mood-hd" style="padding:48px 40px 0 40px;"><div class="sec-en" contenteditable>Wear it everywhere.</div><div class="sec-kr" contenteditable>어디서든, 어떤 날에도</div></div>
     <div class="s-mood-main">
-      ${izNew('메인 무드�?,'860 × 720px',430)}
+      ${izNew('메인 무드컷','860 × 720px',430)}
 
     </div>
     <div class="s-mood3">
-    ${[['Casual','?�일�?],['Work','출근'],['Weekend','주말']].map(([s,t])=>`<div class="s-mood3-card" style="position:relative"><button class="del-btn" onclick="delItem('s-mood3-card',this)">??/button><button class="add-btn" onclick="addMood3Card()">+</button>${izNew('무드�?,'287 × 440px',390)}<div class="s-mood3-ov"></div><div class="s-mood3-copy"><div class="s-mood3-sit" contenteditable>${s}</div><div class="s-mood3-title" contenteditable>${t}</div></div></div>`).join('')}
+    ${[['Casual','데일리'],['Work','출근'],['Weekend','주말']].map(([s,t])=>`<div class="s-mood3-card" style="position:relative"><button class="del-btn" onclick="delItem('s-mood3-card',this)">✕</button><button class="add-btn" onclick="addMood3Card()">+</button>${izNew('무드컷','287 × 440px',390)}<div class="s-mood3-ov"></div><div class="s-mood3-copy"><div class="s-mood3-sit" contenteditable>${s}</div><div class="s-mood3-title" contenteditable>${t}</div></div></div>`).join('')}
     </div>
   </div>`,
   infl:()=>`<div class="sec-wrap s-infl">
-    <div><div class="sec-en" contenteditable>As seen on Influencers</div><div class="sec-kr" contenteditable>?�플루언??착용�?/div></div>
+    <div><div class="sec-en" contenteditable>As seen on Influencers</div><div class="sec-kr" contenteditable>인플루언서 착용컷</div></div>
     <div class="s-infl-grid-top">
-      <div class="s-infl-card" style="flex:1.5;position:relative"><button class="del-btn" onclick="delItem('s-infl-card',this)">??/button>${izNew('?�???�플루언??,'516 × 560px',500)}<div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer_main</div><div class="s-infl-tag" contenteditable>?�로??12.4�?· ?�션 ?�리?�이??/div></div></div>
-      <div class="s-infl-card" style="flex:1;position:relative"><button class="del-btn" onclick="delItem('s-infl-card',this)">??/button>${izNew('?�플루언??2','344 × 560px',500)}<div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer_2</div><div class="s-infl-tag" contenteditable>?�로??8.7�?· ?�이?�스?�??/div></div></div>
+      <div class="s-infl-card" style="flex:1.5;position:relative"><button class="del-btn" onclick="delItem('s-infl-card',this)">✕</button>${izNew('대표 인플루언서','516 × 560px',500)}<div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer_main</div><div class="s-infl-tag" contenteditable>팔로워 12.4만 · 패션 크리에이터</div></div></div>
+      <div class="s-infl-card" style="flex:1;position:relative"><button class="del-btn" onclick="delItem('s-infl-card',this)">✕</button>${izNew('인플루언서 2','344 × 560px',500)}<div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer_2</div><div class="s-infl-tag" contenteditable>팔로워 8.7만 · 라이프스타일</div></div></div>
     </div>
     <div class="s-infl-grid-bot" style="display:flex;gap:4px;margin-top:4px;">
-    ${[['a','?�오?�디'],['b','?�일리룩'],['c','미니멀']].map(([s,t])=>`<div class="s-infl-card" style="flex:1;position:relative"><button class="del-btn" onclick="delItem('s-infl-card',this)">\u2715</button>${izNew('?�브 '+s,'287 × 340px',300)}<div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer_${s}</div><div class="s-infl-tag" contenteditable>#${t}</div></div></div>`).join('')}
+    ${[['a','오오티디'],['b','데일리룩'],['c','미니멀']].map(([s,t])=>`<div class="s-infl-card" style="flex:1;position:relative"><button class="del-btn" onclick="delItem('s-infl-card',this)">\u2715</button>${izNew('서브 '+s,'287 × 340px',300)}<div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer_${s}</div><div class="s-infl-tag" contenteditable>#${t}</div></div></div>`).join('')}
     </div>
 
   </div>`,
   story:()=>`<div class="sec-wrap s-story">
     <div class="s-story-main">
-      <div class="s-story-img">${izNew('?�재 메인 ?��?지','516 × 640px',570)}</div>
+      <div class="s-story-img">${izNew('소재 메인 이미지','516 × 640px',570)}</div>
       <div class="s-story-txt">
         <div class="s-story-label" contenteditable>Material Story</div>
-        <div class="s-story-title" contenteditable>?�재 ?�나?�도<br>?�?�하지 ?�습?�다</div>
-        <div class="s-story-body" contenteditable>?�재?� ?�작 과정???�??브랜?�의 철학�??�토리�? ?�력?�세?? ?�디???�재�?조달?�는지, ?�떤 공정??거치?��?, ?????�재�??�택?�는지 ??진정???�는 ?�야기�? 고객???�뢰�??�습?�다.</div>
+        <div class="s-story-title" contenteditable>소재 하나에도<br>타협하지 않습니다</div>
+        <div class="s-story-body" contenteditable>소재와 제작 과정에 대한 브랜드의 철학과 스토리를 입력하세요. 어디서 소재를 조달하는지, 어떤 공정을 거치는지, 왜 이 소재를 선택했는지 등 진정성 있는 이야기가 고객의 신뢰를 얻습니다.</div>
         <div class="s-story-divider"></div>
-        <div class="s-story-spec" contenteditable>?�재 · ?�용???�력?�세??br>?�산지 · ?�용???�력?�세??br>?�증 · ?�용???�력?�세??/div>
+        <div class="s-story-spec" contenteditable>소재 · 내용을 입력하세요<br>원산지 · 내용을 입력하세요<br>인증 · 내용을 입력하세요</div>
       </div>
     </div>
     <div class="s-story-sub">
-      ${izNew('?�재 ?�브 1','430 × 440px',390)}
-      ${izNew('?�재 ?�브 2','430 × 440px',390)}
+      ${izNew('소재 서브 1','430 × 440px',390)}
+      ${izNew('소재 서브 2','430 × 440px',390)}
     </div>
   </div>`,
   style:()=>`<div class="sec-wrap s-style">
-    <div><div class="sec-en" contenteditable>Styling Guide</div><div class="sec-kr" contenteditable>?�렇�?매치?�세??/div></div>
+    <div><div class="sec-en" contenteditable>Styling Guide</div><div class="sec-kr" contenteditable>이렇게 매치하세요</div></div>
     <div class="s-style-grid">
-    ${[['Daily Casual','?�일�?],['Smart Casual','?�마??],['Feminine','?��???]].map(([m,t])=>`<div class="s-style-card" style="position:relative"><button class="del-btn" onclick="delItem('s-style-card',this)">??/button><button class="add-btn" onclick="addStyleCard()">+</button>${izNew('?��??�링','267 × 400px',360)}<div class="s-style-body"><div class="s-style-mood" contenteditable>${m}</div><div class="s-style-title" contenteditable>${t}</div><div class="s-style-items" contenteditable>?�이??1 + ?�이??2</div></div></div>`).join('')}
+    ${[['Daily Casual','데일리'],['Smart Casual','스마트'],['Feminine','페미닌']].map(([m,t])=>`<div class="s-style-card" style="position:relative"><button class="del-btn" onclick="delItem('s-style-card',this)">✕</button><button class="add-btn" onclick="addStyleCard()">+</button>${izNew('스타일링','267 × 400px',360)}<div class="s-style-body"><div class="s-style-mood" contenteditable>${m}</div><div class="s-style-title" contenteditable>${t}</div><div class="s-style-items" contenteditable>아이템 1 + 아이템 2</div></div></div>`).join('')}
     </div>
   </div>`,
   pkg:()=>`<div class="sec-wrap s-pkg">
     <div class="s-pkg-grid">
-      <div class="s-pkg-img">${izNew('?�키지 ?��?지','430 × 420px',375)}</div>
+      <div class="s-pkg-img">${izNew('패키지 이미지','430 × 420px',375)}</div>
       <div class="s-pkg-txt">
         <div class="s-pkg-label" contenteditable>Packaging &amp; Delivery</div>
-        <div class="s-pkg-title" contenteditable>받는 ?�간부??br>?�별??경험</div>
+        <div class="s-pkg-title" contenteditable>받는 순간부터<br>특별한 경험</div>
         <ul class="s-pkg-list">
-          ${['친환�?박스 ?�장','?�후 2???�전 주문 ???�일 출고','?�국 1~2?????�령','5�????�상 무료배송','?�령 ??14???�내 무료 교환·반품'].map(t=>`<li contenteditable>${t}</li>`).join('')}
+          ${['친환경 박스 포장','오후 2시 이전 주문 시 당일 출고','전국 1~2일 내 수령','5만 원 이상 무료배송','수령 후 14일 이내 무료 교환·반품'].map(t=>`<li contenteditable>${t}</li>`).join('')}
         </ul>
       </div>
     </div>
@@ -118,32 +118,32 @@ const SEC_TMPL = {
   return '<div class="sec-wrap s-size">'
     +'<div class="s-size-title" contenteditable>Size Guide</div>'
     +'<div class="s-size-ctrl">'
-    +'<span class="s-size-ctrl-lbl">?�리??</span>'
+    +'<span class="s-size-ctrl-lbl">프리셋:</span>'
     
-    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'?�류\')">?�류</button>'
-    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'가�?')">가�?/button>'
-    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'?�발\')">?�발</button>'
-    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'?�말\')">?�말</button>'
+    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'의류\')">의류</button>'
+    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'가방\')">가방</button>'
+    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'신발\')">신발</button>'
+    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'양말\')">양말</button>'
     +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'모자\')">모자</button>'
-    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'바�?\')">바�?</button>'
+    +'<button class="size-preset-btn" onclick="applyPreset(this.closest(\'.s-size\'),\'바지\')">바지</button>'
     +'<span class="s-size-ctrl-sep"></span>'
-    +'<button class="size-ctrl-btn" onclick="sizeAddRow(this.closest(\'.s-size\'))">+ ??/button>'
-    +'<button class="size-ctrl-btn" onclick="sizeDelRow(this.closest(\'.s-size\'))">????/button>'
-    +'<button class="size-ctrl-btn" onclick="sizeAddCol(this.closest(\'.s-size\'))">+ ??/button>'
-    +'<button class="size-ctrl-btn" onclick="sizeDelCol(this.closest(\'.s-size\'))">????/button>'
+    +'<button class="size-ctrl-btn" onclick="sizeAddRow(this.closest(\'.s-size\'))">+ 행</button>'
+    +'<button class="size-ctrl-btn" onclick="sizeDelRow(this.closest(\'.s-size\'))">− 행</button>'
+    +'<button class="size-ctrl-btn" onclick="sizeAddCol(this.closest(\'.s-size\'))">+ 열</button>'
+    +'<button class="size-ctrl-btn" onclick="sizeDelCol(this.closest(\'.s-size\'))">− 열</button>'
     +'</div>'
-    +'<div class="s-size-wrap"><div class="s-size-img">'+izNew('??가?�드 ?��?지','430 × 560px',500)+'</div>'
+    +'<div class="s-size-wrap"><div class="s-size-img">'+izNew('핏 가이드 이미지','430 × 560px',500)+'</div>'
     +'<div><table class="s-size-tbl"><thead><tr>'
-    +['Size','총장','가??,'?�깨','?�매'].map(function(h){return '<th contenteditable>'+h+'</th>';}).join('')
+    +['Size','총장','가슴','어깨','소매'].map(function(h){return '<th contenteditable>'+h+'</th>';}).join('')
     +'</tr></thead><tbody>'
     +['XS','S','M','L','XL'].map(function(s,i){
       return '<tr'+(i===2?' class="highlight"':'')+'>'
-        +[s,'??,'??,'??,'??].map(function(v){return '<td contenteditable>'+v+'</td>';}).join('')+'</tr>';
+        +[s,'—','—','—','—'].map(function(v){return '<td contenteditable>'+v+'</td>';}).join('')+'</tr>';
     }).join('')
     +'</tbody></table>'
     +'<div class="s-model-info"><div class="s-model-info-title">Model Size</div>'
-    +'<div class="s-model-info-body" contenteditable>168cm · 52kg · M ?�이�?착용</div></div>'
-    +'<div class="s-size-note" contenteditable>???�위: cm / 측정 방법???�라 1~2cm ?�차가 발생?????�습?�다.</div>'
+    +'<div class="s-model-info-body" contenteditable>168cm · 52kg · M 사이즈 착용</div></div>'
+    +'<div class="s-size-note" contenteditable>※ 단위: cm / 측정 방법에 따라 1~2cm 오차가 발생할 수 있습니다.</div>'
     +'</div></div></div>';
 },
   info:()=>`<div class="sec-wrap s-info">
@@ -152,62 +152,62 @@ const SEC_TMPL = {
       <tr><td class="s-info-key" contenteditable>Season</td><td><div class="ck-group"><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Spring/Autumn</span></div><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Summer</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Winter</span></div></div></td></tr>
       <tr><td class="s-info-key" contenteditable>Fit</td><td><div class="ck-group"><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Slim</span></div><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Regular</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Oversize</span></div></div></td></tr>
       <tr><td class="s-info-key" contenteditable>Thickness</td><td><div class="ck-group"><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Thin</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Regular</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Heavy</span></div></div></td></tr>
-      <tr><td class="s-info-key" contenteditable>Fabric</td><td class="s-info-val" contenteditable>?�재�??�력?�세??/td></tr>
-      <tr><td class="s-info-key" contenteditable>Color</td><td class="s-info-val" contenteditable>컬러�??�력?�세??/td></tr>
+      <tr><td class="s-info-key" contenteditable>Fabric</td><td class="s-info-val" contenteditable>소재를 입력하세요</td></tr>
+      <tr><td class="s-info-key" contenteditable>Color</td><td class="s-info-val" contenteditable>컬러를 입력하세요</td></tr>
       <tr><td class="s-info-key" contenteditable>Size</td><td class="s-info-val" contenteditable>XS / S / M / L / XL</td></tr>
       <tr><td class="s-info-key" contenteditable>Origin</td><td class="s-info-val" contenteditable>Korea</td></tr>
     </table>
   </div>`,
   wash:()=>`<div class="sec-wrap s-wash">
     <div class="s-wash-title" contenteditable>Washing &amp; Care</div>
-    <div class="s-wash-icons">${['?��','?��','?��','?���?,'??].map(ic=>`<div class="s-wash-ico icon-editable" onclick="openEP(this,event)">${ic}</div>`).join('')}</div>
-    <div class="s-wash-note" contenteditable>1. ?�탁 방법 주의?�항???�력?�주?�요.<br>2. ?�탁 방법 주의?�항???�력?�주?�요.<br>3. ?�탁 방법 주의?�항???�력?�주?�요.</div>
+    <div class="s-wash-icons">${['🌊','🚫','🌿','🌡️','❌'].map(ic=>`<div class="s-wash-ico icon-editable" onclick="openEP(this,event)">${ic}</div>`).join('')}</div>
+    <div class="s-wash-note" contenteditable>1. 세탁 방법 주의사항을 입력해주세요.<br>2. 세탁 방법 주의사항을 입력해주세요.<br>3. 세탁 방법 주의사항을 입력해주세요.</div>
   </div>`,
   faq:()=>`<div class="sec-wrap s-faq">
-    <div><div class="sec-en" contenteditable>FAQ</div><div class="sec-kr" contenteditable>?�주 묻는 질문</div></div>
-    ${[['Q. ?�이즈�? ?�게 ?�오?�요?','?�반?�인 ?�국 ?�류 기�? ?�이즈입?�다. ?�무 ?�렁?�거???�?�트?��? ?��? ?�귤???�으�?기획?��??��?�??�소 ?�이즈�? ?�택?�시�??�니??'],['Q. 배송?� ?�마??걸리?�요?','?�후 2???�전 결제 ???�일 출고?�며, ?�국 1~2?????�령 가?�합?�다.'],['Q. 교환·반품??가?�한가??','?�령 ??14???�내 교환·반품 ?�청??가?�합?�다.']].map(([q,a])=>`<div class="s-faq-item" style="position:relative"><button class="del-btn" onclick="delItem('s-faq-item',this)">??/button><button class="add-btn" onclick="addFaqItem()">+</button><div class="s-faq-q" onclick="this.parentElement.classList.toggle('open')"><span class="s-faq-q-txt" contenteditable>${q}</span><span class="s-faq-arr">??/span></div><div class="s-faq-a" contenteditable>${a}</div></div>`).join('')}
+    <div><div class="sec-en" contenteditable>FAQ</div><div class="sec-kr" contenteditable>자주 묻는 질문</div></div>
+    ${[['Q. 사이즈가 작게 나오나요?','일반적인 한국 의류 기준 사이즈입니다. 너무 헐렁하거나 타이트하지 않은 레귤러 핏으로 기획하였으므로 평소 사이즈를 선택하시면 됩니다.'],['Q. 배송은 얼마나 걸리나요?','오후 2시 이전 결제 시 당일 출고되며, 전국 1~2일 내 수령 가능합니다.'],['Q. 교환·반품이 가능한가요?','수령 후 14일 이내 교환·반품 신청이 가능합니다.']].map(([q,a])=>`<div class="s-faq-item" style="position:relative"><button class="del-btn" onclick="delItem('s-faq-item',this)">✕</button><button class="add-btn" onclick="addFaqItem()">+</button><div class="s-faq-q" onclick="this.parentElement.classList.toggle('open')"><span class="s-faq-q-txt" contenteditable>${q}</span><span class="s-faq-arr">▼</span></div><div class="s-faq-a" contenteditable>${a}</div></div>`).join('')}
   </div>`,
   pd:()=>`<div class="sec-wrap s-pd">
     <div class="s-pd-hd"><div class="s-pd-hd-title" contenteditable>Product Detail</div></div>
-    <div class="s-pd-full">${izNew('?�테???�로즈업 1','860 × 840px',300)}</div>
-    <div class="s-pd-2col">${izNew('?�테??2','430 × 700px',250)}${izNew('?�테??3','430 × 700px',250)}</div>
-    <div class="s-pd-3col">${izNew('?�테??4','287 × 500px',300)}${izNew('?�테??5','287 × 500px',300)}${izNew('?�테??6','287 × 500px',300)}</div>
+    <div class="s-pd-full">${izNew('디테일 클로즈업 1','860 × 840px',300)}</div>
+    <div class="s-pd-2col">${izNew('디테일 2','430 × 700px',250)}${izNew('디테일 3','430 × 700px',250)}</div>
+    <div class="s-pd-3col">${izNew('디테일 4','287 × 500px',300)}${izNew('디테일 5','287 × 500px',300)}${izNew('디테일 6','287 × 500px',300)}</div>
   </div>`,
-  img_only:()=>`<div class="sec-wrap s-img-only">${izNew('?��?지','860 × auto',360)}</div>`,
+  img_only:()=>`<div class="sec-wrap s-img-only">${izNew('이미지','860 × auto',360)}</div>`,
   footer:()=>`<div class="sec-wrap s-footer">
-    ${['모니???�상???�는 모바???�경???�라 ?�제 ?�품 ?�상�??�소 차이가 ?�을 ???�습?�다.','?�이�?측정 방법???�라 1~2cm ?�차가 발생?????�습?�다.','?�품 ?�령 ??14???�내 교환·반품 ?�청??가?�합?�다.','불량·?�배?�의 경우 ?�액 ?�불 ?�는 교환 처리???�립?�다.'].map(t=>`<p contenteditable>${t}</p>`).join('')}
+    ${['모니터 해상도 또는 모바일 환경에 따라 실제 제품 색상과 다소 차이가 있을 수 있습니다.','사이즈 측정 방법에 따라 1~2cm 오차가 발생할 수 있습니다.','상품 수령 후 14일 이내 교환·반품 신청이 가능합니다.','불량·오배송의 경우 전액 환불 또는 교환 처리해 드립니다.'].map(t=>`<p contenteditable>${t}</p>`).join('')}
   </div>`,
 };
 const SEC_META = {
-  banner:{label:'컬렉??배너',icon:'ti-tag'},
-  hero:{label:'?�어�??��?지',icon:'ti-home'},
-  trust:{label:'구매 ?�심 배�?',icon:'ti-shield-check'},
+  banner:{label:'컬렉션 배너',icon:'ti-tag'},
+  hero:{label:'히어로 이미지',icon:'ti-home'},
+  trust:{label:'구매 안심 배지',icon:'ti-shield-check'},
   copy:{label:'감성 카피',icon:'ti-quote'},
-  proof:{label:'?�셜 증명',icon:'ti-chart-bar'},
-  feat:{label:'기능 그리??,icon:'ti-list'},
-  compare:{label:'?�재 비교',icon:'ti-scale'},
-  wearing:{label:'착용 ?��?,icon:'ti-shirt'},
-  duo:{label:'2???��?지',icon:'ti-layout-columns'},
-  angle:{label:'?�각??�?,icon:'ti-rotate-360'},
-  mood:{label:'무드�?,icon:'ti-photo'},
-  infl:{label:'?�플루언??,icon:'ti-users'},
-  story:{label:'브랜???�토�?,icon:'ti-book'},
-  style:{label:'?��??�링 가?�드',icon:'ti-hanger'},
-  pkg:{label:'?�키지·배송',icon:'ti-package'},
-  size:{label:'?�이�?가?�드',icon:'ti-ruler'},
-  info:{label:'?�품 ?�보??,icon:'ti-info-circle'},
-  wash:{label:'?�탁 방법',icon:'ti-wash'},
+  proof:{label:'소셜 증명',icon:'ti-chart-bar'},
+  feat:{label:'기능 그리드',icon:'ti-list'},
+  compare:{label:'소재 비교',icon:'ti-scale'},
+  wearing:{label:'착용 풀컷',icon:'ti-shirt'},
+  duo:{label:'2단 이미지',icon:'ti-layout-columns'},
+  angle:{label:'다각도 뷰',icon:'ti-rotate-360'},
+  mood:{label:'무드컷',icon:'ti-photo'},
+  infl:{label:'인플루언서',icon:'ti-users'},
+  story:{label:'브랜드 스토리',icon:'ti-book'},
+  style:{label:'스타일링 가이드',icon:'ti-hanger'},
+  pkg:{label:'패키지·배송',icon:'ti-package'},
+  size:{label:'사이즈 가이드',icon:'ti-ruler'},
+  info:{label:'상품 정보표',icon:'ti-info-circle'},
+  wash:{label:'세탁 방법',icon:'ti-wash'},
   faq:{label:'FAQ',icon:'ti-help-circle'},
-  pd:{label:'?�품 ?�테??,icon:'ti-zoom-in'},
-  img_only:{label:'?��?지�?,icon:'ti-photo-scan'},
-  footer:{label:'?�의?�항 ?�터',icon:'ti-file-text'},
+  pd:{label:'제품 디테일',icon:'ti-zoom-in'},
+  img_only:{label:'이미지만',icon:'ti-photo-scan'},
+  footer:{label:'유의사항 푸터',icon:'ti-file-text'},
 };
 
-// ?�역 ?�태 (var - 중복 ?�언 ?�용)
+// 전역 상태 (var - 중복 선언 허용)
 var _uid=0,_jpgScale=1,_ftEl=null,_epEl=null,_aiResult=null,_slotBusy=false;
 var BG_COLORS=['#ffffff','#0c0c0c','#f8f8f8','#f5f5f5','#f9f9f9','#1a1a2e','#16213e','#0f3460','#1a2e1a','#2d1b1b','#e8f5e9','#fff3e0','#fce4ec','#e3f2fd','#f3e5f5','#e8eaf6','#fff8e1','#e0f7fa','#f9fbe7','#fbe9e7','#111111','#222222','#333333','#555555','#888888','#fffef0','#fff9f0','#f0fff4','#f0f4ff','#fff0f0'];
 
-// ?�틸
+// 유틸
 function nextId(){return 'sec_'+(++_uid);}
 function showHint(msg){var h=document.getElementById('hint');h.textContent=msg;h.style.opacity='1';clearTimeout(h._t);h._t=setTimeout(function(){h.style.opacity='0';},2500);}
 function setW(w,btn){document.getElementById('preview').style.width=w+'px';document.querySelectorAll('.wb-btn').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
@@ -216,7 +216,7 @@ function applyFont(v){
   if(!v) return;
   var pv=document.getElementById('preview');
   if(!pv) return;
-  // 부?�러???�환???�한 transition 추�?
+  // 부드러운 전환을 위한 transition 추가
   if(!pv.style.transition.includes('font-family')){
     pv.style.transition = (pv.style.transition||'') + ', font-family 0.2s ease';
   }
@@ -224,7 +224,7 @@ function applyFont(v){
   pv.style.setProperty('--pf',v);
 }
 
-// ?�?� 커스?� ?�트 ?�커 (?�버 ?�리�? ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 커스텀 폰트 픽커 (호버 프리뷰) ────────────────────────────────────────
 var _fontCommitted = "'Gmarket Sans',sans-serif";
 function fontPickerToggle(e){
   e&&e.stopPropagation();
@@ -259,7 +259,7 @@ function _initFontPicker(){
     applyFont(_fontCommitted);
     _markCommittedOpt();
     fontPickerClose();
-    showHint('???�트: '+(opt.dataset.l||'').replace(/\s*\(.*\)$/,''));
+    showHint('✅ 폰트: '+(opt.dataset.l||'').replace(/\s*\(.*\)$/,''));
   });
   _markCommittedOpt();
 }
@@ -270,7 +270,7 @@ function closeAddModal(){var m=document.getElementById('add-modal');if(m)m.class
 function setJpgScale(s,btn){_jpgScale=s+1;document.querySelectorAll('#jpg-1x,#jpg-2x').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 const TF={active:null,drag:null};
 
-// ?�축??dataURL???�버(/api/upload)�?보내 FTP???�????public URL 반환
+// 압축된 dataURL을 서버(/api/upload)로 보내 FTP에 저장 → public URL 반환
 function uploadToFTP(dataURL){
   return fetch('/api/upload', {
     method:'POST',
@@ -283,13 +283,13 @@ function uploadToFTP(dataURL){
     }
     return r.json();
   }).then(function(j){
-    if(!j||!j.url) throw new Error('?�버 ?�답??url ?�음');
+    if(!j||!j.url) throw new Error('서버 응답에 url 없음');
     return j.url;
   });
 }
 
-// ?��?지 처리: ?�본 그�?�?FTP???�로??(?�상??100% ?��?, 리사?�즈/?�인코딩 ?�음)
-// naturalWidth/Height�?측정?�서 initTF???�달. ?�로???�패 ??dataURL??fallback?�로 ?�용
+// 이미지 처리: 원본 그대로 FTP에 업로드 (해상도 100% 유지, 리사이즈/재인코딩 없음)
+// naturalWidth/Height만 측정해서 initTF에 전달. 업로드 실패 시 dataURL을 fallback으로 사용
 function compressImage(file, cb){
   var reader=new FileReader();
   reader.onload=function(e){
@@ -297,13 +297,13 @@ function compressImage(file, cb){
     var img=new Image();
     img.onload=function(){
       var w=img.naturalWidth, h=img.naturalHeight;
-      showHint('???��?지 ?�로??�?..');
+      showHint('⏳ 이미지 업로드 중...');
       uploadToFTP(src).then(function(url){
-        showHint('???�로???�료');
+        showHint('✅ 업로드 완료');
         cb(url, w, h);
       }).catch(function(err){
-        console.warn('FTP ?�로???�패 ??dataURL fallback:', err && err.message);
-        showHint('???�로???�패 ???�시 미리보기 ?�용');
+        console.warn('FTP 업로드 실패 → dataURL fallback:', err && err.message);
+        showHint('⚠ 업로드 실패 — 임시 미리보기 사용');
         cb(src, w, h);
       });
     };
@@ -323,7 +323,7 @@ function pv(input){
 function initTF(zone,src,nW,nH){
   zone.querySelector('.tf-wrap')?.remove();
   zone.querySelector('.iz-del')?.remove();
-  // ?��?지 ?�로????iz ?��? ?�선 ?�두�?배경 ?�거
+  // 이미지 업로드 후 iz 파란 점선 테두리/배경 제거
   zone.style.border='none';
   zone.style.background='transparent';
   zone.classList.add('has-image');
@@ -359,7 +359,7 @@ function initTF(zone,src,nW,nH){
   wrap.appendChild(dim);
   const badge=document.createElement('div');
   badge.className='tf-lock-badge';
-  badge.textContent='??Shift = ?�유변??;
+  badge.textContent='⇧ Shift = 자유변형';
   wrap.appendChild(badge);
   // Hide placeholder
   const inner=zone.querySelector('.iz-in');
@@ -367,16 +367,16 @@ function initTF(zone,src,nW,nH){
   // Add delete button
   const del=document.createElement('button');
   del.className='iz-del';
-  del.innerHTML='?��';
-  del.onclick=e=>{e.stopPropagation();if(confirm('?��?지�???��?�까??')){wrap.remove();del.remove();if(inner)inner.style.display='';zone.querySelectorAll('.iz-ov').forEach(o=>o.style.display='');const fi2=zone.querySelector('input[type=file]');if(fi2){fi2.style.pointerEvents='';fi2.style.opacity='0';}}};
+  del.innerHTML='🗑';
+  del.onclick=e=>{e.stopPropagation();if(confirm('이미지를 삭제할까요?')){wrap.remove();del.remove();if(inner)inner.style.display='';zone.querySelectorAll('.iz-ov').forEach(o=>o.style.display='');const fi2=zone.querySelector('input[type=file]');if(fi2){fi2.style.pointerEvents='';fi2.style.opacity='0';}}};
   zone.appendChild(del);
   zone.appendChild(wrap);
   tfSelect(wrap,zone);
   bindTF(wrap,zone);
-  // ?��?지 ?�로????input?� z-index�?조정 (?�릭 ?�벤??방�?)
+  // 이미지 업로드 후 input은 z-index만 조정 (클릭 이벤트 방지)
   const fileInput=zone.querySelector('input[type=file]');
   if(fileInput){fileInput.style.pointerEvents='none';fileInput.style.opacity='0';}
-  showHint('???�래�? ?�동 · ?�들: ?�기 조절 · Shift: 비율 ?�유변??· Esc: ?�정');
+  showHint('↔ 드래그: 이동 · 핸들: 크기 조절 · Shift: 비율 자유변형 · Esc: 확정');
 }
 
 function tfSetPos(wrap,x,y,w,h){
@@ -461,7 +461,7 @@ document.addEventListener('keydown',e=>{
 });
 /* IZ resize bar */
 function addBar(iz){
-  // flex/grid ?�이?�웃 ?�의 iz??resize bar 추�? ????(?�이?�웃 깨짐 방�?)
+  // flex/grid 레이아웃 안의 iz는 resize bar 추가 안 함 (레이아웃 깨짐 방지)
   var SKIP=['.s-duo','.s-angle-grid','.s-cmp-wrap','.s-cmp-desc',
     '.s-mood3','.s-story-sub','.s-style-grid',
     '.s-infl-grid-top','.s-infl-grid-bot',
@@ -471,7 +471,7 @@ function addBar(iz){
   if(iz.querySelector('.resize-bar'))return;
   var bar=document.createElement('div');
   bar.className='resize-bar';
-  bar.textContent='??;
+  bar.textContent='⠿';
   var st=false,sh=0,sy=0;
   bar.addEventListener('mousedown',function(ev){
     ev.preventDefault();st=true;sh=iz.offsetHeight;sy=ev.clientY;
@@ -495,15 +495,15 @@ function buildIzOverlay(iz){
   var ov=document.createElement('div');
   ov.className='iz-ov';
 
-  // ?�?�?� ?�로??버튼 (body???�시 input ?�성 방식 - 가???�뢰???�음) ?�?�?�
+  // ─── 업로드 버튼 (body에 임시 input 생성 방식 - 가장 신뢰성 높음) ───
   var upBtn=document.createElement('button');
   upBtn.type='button';
   upBtn.className='iz-ov-btn blue';
-  upBtn.textContent='?�� ?��?지 ?�로??;upBtn.title='?�릭?�여 ?��?지�??�로?�합?�다';
+  upBtn.textContent='📂 이미지 업로드';upBtn.title='클릭하여 이미지를 업로드합니다';
   upBtn.addEventListener('click',function(e){
     e.stopPropagation();
     e.preventDefault();
-    // body???�시 file input ?�성 ???�릭 ???�일 ?�택 ???�거
+    // body에 임시 file input 생성 → 클릭 → 파일 선택 후 제거
     var tmp=document.createElement('input');
     tmp.type='file';
     tmp.accept='image/*';
@@ -513,7 +513,7 @@ function buildIzOverlay(iz){
       compressImage(tmp.files[0], function(src,nW,nH){
         initTF(iz,src,nW,nH);
       });
-      // ?�용 ?�료 ???�거
+      // 사용 완료 후 제거
       setTimeout(function(){if(tmp.parentNode)document.body.removeChild(tmp);},1000);
     };
     document.body.appendChild(tmp);
@@ -521,22 +521,22 @@ function buildIzOverlay(iz){
   });
   ov.appendChild(upBtn);
 
-  // ?�?�?� ?�롯 추�? (?�일 ?��?지 ?�역?� 버튼 ?��?) ?�?�?�
-  // ?�롯 추�?�??�용?��? ?�는 부�?목록
-  var NO_ADD=[];  // 모든 ?�션 ?�롯 추�? ?�용
+  // ─── 슬롯 추가 (단일 이미지 영역은 버튼 숨김) ───
+  // 슬롯 추가를 허용하지 않는 부모 목록
+  var NO_ADD=[];  // 모든 섹션 슬롯 추가 허용
   var canAdd=!NO_ADD.some(function(sel){return iz.closest(sel);});
 
   var addBtn=document.createElement('button');
   addBtn.className='iz-ov-btn green';
-  addBtn.textContent='???�롯 추�?';
-  if(!canAdd){addBtn.style.display='none';}  // ?�일 ?�역: ?��?
+  addBtn.textContent='➕ 슬롯 추가';
+  if(!canAdd){addBtn.style.display='none';}  // 단일 영역: 숨김
   addBtn.addEventListener('click',function(e){
     e.stopPropagation();
-    // 즉시 ??�� (?�금 ?�음)
+    // 즉시 삭제 (잠금 없음)
 
     var inflCard=iz.closest('.s-infl-card');
     if(inflCard){
-      // ?�플루언??카드 ??카드 ?�체�?grid??추�?
+      // 인플루언서 카드 → 카드 전체를 grid에 추가
       var grid=inflCard.closest('.s-infl-grid-bot')||inflCard.closest('.s-infl-grid-top');
       if(!grid){_slotBusy=false;return;}
       var newCard=document.createElement('div');
@@ -549,70 +549,70 @@ function buildIzOverlay(iz){
       var newIz=document.createElement('div');
       newIz.className='iz';
       newIz.style.cssText='height:300px;border:none;background:#e8eaff;';
-      newIz.innerHTML='<button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">?��</button><div class="iz-in"><div class="iz-ico">?��</div><div class="iz-lbl">?�플루언??/div><div class="iz-px">287 × 340px</div></div><input type="file" accept="image/*" onchange="pv(this)">';
+      newIz.innerHTML='<button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">인플루언서</div><div class="iz-px">287 × 340px</div></div><input type="file" accept="image/*" onchange="pv(this)">';
       newIz.onclick=function(ev){izClickOpen(newIz,ev);};
       newCard.appendChild(newIz);
       var inflOv=document.createElement('div');inflOv.className='s-infl-ov';newCard.appendChild(inflOv);
       var inflCopy=document.createElement('div');inflCopy.className='s-infl-copy';
-      inflCopy.innerHTML='<div class="s-infl-handle" contenteditable>@influencer</div><div class="s-infl-tag" contenteditable>#?�그</div>';
+      inflCopy.innerHTML='<div class="s-infl-handle" contenteditable>@influencer</div><div class="s-infl-tag" contenteditable>#태그</div>';
       newCard.appendChild(inflCopy);
-      grid.insertBefore(newCard, inflCard.nextSibling); // ?�릭 ?�치 ?�음
+      grid.insertBefore(newCard, inflCard.nextSibling); // 클릭 위치 다음
       buildIzOverlay(newIz);
-      showHint('???�플루언??카드 추�???);
+      showHint('✅ 인플루언서 카드 추가됨');
     } else {
-      // ?� 복합 ?� 컨텍?�트 감�? (angle-cell, style-card, mood3-card ?? ?�
+      // ─ 복합 셀 컨텍스트 감지 (angle-cell, style-card, mood3-card 등) ─
       var featItem=iz.closest('.s-feat-item');
       var angleCell=iz.closest('.s-angle-cell');
       var styleCard=iz.closest('.s-style-card');
       var mood3Card=iz.closest('.s-mood3-card');
 
       if(featItem){
-        // feat ?�이????그리?�에 ???�이??추�? (?�른�?�?공간 채우�?
+        // feat 아이템 → 그리드에 새 아이템 추가 (오른쪽 빈 공간 채우기)
         if(typeof addFeatItem==='function')addFeatItem();
         return;
       } else if(angleCell){
-        // ?�각?? ??angle-cell ?�체�?grid??추�?
-        try{addAngleSlot();}catch(e){showHint('??각도 ?�롯 추�? ?�류');}
+        // 다각도: 새 angle-cell 전체를 grid에 추가
+        try{addAngleSlot();}catch(e){showHint('❌ 각도 슬롯 추가 오류');}
         _slotBusy=false;return;
       } else if(styleCard){
-        try{addStyleCard();}catch(e){showHint('???��????�롯 추�? ?�류');}
+        try{addStyleCard();}catch(e){showHint('❌ 스타일 슬롯 추가 오류');}
         _slotBusy=false;return;
       } else if(mood3Card){
-        try{addMood3Card();}catch(e){showHint('??무드 ?�롯 추�? ?�류');}
+        try{addMood3Card();}catch(e){showHint('❌ 무드 슬롯 추가 오류');}
         _slotBusy=false;return;
       }
 
-      // ?�반 iz ?�롯 추�?
+      // 일반 iz 슬롯 추가
       var parent=iz.parentElement;
       var h2=iz.offsetHeight||parseInt(iz.style.height)||300;
 
-      // 컨테?�너 분류
-      // 1) ?�열 Grid ?�션: ?�으�?배치
+      // 컨테이너 분류
+      // 1) 다열 Grid 섹션: 옆으로 배치
       var GRID_COLS={'s-duo':2,'s-pd-2col':2,'s-pd-3col':3,'s-story-sub':2,'s-infl-grid-bot':3,'s-angle-grid':2,'s-mood3':3,'s-style-grid':3};
       var cols=0;
       for(var cls in GRID_COLS){if(parent.classList.contains(cls)){cols=GRID_COLS[cls];break;}}
 
-      // 2) ?�일 ?�체???�션: ?�로로만 추�?
+      // 2) 단일 전체폭 섹션: 세로로만 추가
       var VERT=['s-hero','s-wearing','s-img-only','s-pd-full','s-pd-full2','s-mood-main','s-story-img','s-pkg-img','s-size-img','s-cmp-col'];
       var isVert=VERT.some(function(v){return parent.classList.contains(v);});
 
       var newIz2=document.createElement('div');
       newIz2.className='iz';
       newIz2.onclick=function(ev){izClickOpen(newIz2,ev);};
-      newIz2.innerHTML='<button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">?��</button><div class="iz-in"><div class="iz-ico">?��</div><div class="iz-lbl">?��?지</div><div class="iz-px">??/div></div><input type="file" accept="image/*" onchange="pv(this)">';
+      newIz2.innerHTML='<button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">이미지</div><div class="iz-px">—</div></div><input type="file" accept="image/*" onchange="pv(this)">';
 
       if(isVert){
-        // ?�체???�로 ?�기
+        // 전체폭 세로 쌓기
         parent.style.display='block';
         newIz2.style.cssText='height:'+h2+'px;width:100%;display:block;margin-top:3px;';
       } else if(cols>0){
-        // 명시??그리???�션 (?��? CSS�??�용??
+        // 명시적 그리드 섹션 (이미 CSS로 적용됨)
         newIz2.style.height=h2+'px';
         parent.style.display='grid';
         parent.style.gridTemplateColumns='repeat('+cols+',1fr)';
         parent.style.gap='3px';
       } else {
-        // 기�?: ?�재 컬럼 ???��? (기존 ?�롯�?같�? ???�로)
+        // 기타: 현재 컬럼 수 유지 (기존 슬롯과 같은 열 수로)
         var existingCount=parent.querySelectorAll(':scope>.iz').length||1;
         parent.style.display='grid';
         parent.style.gridTemplateColumns='repeat('+existingCount+',1fr)';
@@ -622,15 +622,15 @@ function buildIzOverlay(iz){
       parent.insertBefore(newIz2, iz.nextSibling);
       buildIzOverlay(newIz2);
       addBar(newIz2);
-      showHint('???�롯 추�???);
+      showHint('✅ 슬롯 추가됨');
     }
   });
   ov.appendChild(addBtn);
 
-  // ?�?�?� ?�롯 ??�� (?�역 ?�금, 컨텍?�트 ?�식) ?�?�?�
+  // ─── 슬롯 삭제 (전역 잠금, 컨텍스트 인식) ───
   var delBtn=document.createElement('button');
   delBtn.className='iz-ov-btn red';
-  delBtn.textContent='???�롯 ??��';
+  delBtn.textContent='✕ 슬롯 삭제';
   delBtn.addEventListener('click',function(e){
     e.stopPropagation();
     if(_slotBusy)return;
@@ -642,16 +642,16 @@ function buildIzOverlay(iz){
     var mood3Card2=iz.closest('.s-mood3-card');
     var featItem2=iz.closest('.s-feat-item');
 
-    if(inflCard2){inflCard2.remove();showHint('?�� 카드 ??��??);}
-    else if(angleCell2){angleCell2.remove();showHint('?�� 각도 ?�롯 ??��??);}
-    else if(styleCard2){styleCard2.remove();showHint('?�� ?��???카드 ??��??);}
-    else if(mood3Card2){mood3Card2.remove();showHint('?�� 무드 카드 ??��??);}
-    else if(featItem2){featItem2.remove();showHint('?�� ?�징 ??�� ??��??);}
+    if(inflCard2){inflCard2.remove();showHint('🗑 카드 삭제됨');}
+    else if(angleCell2){angleCell2.remove();showHint('🗑 각도 슬롯 삭제됨');}
+    else if(styleCard2){styleCard2.remove();showHint('🗑 스타일 카드 삭제됨');}
+    else if(mood3Card2){mood3Card2.remove();showHint('🗑 무드 카드 삭제됨');}
+    else if(featItem2){featItem2.remove();showHint('🗑 특징 항목 삭제됨');}
     else {
       var nextEl=iz.nextElementSibling;
       if(nextEl&&nextEl.classList.contains('resize-bar'))nextEl.remove();
       iz.remove();
-      showHint('?�� ?�롯 ??��??);
+      showHint('🗑 슬롯 삭제됨');
     }
   });
   ov.appendChild(delBtn);
@@ -670,7 +670,7 @@ function izAddSlot(btn){
   newIz.querySelector('input[type=file]').value='';
   buildIzOverlay(newIz);
   parent.insertBefore(newIz,iz.nextSibling);
-  showHint('???��?지 ?�롯 추�???);
+  showHint('✅ 이미지 슬롯 추가됨');
 }
 function izDelSlot(btn){
   const iz=btn.closest('.iz');
@@ -679,15 +679,15 @@ function izDelSlot(btn){
   
   iz.nextSibling?.remove?.(); // remove resize bar
   iz.remove();
-  showHint('?�� ?�롯 ??��??);
+  showHint('🗑 슬롯 삭제됨');
 }
 function initIzOverlays(){
   document.querySelectorAll('#preview .iz').forEach(iz=>buildIzOverlay(iz));
 }
 
-/* ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═
+/* ══════════════════════════════════════════════════════════
    FLOATING TEXT TOOLBAR
-?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═ */
+══════════════════════════════════════════════════════════ */
 function showFT(el){
   if(!el)return;
   try{
@@ -721,7 +721,7 @@ function closeFT(){
   if(tb)tb.style.display='none';
   _ftEl=null;
 }
-// CSS??!important 룰을 ?�기?�면 inline ??!important �??�정?�야 ??
+// CSS의 !important 룰을 이기려면 inline 도 !important 로 설정해야 함
 function _camelToKebab(s){ return s.replace(/[A-Z]/g, function(m){return '-'+m.toLowerCase();}); }
 function ftToggle(prop,on,off){
   if(!_ftEl)return;
@@ -748,17 +748,17 @@ function rgbToHex(rgb){
 }
 // Bind showFT to all contenteditable focus events
 
-// ?�바 ?�릭 ??contenteditable ?�커???��? (?�심)
+// 툴바 클릭 시 contenteditable 포커스 유지 (핵심)
 document.addEventListener('DOMContentLoaded',function(){
   var ft=document.getElementById('ft');
   if(ft){
     ft.addEventListener('mousedown',function(e){
-      e.preventDefault(); // contenteditable ?�커???��? ?�게
+      e.preventDefault(); // contenteditable 포커스 잃지 않게
     });
   }
 });
 
-// ?�재 ?�택???�소 ?�이?�이??
+// 현재 선택된 요소 하이라이트
 var _ftPrevOutline='';
 document.addEventListener('focusin',e=>{
   if(e.target.hasAttribute('contenteditable')&&e.target.isContentEditable)
@@ -769,7 +769,7 @@ document.addEventListener('focusout',function(e){
     setTimeout(function(){
       var ae=document.activeElement;
       var ft=document.getElementById('ft');
-      // ?�른 contenteditable�??�동 or ft ?�바 ?�릭 ??= ?��? ?�음
+      // 다른 contenteditable로 이동 or ft 툴바 클릭 시 = 닫지 않음
       if(ft&&ft.contains(ae))return;
       if(ae&&ae.isContentEditable)return;
       closeFT();
@@ -777,51 +777,51 @@ document.addEventListener('focusout',function(e){
   }
 });
 
-/* ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═
+/* ══════════════════════════════════════════════════════════
    EMOJI PICKER
-?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═ */
+══════════════════════════════════════════════════════════ */
 const EP_CATS={
-  '기능?�·소??:['?��?,'?���?,'?��','?��','?��','?���?,'??','?�️','?��','?��','?���?,'??,'?��','?��','?��','?��','?��','?��','?�️','?��','?��','?�️','?��','??,'�?,'?��','?��','?��','?��','?��'],
-  '계절·?�씨':['?��','?��','?��','?��','?��?,'?��','?��','?��','?��','?��','?��','?�️','??,'?��','�?,'?��','?���?,'?���?,'?���?,'?���?,'?��','?��','?��','?��','?��','?��'],
-  '?�션·?��???:['?��','?��','?��','?��','?��','?��','?��','?��','?��','?��','?��','?��','?��','?��','?��','?��'],
-  '?�이?�스?�??:['?��','?��','?���?,'?��','?�️','?��','?��','??,'?��','?��','?��','?��','?���?,'?��','?��','?��','?��','?��','??,'?��'],
-  '기능·?�재':['?��','?��','?�️','?��','?�️','?��','?��','?�️','?��','?��','?��','?��','?��','?��','?��','?��'],
-  '배송·?�비??:['?��','??,'?��','?��?��','?��','?��','??,'?��','?��','?��','?��','�?,'?��','?��','??','?��'],
-  '?�치·지??:['?��','?��','?��','?��','?��','?��','??,'?��','?��','?��','?��','?��','?�️','?�️','?��','?��'],
+  '기능성·소재':['☀️','🛡️','💧','💦','💨','🌬️','🌀','❄️','🔥','🧊','🌡️','⚡','💪','🤸','🧘','🏃','🌿','🌱','♻️','🔬','🧪','⚗️','🏅','✅','⭐','🔆','🌞','🌊','🌈','💎'],
+  '계절·날씨':['🌸','🌺','🌼','🌻','☀️','🌞','🌈','🌊','🍃','🍂','🍁','❄️','⛄','🌙','⭐','🌟','🌤️','🌧️','🌨️','🌬️','🔥','💧','🌿','🌱','🌴','🎋'],
+  '패션·스타일':['👗','👕','👚','🧥','👟','👜','💍','🧣','🎽','👒','🧢','💄','🪡','🧵','🪢','👔'],
+  '라이프스타일':['🏃','🧘','🏋️','🚴','⛷️','🏄','🎾','⛳','🏊','🧗','🎯','🎿','🏕️','🌄','🎭','🎨','🎵','📚','☕','🍵'],
+  '기능·소재':['💪','🌱','♻️','🧪','⚗️','🔬','🛡','⚙️','🔧','🧬','💎','🪨','🌾','🍃','🦺','🔒'],
+  '배송·서비스':['🚚','⚡','🔄','🇰🇷','💳','🎁','✅','📦','🏅','💯','🌟','⭐','📬','🛒','🎀','🏪'],
+  '수치·지표':['📊','📈','🏆','🥇','🎯','💯','✨','💥','🔝','🆕','🆓','🆙','✔️','❤️','💙','💚'],
 };
 
 function addFeatItem(){
   var s=document.querySelector('.s-feat-grid');if(!s)return;
   var d=document.createElement('div');d.className='s-feat-item';d.style.position='relative';
-  d.innerHTML='<button class="del-btn" onclick="delItem(\'s-feat-item\',this)">??/button>'
+  d.innerHTML='<button class="del-btn" onclick="delItem(\'s-feat-item\',this)">✕</button>'
     +'<button class="add-btn" onclick="addFeatItem()">+</button>'
     +'<div class="s-feat-ico-wrap">'
-    +'<div class="s-feat-ico icon-editable" onclick="openEP(this,event)">??/div>'
-    +'<button class="s-feat-ico-del" onclick="event.stopPropagation();this.previousElementSibling.textContent=\'\'" title="?�이�???��">??/button>'
+    +'<div class="s-feat-ico icon-editable" onclick="openEP(this,event)">✨</div>'
+    +'<button class="s-feat-ico-del" onclick="event.stopPropagation();this.previousElementSibling.textContent=\'\'" title="아이콘 삭제">✕</button>'
     +'</div>'
-    +'<div class="s-feat-name" contenteditable>?�징 ?�목</div>'
-    +'<div class="s-feat-desc" contenteditable>?�명???�력?�세??</div>'
-    +izNew('?�징 ?��?지','860 × 960px',437);
+    +'<div class="s-feat-name" contenteditable>특징 제목</div>'
+    +'<div class="s-feat-desc" contenteditable>설명을 입력하세요.</div>'
+    +izNew('특징 이미지','860 × 960px',437);
   s.appendChild(d);
   d.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
-  showHint('???�징 ??�� 추�???);
+  showHint('✅ 특징 항목 추가됨');
 }
 
 function addFaqItem(){
   const s=document.querySelector('.s-faq');if(!s)return;
   const d=document.createElement('div');d.className='s-faq-item';d.style.position='relative';
-  d.innerHTML=`<button class="del-btn" onclick="delItem('s-faq-item',this)">??/button><div class="s-faq-q" onclick="this.parentElement.classList.toggle('open')"><span class="s-faq-q-txt" contenteditable>??질문</span><span class="s-faq-arr">??/span></div><div class="s-faq-a" contenteditable>?��????�력?�세??</div>`;
-  s.appendChild(d);showHint('??FAQ 추�???);
+  d.innerHTML=`<button class="del-btn" onclick="delItem('s-faq-item',this)">✕</button><div class="s-faq-q" onclick="this.parentElement.classList.toggle('open')"><span class="s-faq-q-txt" contenteditable>새 질문</span><span class="s-faq-arr">▼</span></div><div class="s-faq-a" contenteditable>답변을 입력하세요.</div>`;
+  s.appendChild(d);showHint('✅ FAQ 추가됨');
 }
 function addDuoSlot(){
   const s=document.querySelector('.s-duo');if(!s)return;
   const d=document.createElement('div');
-  d.innerHTML=izNew('착용�?,'430 × 680px',680);
+  d.innerHTML=izNew('착용컷','430 × 680px',680);
   const iz=d.firstChild;
   buildIzOverlay(iz);
   s.appendChild(iz);
   addBar(iz);
-  showHint('???�롯 추�???);
+  showHint('✅ 슬롯 추가됨');
 }
 
 /* Checkbox toggle */
@@ -835,9 +835,9 @@ document.addEventListener('click',e=>{
   if(q&&!e.target.closest('[contenteditable]'))q.parentElement.classList.toggle('open');
 });
 
-/* ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═
+/* ══════════════════════════════════════════════════════════
    SECTION TEMPLATES
-?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═ */
+══════════════════════════════════════════════════════════ */
 function delItem(cls,el){
   const item=el.closest('.'+cls);
   if(!item)return;
@@ -847,51 +847,51 @@ function delSlot(btn){var iz=btn.closest?btn.closest('.iz'):btn.parentElement;if
 
 /* IZ helpers for each section type */
 function izNew(label,px,h=''){
-  return `<div class="iz"${h?' style="height:'+h+'px"':''} onclick="izClickOpen(this,event)"><button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">?��</button><div class="iz-in"><div class="iz-ico">?��</div><div class="iz-lbl">${label}</div><div class="iz-px">${px}</div></div><input type="file" accept="image/*" onchange="pv(this)"></div>`;
+  return `<div class="iz"${h?' style="height:'+h+'px"':''} onclick="izClickOpen(this,event)"><button class="iz-zone-del" onclick="event.stopPropagation();delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">${label}</div><div class="iz-px">${px}</div></div><input type="file" accept="image/*" onchange="pv(this)"></div>`;
 }
 function addTrustItem(){
   const s=document.querySelector('.s-trust');if(!s)return;
   const d=document.createElement('div');d.className='s-trust-item';d.style.position='relative';
-  d.innerHTML=`<button class="del-btn" onclick="delItem('s-trust-item',this)">??/button><button class="add-btn" onclick="addTrustItem()">+</button><button class="ico-btn" onclick="openEP(this.closest('.s-trust-item').querySelector('.icon-editable'),event)">?�� ?�이�?/button><div class="s-trust-ico icon-editable" onclick="openEP(this,event)">�?/div><div class="s-trust-name" contenteditable>??�� ?�름</div><div class="s-trust-desc" contenteditable>?�명 ?�력</div>`;
-  s.appendChild(d);showHint('??배�? 추�???);
+  d.innerHTML=`<button class="del-btn" onclick="delItem('s-trust-item',this)">✕</button><button class="add-btn" onclick="addTrustItem()">+</button><button class="ico-btn" onclick="openEP(this.closest('.s-trust-item').querySelector('.icon-editable'),event)">🎨 아이콘</button><div class="s-trust-ico icon-editable" onclick="openEP(this,event)">⭐</div><div class="s-trust-name" contenteditable>항목 이름</div><div class="s-trust-desc" contenteditable>설명 입력</div>`;
+  s.appendChild(d);showHint('✅ 배지 추가됨');
 }
 function addProofItem(){
   const s=document.querySelector('.s-proof');if(!s)return;
   const d=document.createElement('div');d.className='s-proof-item';d.style.position='relative';
-  d.innerHTML=`<button class="del-btn" onclick="delItem('s-proof-item',this)">??/button><button class="add-btn" onclick="addProofItem()">+</button><div class="s-proof-num" contenteditable>0+</div><div class="s-proof-lbl" contenteditable>Label</div>`;
-  s.appendChild(d);showHint('??지??추�???);
+  d.innerHTML=`<button class="del-btn" onclick="delItem('s-proof-item',this)">✕</button><button class="add-btn" onclick="addProofItem()">+</button><div class="s-proof-num" contenteditable>0+</div><div class="s-proof-lbl" contenteditable>Label</div>`;
+  s.appendChild(d);showHint('✅ 지표 추가됨');
 }
 
 function addInflSlot(){
   const s=document.querySelector('.s-infl-grid-bot');if(!s)return;
   const d=document.createElement('div');d.className='s-infl-card';d.style.position='relative';
-  d.innerHTML=`<div class="iz" style="height:340px;border:none;background:#f0f4ff">${izNew('?�플루언??,'287 × 340px',340).replace('<div class="iz">','').replace('</div>','')}</div><div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer</div><div class="s-infl-tag" contenteditable>#?�그</div></div>`;
+  d.innerHTML=`<div class="iz" style="height:340px;border:none;background:#f0f4ff">${izNew('인플루언서','287 × 340px',340).replace('<div class="iz">','').replace('</div>','')}</div><div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer</div><div class="s-infl-tag" contenteditable>#태그</div></div>`;
   // Simpler: just add an iz card
   const card=document.createElement('div');card.className='s-infl-card';card.style.flex='1';
-  card.innerHTML=`<div class="iz" style="height:340px;border:none;background:#f0f4ff"><button class="iz-zone-del" onclick="delSlot(this)">?��</button><div class="iz-in"><div class="iz-ico">?��</div><div class="iz-lbl">?�플루언??/div><div class="iz-px">287 × 340px</div></div><input type="file" accept="image/*" onchange="pv(this)"></div><div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer</div><div class="s-infl-tag" contenteditable>#?�그</div></div>`;
+  card.innerHTML=`<div class="iz" style="height:340px;border:none;background:#f0f4ff"><button class="iz-zone-del" onclick="delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">인플루언서</div><div class="iz-px">287 × 340px</div></div><input type="file" accept="image/*" onchange="pv(this)"></div><div class="s-infl-ov"></div><div class="s-infl-copy"><div class="s-infl-handle" contenteditable>@influencer</div><div class="s-infl-tag" contenteditable>#태그</div></div>`;
   s.appendChild(card);card.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
-  showHint('???�플루언??카드 추�???);
+  showHint('✅ 인플루언서 카드 추가됨');
 }
 function addAngleSlot(){
   const s=document.querySelector('.s-angle-grid');if(!s)return;
   const d=document.createElement('div');d.className='s-angle-cell';d.style.position='relative';
-  d.innerHTML=`<button class="del-btn" onclick="delItem('s-angle-cell',this)">??/button>${izNew('각도 ?��?지','430 × 520px',260)}<div class="s-angle-label"><div class="s-angle-label-en" contenteditable>View</div><div class="s-angle-label-kr" contenteditable>각도</div></div>`;
+  d.innerHTML=`<button class="del-btn" onclick="delItem('s-angle-cell',this)">✕</button>${izNew('각도 이미지','430 × 520px',260)}<div class="s-angle-label"><div class="s-angle-label-en" contenteditable>View</div><div class="s-angle-label-kr" contenteditable>각도</div></div>`;
   s.appendChild(d);d.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
-  showHint('??각도 ?�롯 추�???);
+  showHint('✅ 각도 슬롯 추가됨');
 }
 function addStyleCard(){
   const s=document.querySelector('.s-style-grid');if(!s)return;
   const d=document.createElement('div');d.className='s-style-card';d.style.position='relative';
-  d.innerHTML=`<button class="del-btn" onclick="delItem('s-style-card',this)">??/button>${izNew('?��??�링','267 × 400px',400)}<div class="s-style-body"><div class="s-style-mood" contenteditable>Style</div><div class="s-style-title" contenteditable>?��????�목</div><div class="s-style-items" contenteditable>?�이??1<br>?�이??2</div></div>`;
+  d.innerHTML=`<button class="del-btn" onclick="delItem('s-style-card',this)">✕</button>${izNew('스타일링','267 × 400px',400)}<div class="s-style-body"><div class="s-style-mood" contenteditable>Style</div><div class="s-style-title" contenteditable>스타일 제목</div><div class="s-style-items" contenteditable>아이템 1<br>아이템 2</div></div>`;
   s.appendChild(d);d.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
-  showHint('???��???카드 추�???);
+  showHint('✅ 스타일 카드 추가됨');
 }
 function addMood3Card(){
   const s=document.querySelector('.s-mood3');if(!s)return;
   const d=document.createElement('div');d.className='s-mood3-card';d.style.position='relative';
-  d.innerHTML=`<button class="del-btn" onclick="delItem('s-mood3-card',this)">??/button><div class="iz" style="height:440px;border:none;background:#f0f4ff"><button class="iz-zone-del" onclick="delSlot(this)">?��</button><div class="iz-in"><div class="iz-ico">?��</div><div class="iz-lbl">무드�?/div><div class="iz-px">287 × 440px</div></div><input type="file" accept="image/*" onchange="pv(this)"></div><div class="s-mood3-ov"></div><div class="s-mood3-copy"><div class="s-mood3-sit" contenteditable>Mood</div><div class="s-mood3-title" contenteditable>무드 ?�목</div></div>`;
+  d.innerHTML=`<button class="del-btn" onclick="delItem('s-mood3-card',this)">✕</button><div class="iz" style="height:440px;border:none;background:#f0f4ff"><button class="iz-zone-del" onclick="delSlot(this)">🗑</button><div class="iz-in"><div class="iz-ico">🖼</div><div class="iz-lbl">무드컷</div><div class="iz-px">287 × 440px</div></div><input type="file" accept="image/*" onchange="pv(this)"></div><div class="s-mood3-ov"></div><div class="s-mood3-copy"><div class="s-mood3-sit" contenteditable>Mood</div><div class="s-mood3-title" contenteditable>무드 제목</div></div>`;
   s.appendChild(d);d.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
-  showHint('??무드�?추�???);
+  showHint('✅ 무드컷 추가됨');
 }
 
 /* Checkbox toggle */
@@ -905,9 +905,9 @@ document.addEventListener('click',e=>{
   if(q&&!e.target.closest('[contenteditable]'))q.parentElement.classList.toggle('open');
 });
 
-/* ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═
+/* ══════════════════════════════════════════════════════════
    SECTION TEMPLATES
-?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═ */
+══════════════════════════════════════════════════════════ */
 function openEP(el,e){
   if(e)e.stopPropagation();
   _epEl=el;
@@ -940,70 +940,70 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('#ep')&&!e.target.closest('.icon-editable'))closeEP();
 });
 
-/* ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═
+/* ══════════════════════════════════════════════════════════
    DELETE / ADD ITEMS
-?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═ */
+══════════════════════════════════════════════════════════ */
 
 async function aiGenerate(){
   var btn=document.getElementById('ai-gen-btn');
   btn.disabled=true;
-  btn.innerHTML='<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></span> ?�성 �?..';
-  var brand=document.getElementById('ai-brand').value||'브랜??;
-  var product=document.getElementById('ai-product').value||'?�품';
-  var cat=document.getElementById('ai-category').value||'?�션';
+  btn.innerHTML='<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite"></span> 생성 중...';
+  var brand=document.getElementById('ai-brand').value||'브랜드';
+  var product=document.getElementById('ai-product').value||'제품';
+  var cat=document.getElementById('ai-category').value||'패션';
   var feat=document.getElementById('ai-features').value||'';
-  var target=document.getElementById('ai-target').value||'20-30?� ?�성';
-  var tone=document.getElementById('ai-tone').value||'감성??;
+  var target=document.getElementById('ai-target').value||'20-30대 여성';
+  var tone=document.getElementById('ai-tone').value||'감성적';
 
-  var prompt='?�신?� ?�국 ?�리미엄 ?�커머스 ?�세?�이지 ?�문 카피?�이?�입?�다.\n'
-    +'?�음 ?�보�?바탕?�로 구매 ?�환?�이 ?��? 카피�??�성?�세??\n\n'
-    +'[?�품 ?�보]\n'
-    +'- 브랜?? '+brand+'\n'
-    +'- ?�품�? '+product+'\n'
+  var prompt='당신은 한국 프리미엄 이커머스 상세페이지 전문 카피라이터입니다.\n'
+    +'다음 정보를 바탕으로 구매 전환율이 높은 카피를 작성하세요.\n\n'
+    +'[제품 정보]\n'
+    +'- 브랜드: '+brand+'\n'
+    +'- 제품명: '+product+'\n'
     +'- 카테고리: '+cat+'\n'
-    +'- ?�심 기능/?�재: '+feat+'\n'
-    +'- ?��?고객: '+target+'\n'
-    +'- ?�앤매너: '+tone+'\n\n'
-    +'[?�성 지�?\n'
-    +'- 배너/?�어�? ?�팩???�는 짧�? 문구, 감각?�인 ?�문 ?�로�?n'
-    +'- 브랜???�토�? 철학�?감성???��? 3-4문장, <em>강조</em> ?�그 ?�용\n'
-    +'- 기능 ?�명: 구체?�인 ?�치/?�재�??�함, ?�비???�택 중심\n'
-    +'- FAQ: ?�제 구매?��? ?�주 묻는 ?�실?�인 질문�?친절???��?\n'
-    +'- 무드/?��??? 착용 ?�황???�생?�게 묘사\n'
-    +'- ?�탁/관�? 구체?�이�??�용?�인 ?�내\n\n'
-    +'반드???�래 JSON�?반환 (마크?�운, 코드블록 ?�이 ?�수 JSON):\n'
+    +'- 핵심 기능/소재: '+feat+'\n'
+    +'- 타겟 고객: '+target+'\n'
+    +'- 톤앤매너: '+tone+'\n\n'
+    +'[작성 지침]\n'
+    +'- 배너/히어로: 임팩트 있는 짧은 문구, 감각적인 영문 슬로건\n'
+    +'- 브랜드 스토리: 철학과 감성을 담은 3-4문장, <em>강조</em> 태그 활용\n'
+    +'- 기능 설명: 구체적인 수치/소재명 포함, 소비자 혜택 중심\n'
+    +'- FAQ: 실제 구매자가 자주 묻는 현실적인 질문과 친절한 답변\n'
+    +'- 무드/스타일: 착용 상황을 생생하게 묘사\n'
+    +'- 세탁/관리: 구체적이고 실용적인 안내\n\n'
+    +'반드시 아래 JSON만 반환 (마크다운, 코드블록 없이 순수 JSON):\n'
     +'{\n'
-    +'"bannerSeason":"?�즌 ?�스??(?? 2025 SUMMER)",\n'
-    +'"bannerKr":"배너 ?��? 메인 (2-4??",\n'
-    +'"bannerEn":"배너 ?�문 ?�로�?(4-7?�어)",\n'
-    +'"heroEn":"?�어�??�문 ?�?��? (3-5?�어)",\n'
-    +'"heroKr":"?�어�??��? ?�?��? (강렬??2�? \\n?�로 구분)",\n'
-    +'"heroSub":"?�어�??�브 문구 (1문장)",\n'
-    +'"copyEye":"?�션 ?�이�?(?? Brand Story)",\n'
-    +'"copyQuote":"감성 ?�용�?(?�탤�?강조??<em>?�스??/em>, 1-2문장)",\n'
-    +'"copyBody":"브랜??철학 본문 (3-4문장, <em>?�심?�어</em> 강조)",\n'
-    +'"feat1ico":"?�모지","feat1nm":"기능�?","feat1desc":"기능 ?�명 (구체???�치 ?�함)",\n'
-    +'"feat2ico":"?�모지","feat2nm":"기능�?","feat2desc":"기능 ?�명",\n'
-    +'"feat3ico":"?�모지","feat3nm":"기능�?","feat3desc":"기능 ?�명",\n'
-    +'"feat4ico":"?�모지","feat4nm":"기능�?","feat4desc":"기능 ?�명",\n'
-    +'"feat5ico":"?�모지","feat5nm":"기능�?","feat5desc":"기능 ?�명",\n'
-    +'"feat6ico":"?�모지","feat6nm":"기능�?","feat6desc":"기능 ?�명",\n'
-    +'"proofN1":"?�치1 (?? 98%)","proofL1":"?�벨1","proofN2":"?�치2","proofL2":"?�벨2","proofN3":"?�치3","proofL3":"?�벨3",\n'
-    +'"moodEn":"무드?�션 ?�문 ?�딩 (3-5?�어)","moodKr":"무드?�션 ?��? (2-3?�어)",\n'
-    +'"inflEn":"?�플루언???�션 ?�문","inflKr":"?�플루언???�션 ?��?",\n'
-    +'"storyLabel":"?�재 ?�션 ?�문 ?�이�?(?? MATERIAL STORY)","storyTitle":"?�재 ?�?��? (2�? \\n구분)","storyBody":"?�재 본문 (3-4문장)","storySpec1":"?�재?�내??,"storySpec2":"?�산지?�내??,"storySpec3":"?�증?�내??,\n'
-    +'"styleEn":"?��????�션 ?�문","styleKr":"?��????�션 ?��?",\n'
-    +'"style1mood":"캐주???��????�이�?,"style1title":"?��????�?��?1","style1items":"?�이??조합 (?? ?�님 ?�츠 + ?�버????",\n'
-    +'"style2mood":"?�마??캐주??,"style2title":"?��????�?��?2","style2items":"?�이??조합",\n'
-    +'"style3mood":"?��???,"style3title":"?��????�?��?3","style3items":"?�이??조합",\n'
-    +'"pkgLabel":"?�키지 ?�이�?(?? PACKAGING & DELIVERY)","pkgTitle":"?�키지 ?�?��? (2�?","pkg1":"배송 ?�징1","pkg2":"배송 ?�징2","pkg3":"배송 ?�징3","pkg4":"배송 ?�징4","pkg5":"교환반품 ?�책",\n'
-    +'"wearing_en":"착용�??�문","wearing_kr":"착용�??��?",\n'
-    +'"wash1":"?�탁 주의?�항1","wash2":"?�탁 주의?�항2","wash3":"?�탁 주의?�항3",\n'
-    +'"faq1q":"Q. 질문1","faq1a":"?��?1 (구체??",\n'
-    +'"faq2q":"Q. 질문2","faq2a":"?��?2",\n'
-    +'"faq3q":"Q. 질문3","faq3a":"?��?3",\n'
-    +'"faq4q":"Q. 질문4","faq4a":"?��?4",\n'
-    +'"faq5q":"Q. 질문5","faq5a":"?��?5"\n'
+    +'"bannerSeason":"시즌 텍스트 (예: 2025 SUMMER)",\n'
+    +'"bannerKr":"배너 한글 메인 (2-4자)",\n'
+    +'"bannerEn":"배너 영문 슬로건 (4-7단어)",\n'
+    +'"heroEn":"히어로 영문 타이틀 (3-5단어)",\n'
+    +'"heroKr":"히어로 한글 타이틀 (강렬한 2줄, \\n으로 구분)",\n'
+    +'"heroSub":"히어로 서브 문구 (1문장)",\n'
+    +'"copyEye":"섹션 레이블 (예: Brand Story)",\n'
+    +'"copyQuote":"감성 인용문 (이탤릭 강조는 <em>텍스트</em>, 1-2문장)",\n'
+    +'"copyBody":"브랜드 철학 본문 (3-4문장, <em>핵심단어</em> 강조)",\n'
+    +'"feat1ico":"이모지","feat1nm":"기능명1","feat1desc":"기능 설명 (구체적 수치 포함)",\n'
+    +'"feat2ico":"이모지","feat2nm":"기능명2","feat2desc":"기능 설명",\n'
+    +'"feat3ico":"이모지","feat3nm":"기능명3","feat3desc":"기능 설명",\n'
+    +'"feat4ico":"이모지","feat4nm":"기능명4","feat4desc":"기능 설명",\n'
+    +'"feat5ico":"이모지","feat5nm":"기능명5","feat5desc":"기능 설명",\n'
+    +'"feat6ico":"이모지","feat6nm":"기능명6","feat6desc":"기능 설명",\n'
+    +'"proofN1":"수치1 (예: 98%)","proofL1":"라벨1","proofN2":"수치2","proofL2":"라벨2","proofN3":"수치3","proofL3":"라벨3",\n'
+    +'"moodEn":"무드섹션 영문 헤딩 (3-5단어)","moodKr":"무드섹션 한글 (2-3단어)",\n'
+    +'"inflEn":"인플루언서 섹션 영문","inflKr":"인플루언서 섹션 한글",\n'
+    +'"storyLabel":"소재 섹션 영문 레이블 (예: MATERIAL STORY)","storyTitle":"소재 타이틀 (2줄, \\n구분)","storyBody":"소재 본문 (3-4문장)","storySpec1":"소재・내용","storySpec2":"원산지・내용","storySpec3":"인증・내용",\n'
+    +'"styleEn":"스타일 섹션 영문","styleKr":"스타일 섹션 한글",\n'
+    +'"style1mood":"캐주얼 스타일 레이블","style1title":"스타일 타이틀1","style1items":"아이템 조합 (예: 데님 쇼츠 + 오버핏 탑)",\n'
+    +'"style2mood":"스마트 캐주얼","style2title":"스타일 타이틀2","style2items":"아이템 조합",\n'
+    +'"style3mood":"페미닌","style3title":"스타일 타이틀3","style3items":"아이템 조합",\n'
+    +'"pkgLabel":"패키지 레이블 (예: PACKAGING & DELIVERY)","pkgTitle":"패키지 타이틀 (2줄)","pkg1":"배송 특징1","pkg2":"배송 특징2","pkg3":"배송 특징3","pkg4":"배송 특징4","pkg5":"교환반품 정책",\n'
+    +'"wearing_en":"착용컷 영문","wearing_kr":"착용컷 한글",\n'
+    +'"wash1":"세탁 주의사항1","wash2":"세탁 주의사항2","wash3":"세탁 주의사항3",\n'
+    +'"faq1q":"Q. 질문1","faq1a":"답변1 (구체적)",\n'
+    +'"faq2q":"Q. 질문2","faq2a":"답변2",\n'
+    +'"faq3q":"Q. 질문3","faq3a":"답변3",\n'
+    +'"faq4q":"Q. 질문4","faq4a":"답변4",\n'
+    +'"faq5q":"Q. 질문5","faq5a":"답변5"\n'
     +'}';
 
   fetch('https://api.anthropic.com/v1/messages',{
@@ -1015,12 +1015,12 @@ async function aiGenerate(){
     _aiResult=JSON.parse(txt);
     var res=document.getElementById('ai-result');
     res.style.display='block';
-    res.innerHTML='???�성 ?�료!<br>배너: <b>'+(_aiResult.bannerKr||'')+'</b><br>?�로�? <b>'+(_aiResult.bannerEn||'')+'</b><br>기능1: <b>'+(_aiResult.feat1nm||'')+'</b>';
+    res.innerHTML='✅ 생성 완료!<br>배너: <b>'+(_aiResult.bannerKr||'')+'</b><br>슬로건: <b>'+(_aiResult.bannerEn||'')+'</b><br>기능1: <b>'+(_aiResult.feat1nm||'')+'</b>';
     document.getElementById('ai-apply-btn').style.display='block';
-  }).catch(function(err){showHint('???�류: '+err.message);})
+  }).catch(function(err){showHint('❌ 오류: '+err.message);})
   .finally(function(){
     btn.disabled=false;
-    btn.innerHTML='??AI 카피 ?�동 ?�성';
+    btn.innerHTML='✨ AI 카피 자동 생성';
   });
 }
 
@@ -1036,17 +1036,17 @@ function aiApply(){
   setTxt('.s-banner-kr',r.bannerKr);
   setTxt('.s-banner-en',r.bannerEn);
 
-  // ?�어�?
+  // 히어로
   setTxt('.s-hero-en',r.heroEn);
   if(r.heroKr){var hk=pv.querySelector('.s-hero-kr');if(hk)hk.innerHTML=r.heroKr.replace(/\n/g,'<br>');}
   setTxt('.s-hero-sub',r.heroSub);
 
-  // 브랜??카피
+  // 브랜드 카피
   setTxt('.s-copy-eye',r.copyEye);
   set('.s-copy-quote',r.copyQuote);
   set('.s-copy-body',r.copyBody);
 
-  // ?�징 (최�? 6�?
+  // 특징 (최대 6개)
   var fitems=pv.querySelectorAll('.s-feat-item');
   [[r.feat1ico,r.feat1nm,r.feat1desc],[r.feat2ico,r.feat2nm,r.feat2desc],
    [r.feat3ico,r.feat3nm,r.feat3desc],[r.feat4ico,r.feat4nm,r.feat4desc],
@@ -1059,7 +1059,7 @@ function aiApply(){
     var dcEl=fitems[i].querySelector('.s-feat-desc');if(dcEl&&desc)dcEl.textContent=desc;
   });
 
-  // ?�치 증거
+  // 수치 증거
   var pitems=pv.querySelectorAll('.s-proof-item');
   [[r.proofN1,r.proofL1],[r.proofN2,r.proofL2],[r.proofN3,r.proofL3]].forEach(function(arr,i){
     if(!pitems[i])return;
@@ -1067,21 +1067,21 @@ function aiApply(){
     var lEl=pitems[i].querySelector('.s-proof-lbl');if(lEl&&arr[1])lEl.textContent=arr[1];
   });
 
-  // 무드�??�션
+  // 무드컷 섹션
   var moodSec=pv.querySelector('.s-mood');
   if(moodSec){
     var mEn=moodSec.querySelector('.sec-en');if(mEn&&r.moodEn)mEn.textContent=r.moodEn;
     var mKr=moodSec.querySelector('.sec-kr');if(mKr&&r.moodKr)mKr.textContent=r.moodKr;
   }
 
-  // ?�플루언???�션
+  // 인플루언서 섹션
   var inflSec=pv.querySelector('.s-infl');
   if(inflSec){
     var iEn=inflSec.querySelector('.sec-en');if(iEn&&r.inflEn)iEn.textContent=r.inflEn;
     var iKr=inflSec.querySelector('.sec-kr');if(iKr&&r.inflKr)iKr.textContent=r.inflKr;
   }
 
-  // ?�재 ?�토�?
+  // 소재 스토리
   setTxt('.s-story-label',r.storyLabel);
   if(r.storyTitle){var st=pv.querySelector('.s-story-title');if(st)st.innerHTML=r.storyTitle.replace(/\n/g,'<br>');}
   setTxt('.s-story-body',r.storyBody);
@@ -1090,7 +1090,7 @@ function aiApply(){
     specEl.innerHTML=(r.storySpec1||'')+'<br>'+(r.storySpec2||'')+'<br>'+(r.storySpec3||'');
   }
 
-  // ?��???가?�드
+  // 스타일 가이드
   var styleSec=pv.querySelector('.s-style');
   if(styleSec){
     var sEn=styleSec.querySelector('.sec-en');if(sEn&&r.styleEn)sEn.textContent=r.styleEn;
@@ -1105,7 +1105,7 @@ function aiApply(){
     });
   }
 
-  // ?�키지
+  // 패키지
   setTxt('.s-pkg-label',r.pkgLabel);
   if(r.pkgTitle){var pt=pv.querySelector('.s-pkg-title');if(pt)pt.innerHTML=r.pkgTitle.replace(/\n/g,'<br>');}
   var pkgItems=pv.querySelectorAll('.s-pkg-item');
@@ -1113,11 +1113,11 @@ function aiApply(){
     if(pkgItems[i]&&val)pkgItems[i].textContent=val;
   });
 
-  // 착용�?
+  // 착용컷
   setTxt('.s-wearing-en',r.wearing_en);
   setTxt('.s-wearing-kr',r.wearing_kr);
 
-  // ?�탁/관�?
+  // 세탁/관리
   var washNotes=pv.querySelectorAll('.s-wash-note-item');
   [r.wash1,r.wash2,r.wash3].forEach(function(val,i){
     if(washNotes[i]&&val)washNotes[i].textContent=val;
@@ -1132,12 +1132,12 @@ function aiApply(){
     var aEl=faqitems[i].querySelector('.s-faq-a');if(aEl&&arr[1])aEl.textContent=arr[1];
   });
 
-  showHint('??AI 카피 ?�체 ?�용 ?�료!');
+  showHint('✅ AI 카피 전체 적용 완료!');
 }
 
-/* ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═
+/* ══════════════════════════════════════════════════════════
    SAVE / EXPORT
-?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═ */
+══════════════════════════════════════════════════════════ */
 function buildClean(){
   const clone=document.getElementById('preview').cloneNode(true);
   // Remove edit UI
@@ -1154,10 +1154,10 @@ function buildClean(){
 async function saveJPG(){await doSave(_jpgScale||3,'jpg');}
 async function savePNG(){await doSave(3,'png');}
 function dlTrigger(url,name){
-  // 1�? 직접 ?�운로드 ?�도
+  // 1차: 직접 다운로드 시도
   const a=document.createElement('a');a.href=url;a.download=name;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  // 2�? ????(iframe ?�한 ?��?
+  // 2차: 새 탭 (iframe 제한 대비)
   setTimeout(()=>{
     try{window.open(url,'_blank');}catch(e){}
   },300);
@@ -1174,36 +1174,36 @@ async function loadH2C(){
 }
 
 async function doSave(scale, fmt){
-  showHint('???��?지 ?�성 �?..');
-  const API = window.EDITOR_API_URL || '';   // ?�버 URL (배포 ???�정)
+  showHint('⏳ 이미지 생성 중...');
+  const API = window.EDITOR_API_URL || '';   // 서버 URL (배포 후 설정)
 
-  // ?�?� ?�버가 ?�결??경우: Puppeteer 고화�?캡처 ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+  // ── 서버가 연결된 경우: Puppeteer 고화질 캡처 ──────────────────────────
   if(API){
     try{
       const html = document.documentElement.outerHTML;
       const res = await fetch(API + '/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 98, scale })
+        body: JSON.stringify({ html, format: fmt === 'jpg' ? 'jpeg' : 'png', quality: 95, scale })
       });
-      if(!res.ok) throw new Error('?�버 ?�류: ' + res.status);
+      if(!res.ok) throw new Error('서버 오류: ' + res.status);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       showImgModal(url, fmt, true);
-      showHint('???�버 고화�?캡처 ?�료! ?�클�????�??);
+      showHint('✅ 서버 고화질 캡처 완료! 우클릭 → 저장');
       return;
     } catch(err){
-      console.warn('?�버 캡처 ?�패, html2canvas�??�백:', err);
+      console.warn('서버 캡처 실패, html2canvas로 폴백:', err);
     }
   }
 
-  // ?�?� ?�백: html2canvas (로컬/?�프?�인) ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+  // ── 폴백: html2canvas (로컬/오프라인) ─────────────────────────────────
   const ok = await loadH2C();
   if(!ok){
-    alert('??html2canvas 로드 ?�패\n?�터???�결???�인?�주?�요.');
-    showHint('??html2canvas 로드 ?�패'); return;
+    alert('❌ html2canvas 로드 실패\n인터넷 연결을 확인해주세요.');
+    showHint('❌ html2canvas 로드 실패'); return;
   }
-  showHint('?�� ' + fmt.toUpperCase() + ' ?�성 �?..');
+  showHint('📸 ' + fmt.toUpperCase() + ' 생성 중...');
   document.activeElement?.blur();
   tfDeselect();
   await new Promise(r => setTimeout(r, 400));
@@ -1223,23 +1223,23 @@ async function doSave(scale, fmt){
     });
     const dataUrl = canvas.toDataURL(fmt === 'png' ? 'image/png' : 'image/jpeg', 0.98);
     showImgModal(dataUrl, fmt, false);
-    showHint('???��?지 ?�성 ?�료 - ?�클�????��?지 ?�??);
+    showHint('✅ 이미지 생성 완료 - 우클릭 → 이미지 저장');
   } catch(err){
-    var msg = '???��?지 ?�성 ?�류: ' + err.message;
+    var msg = '❌ 이미지 생성 오류: ' + err.message;
     showHint(msg);
     console.error(err);
-    alert(msg + '\n\n콘솔(F12)?�서 ?�세 ?�류�??�인?�세??');
+    alert(msg + '\n\n콘솔(F12)에서 상세 오류를 확인하세요.');
   }
 }
 
-// ?�?� buildSecOv ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── buildSecOv ──────────────────────────────────────────────────────────
 function buildSecOv(sec,meta){
   var ov=document.createElement('div');ov.className='sec-ov';
   var lbl=document.createElement('span');lbl.className='sec-ov-btn sov-lbl';lbl.textContent=meta.label||'';ov.appendChild(lbl);
   var bgWrap=document.createElement('div');bgWrap.style.cssText='position:relative;display:inline-block;';
-  var bgBtn=document.createElement('button');bgBtn.className='sec-ov-btn sov-bg';bgBtn.textContent='?�� 배경';
+  var bgBtn=document.createElement('button');bgBtn.className='sec-ov-btn sov-bg';bgBtn.textContent='🎨 배경';
   var bgPop=document.createElement('div');bgPop.className='bg-pop';
-  var bgT=document.createElement('div');bgT.className='bg-pop-title';bgT.textContent='배경??;bgPop.appendChild(bgT);
+  var bgT=document.createElement('div');bgT.className='bg-pop-title';bgT.textContent='배경색';bgPop.appendChild(bgT);
   var swDiv=document.createElement('div');swDiv.className='bg-swatches';
   BG_COLORS.forEach(function(col){
     var sw=document.createElement('div');sw.className='bg-sw';sw.style.background=col;
@@ -1252,25 +1252,25 @@ function buildSecOv(sec,meta){
   bgPop.appendChild(colIn);
   bgBtn.addEventListener('click',function(e){e.stopPropagation();bgPop.classList.toggle('show');});
   bgWrap.appendChild(bgBtn);bgWrap.appendChild(bgPop);ov.appendChild(bgWrap);
-  ['??,'??].forEach(function(dir){
+  ['↑','↓'].forEach(function(dir){
     var btn=document.createElement('button');
-    btn.className='sec-ov-btn sov-'+(dir==='???'up':'dn');btn.textContent=dir;
+    btn.className='sec-ov-btn sov-'+(dir==='↑'?'up':'dn');btn.textContent=dir;
     btn.addEventListener('click',function(){
       var p=document.getElementById('preview');
       var ss=[].slice.call(p.querySelectorAll(':scope>.sec-wrap'));
       var i=ss.indexOf(sec);
-      if(dir==='??&&i>0)p.insertBefore(sec,ss[i-1]);
-      else if(dir==='??&&i<ss.length-1)p.insertBefore(ss[i+1],sec);
+      if(dir==='↑'&&i>0)p.insertBefore(sec,ss[i-1]);
+      else if(dir==='↓'&&i<ss.length-1)p.insertBefore(ss[i+1],sec);
     });
     ov.appendChild(btn);
   });
-  var delB=document.createElement('button');delB.className='sec-ov-btn sov-del';delB.textContent='??;
+  var delB=document.createElement('button');delB.className='sec-ov-btn sov-del';delB.textContent='✕';
   delB.addEventListener('click',function(){sec.remove();});
   ov.appendChild(delB);
   return ov;
 }
 
-// ?�?� addSection ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── addSection ────────────────────────────────────────────────────────────
 function addSection(type){
   var tmpl=SEC_TMPL[type];if(!tmpl){console.warn('Unknown section:',type);return;}
   var html=typeof tmpl==='function'?tmpl():tmpl;
@@ -1282,14 +1282,14 @@ function addSection(type){
   var preview=document.getElementById('preview');if(!preview)return;
   preview.appendChild(sec);
   sec.querySelectorAll('.iz').forEach(function(iz){buildIzOverlay(iz);addBar(iz);});
-  // ?�스???�바 ?�결
+  // 텍스트 툴바 연결
   sec.querySelectorAll('[contenteditable]').forEach(function(el){
     if(typeof bindFT==='function')bindFT(el);
   });
   closeAddModal();
 }
 
-// ?�?� ?�로???�스???�바: bindFT???�환??no-op (focusin/mouseover가 문서 ?�벨�?처리) ?�
+// ── 플로팅 텍스트 툴바: bindFT는 호환용 no-op (focusin/mouseover가 문서 레벨로 처리) ─
 var _ftHideTimer=null;
 function _ftScheduleHide(){
   clearTimeout(_ftHideTimer);
@@ -1302,18 +1302,18 @@ function _ftScheduleHide(){
 }
 function _ftCancelHide(){ clearTimeout(_ftHideTimer); }
 
-function bindFT(el){ /* no-op: 문서 ?�벨 ?�임?�로 처리 (?�환??stub) */ }
+function bindFT(el){ /* no-op: 문서 레벨 위임으로 처리 (호환용 stub) */ }
 
-// ?�?� #ft ?�의 ?�트 ?�커 (per-element, ?�버 ?�리�? ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── #ft 안의 폰트 픽커 (per-element, 호버 프리뷰) ──────────────────────────
 var _FT_FONTS=[
-  ["'Gmarket Sans',sans-serif","Gmarket Sans","??기본"],
-  ["'Pretendard',sans-serif","Pretendard","쿠팡 / ?�스"],
+  ["'Gmarket Sans',sans-serif","Gmarket Sans","★ 기본"],
+  ["'Pretendard',sans-serif","Pretendard","쿠팡 / 토스"],
   ["'SUIT',sans-serif","SUIT",""],
-  ["'Noto Sans KR',sans-serif","Noto Sans KR","?�이�?],
+  ["'Noto Sans KR',sans-serif","Noto Sans KR","네이버"],
   ["'Gothic A1',sans-serif","Gothic A1",""],
   ["'Nanum Gothic',sans-serif","Nanum Gothic",""],
   ["'Nanum Myeongjo',serif","Nanum Myeongjo","명조"],
-  ["'Black Han Sans',sans-serif","Black Han Sans","굵�? ?�딩"],
+  ["'Black Han Sans',sans-serif","Black Han Sans","굵은 헤딩"],
   ["'Do Hyeon',sans-serif","Do Hyeon",""],
   ["'Jua',sans-serif","Jua",""],
 ];
@@ -1342,12 +1342,12 @@ function _ftBuildFontDropdown(){
     _ftEl.style.fontFamily=opt.dataset.v;
     _ftFontOrig=opt.dataset.v;
     ftFontPickerClose();
-    showHint('?????�스?�의 ?�트: '+opt.textContent.trim().split(' ')[0]);
+    showHint('✅ 이 텍스트의 폰트: '+opt.textContent.trim().split(' ')[0]);
   });
 }
 function ftFontPickerToggle(e){
   e&&e.stopPropagation();
-  if(!_ftEl){ showHint('먼�? ?�집???�스?�에 마우?��? ?�리?�요'); return; }
+  if(!_ftEl){ showHint('먼저 편집할 텍스트에 마우스를 올리세요'); return; }
   _ftBuildFontDropdown();
   var dd=document.getElementById('ft-font-dropdown'); if(!dd) return;
   if(dd.style.display==='block'){ ftFontPickerClose(); return; }
@@ -1365,7 +1365,7 @@ document.addEventListener('click', function(e){
   ftFontPickerClose();
 });
 
-// 문서 ?�벨 ?�버 ?�임: contenteditable ??진입 ??toolbar ?�시
+// 문서 레벨 호버 위임: contenteditable 위 진입 시 toolbar 표시
 document.addEventListener('mouseover', function(e){
   var ce=e.target.closest('[contenteditable]');
   if(!ce || !ce.isContentEditable) return;
@@ -1376,14 +1376,14 @@ document.addEventListener('mouseover', function(e){
 document.addEventListener('mouseout', function(e){
   var ce=e.target.closest('[contenteditable]');
   if(!ce) return;
-  // ?�동??곳이 같�? ce ?��?거나 #ft ?�면 ?��?
+  // 이동한 곳이 같은 ce 내부거나 #ft 위면 유지
   var to=e.relatedTarget;
   var ft=document.getElementById('ft');
   if(to && (ce.contains(to) || (ft && ft.contains(to)))) return;
   _ftScheduleHide();
 });
 
-// ?�바 ?�체??마우?��? 머무???�안 ?��? 취소
+// 툴바 자체에 마우스가 머무는 동안 숨김 취소
 (function(){
   function attach(){
     var ft=document.getElementById('ft'); if(!ft) return;
@@ -1404,7 +1404,7 @@ function ftSz(delta){
   if(szEl)szEl.textContent=next+'px';
 }
 
-// ?�?� clearIzImage ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── clearIzImage ──────────────────────────────────────────────────────────
 function clearIzImage(iz){
   if(!iz)return;
   var tf=iz.querySelector('.tf-wrap');if(tf)tf.remove();
@@ -1413,17 +1413,17 @@ function clearIzImage(iz){
   iz.classList.remove('has-image');
   iz.querySelectorAll('.iz-ov').forEach(function(o){o.remove();});
   if(typeof buildIzOverlay==='function')buildIzOverlay(iz);
-  showHint('?�� ?��?지 ?�거??(?�롯 ?��?)');
+  showHint('🗑 이미지 제거됨 (슬롯 유지)');
 }
 
-// ?�?� 배경???�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 배경색 ────────────────────────────────────────────────────────────────
 var SIZE_PRESETS={
-  '?�류':{cols:['Size','총장','가??,'?�깨','?�매'],rows:['XS','S','M','L','XL']},
-  '가�?:{cols:['?�이�?,'가�?,'?�로','?�이'],rows:['S','M','L']},
-  '?�발':{cols:['?�이�?,'�?길이','�???],rows:['220','230','240','250','260','270']},
-  '?�말':{cols:['?�이�?,'�??�이�?],rows:['S(220-240)','L(250-270)']},
-  '모자':{cols:['?�이�?,'머리?�레'],rows:['S','M','L','XL']},
-  '바�?':{cols:['Size','?�리','?�덩??,'밑위','?�벅지','밑단'],rows:['XS','S','M','L','XL']},
+  '의류':{cols:['Size','총장','가슴','어깨','소매'],rows:['XS','S','M','L','XL']},
+  '가방':{cols:['사이즈','가로','세로','높이'],rows:['S','M','L']},
+  '신발':{cols:['사이즈','발 길이','발 폭'],rows:['220','230','240','250','260','270']},
+  '양말':{cols:['사이즈','발 사이즈'],rows:['S(220-240)','L(250-270)']},
+  '모자':{cols:['사이즈','머리둘레'],rows:['S','M','L','XL']},
+  '바지':{cols:['Size','허리','엉덩이','밑위','허벅지','밑단'],rows:['XS','S','M','L','XL']},
 };
 function applyPreset(secEl,presetName){
   var p=SIZE_PRESETS[presetName];if(!p)return;
@@ -1432,17 +1432,17 @@ function applyPreset(secEl,presetName){
   thead.innerHTML=p.cols.map(function(h){return '<th contenteditable>'+h+'</th>';}).join('');
   var tbody=tbl.querySelector('tbody');
   tbody.innerHTML=p.rows.map(function(r,i){
-    var cells=[r];for(var j=1;j<p.cols.length;j++)cells.push('??);
+    var cells=[r];for(var j=1;j<p.cols.length;j++)cells.push('—');
     return '<tr'+(i===Math.floor(p.rows.length/2)?' class="highlight"':'')+'>'+cells.map(function(v){return '<td contenteditable>'+v+'</td>';}).join('')+'</tr>';
   }).join('');
-  showHint('??'+presetName+' ?�리???�용');
+  showHint('✅ '+presetName+' 프리셋 적용');
 }
-function sizeAddRow(secEl){var tbody=secEl.querySelector('.s-size-tbl tbody');if(!tbody)return;var cols=secEl.querySelectorAll('.s-size-tbl thead th').length;var tr=document.createElement('tr');for(var i=0;i<cols;i++){var td=document.createElement('td');td.contentEditable='true';td.textContent='??;tr.appendChild(td);}tbody.appendChild(tr);}
+function sizeAddRow(secEl){var tbody=secEl.querySelector('.s-size-tbl tbody');if(!tbody)return;var cols=secEl.querySelectorAll('.s-size-tbl thead th').length;var tr=document.createElement('tr');for(var i=0;i<cols;i++){var td=document.createElement('td');td.contentEditable='true';td.textContent='—';tr.appendChild(td);}tbody.appendChild(tr);}
 function sizeDelRow(secEl){var tbody=secEl.querySelector('.s-size-tbl tbody');if(!tbody)return;var rows=tbody.querySelectorAll('tr');if(rows.length>1)rows[rows.length-1].remove();}
-function sizeAddCol(secEl){var tbl=secEl.querySelector('.s-size-tbl');if(!tbl)return;var th=document.createElement('th');th.contentEditable='true';th.textContent='??��';tbl.querySelector('thead tr').appendChild(th);tbl.querySelectorAll('tbody tr').forEach(function(tr){var td=document.createElement('td');td.contentEditable='true';td.textContent='??;tr.appendChild(td);});}
+function sizeAddCol(secEl){var tbl=secEl.querySelector('.s-size-tbl');if(!tbl)return;var th=document.createElement('th');th.contentEditable='true';th.textContent='항목';tbl.querySelector('thead tr').appendChild(th);tbl.querySelectorAll('tbody tr').forEach(function(tr){var td=document.createElement('td');td.contentEditable='true';td.textContent='—';tr.appendChild(td);});}
 function sizeDelCol(secEl){var thead=secEl.querySelector('.s-size-tbl thead tr');if(!thead)return;var ths=thead.querySelectorAll('th');if(ths.length<=1)return;ths[ths.length-1].remove();secEl.querySelectorAll('.s-size-tbl tbody tr').forEach(function(tr){var tds=tr.querySelectorAll('td');if(tds.length>1)tds[tds.length-1].remove();});}
 
-// ?�?� saveHTML / saveEditHTML ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── saveHTML / saveEditHTML ────────────────────────────────────────────────
 function makeFixed(orig){
   return orig
     .replace(/\/\*INIT_BEGIN\*\/[\s\S]*?\/\*INIT_END\*\//,"(function(){\n  var preview=document.getElementById('preview');\n  if(!preview)return;\n  [].slice.call(preview.querySelectorAll(':scope>.sec-wrap')).forEach(function(sec){\n    var type=sec.dataset.secType;\n    var meta=(typeof SEC_META!=='undefined'&&SEC_META[type])||{label:type||''};\n    [].slice.call(sec.querySelectorAll('.sec-ov')).forEach(function(o){o.remove();});\n    if(typeof buildSecOv==='function')sec.appendChild(buildSecOv(sec,meta));\n    [].slice.call(sec.querySelectorAll('.iz')).forEach(function(iz){\n      [].slice.call(iz.querySelectorAll('.iz-ov')).forEach(function(o){o.remove();});\n      if(typeof buildIzOverlay==='function')buildIzOverlay(iz);\n      if(typeof addBar==='function')addBar(iz);\n      var tf=iz.querySelector('.tf-wrap');\n      if(tf&&typeof bindTF==='function')bindTF(tf,iz);\n    });\n  });\n  try{if(typeof renderEPCats==='function'&&typeof EP_CATS!=='undefined')renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){}\n  document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});\n})();")
@@ -1477,7 +1477,7 @@ function saveHTML(){
   var u=URL.createObjectURL(b);
   var a=document.createElement('a');a.href=u;a.download='detail-page.html';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(u);showHint('??HTML ?�?�됨');
+  URL.revokeObjectURL(u);showHint('✅ HTML 저장됨');
 }
 function saveEditHTML(){
   var fixed=makeFixed(document.documentElement.outerHTML);
@@ -1485,10 +1485,10 @@ function saveEditHTML(){
   var u=URL.createObjectURL(b);
   var a=document.createElement('a');a.href=u;a.download='detail-page-editor.html';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(u);showHint('???�집 HTML ?�?�됨');
+  URL.revokeObjectURL(u);showHint('✅ 편집 HTML 저장됨');
 }
 
-// ?�?� ?�역 ?�벤???�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 전역 이벤트 ───────────────────────────────────────────────────────────
 document.addEventListener('click',function(e){
   if(!e.target.closest('.bg-pop')&&!e.target.closest('.sov-bg'))
     document.querySelectorAll('.bg-pop.show').forEach(function(p){p.classList.remove('show');});
@@ -1496,39 +1496,39 @@ document.addEventListener('click',function(e){
   if(!e.target.closest('[contenteditable]')&&!(document.getElementById('ft')&&document.getElementById('ft').contains(e.target)))closeFT();
 });
 
-// ?�?� INIT ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── INIT ──────────────────────────────────────────────────────────────────
 function showImgModal(dataUrl, fmt, isBlob, label){
   var old=document.getElementById('img-save-modal');if(old)old.remove();
   var modal=document.createElement('div');
   modal.id='img-save-modal';
   modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;flex-direction:column;align-items:center;padding:16px;overflow-y:auto;';
 
-  // ?�단 �?
+  // 상단 바
   var bar=document.createElement('div');
   bar.style.cssText='width:100%;max-width:900px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-shrink:0;';
 
   var guide=document.createElement('div');
   guide.style.cssText='color:#fff;font-size:13px;font-weight:600;background:rgba(255,255,255,.12);padding:8px 14px;border-radius:8px;';
-  guide.textContent='?�� '+(label||fmt.toUpperCase())+' ?�?????�클�????��?지�??�른 ?�름?�로 ?�??;
+  guide.textContent='📥 '+(label||fmt.toUpperCase())+' 저장 — 우클릭 → 이미지를 다른 이름으로 저장';
 
   var dlBtn=document.createElement('a');
   dlBtn.href=dataUrl;
   dlBtn.download='detail-page.'+(fmt==='jpg'?'jpg':'png');
   dlBtn.style.cssText='background:'+(isBlob?'#16a34a':'#2563eb')+';color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;';
-  dlBtn.textContent='�??�운로드';
+  dlBtn.textContent='⬇ 다운로드';
 
   var closeBtn=document.createElement('button');
-  closeBtn.textContent='???�기';
+  closeBtn.textContent='✕ 닫기';
   closeBtn.style.cssText='background:#dc2626;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;';
   closeBtn.onclick=function(){modal.remove();};
 
   bar.appendChild(guide);bar.appendChild(dlBtn);bar.appendChild(closeBtn);
 
-  // ?��?지
+  // 이미지
   var img=document.createElement('img');
   img.src=dataUrl;
   img.style.cssText='max-width:100%;width:auto;height:auto;border:2px solid rgba(255,255,255,.3);border-radius:6px;display:block;cursor:pointer;';
-  img.title='?�클�????��?지�??�른 ?�름?�로 ?�??;
+  img.title='우클릭 → 이미지를 다른 이름으로 저장';
 
   var wrap=document.createElement('div');
   wrap.style.cssText='width:100%;max-width:900px;';
@@ -1539,26 +1539,26 @@ function showImgModal(dataUrl, fmt, isBlob, label){
   modal.addEventListener('click',function(ev){if(ev.target===modal)modal.remove();});
 }
 
-// ?�?� 모바?�·PC 맞춤 캡처 ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 모바일·PC 맞춤 캡처 ───────────────────────────────────────────────────
 async function saveMobile(){
-  // 375px (모바?? ?�비�?캡처
-  await doSaveCustom(375, 3, 'jpg', '모바??);
+  // 375px (모바일) 너비로 캡처
+  await doSaveCustom(375, 3, 'jpg', '모바일');
 }
 async function savePC(){
-  // 860px (PC) ?�비�?캡처 - ?�재 기본�?
+  // 860px (PC) 너비로 캡처 - 현재 기본값
   await doSaveCustom(860, 3, 'jpg', 'PC');
 }
 async function doSaveCustom(targetW, scale, fmt, label){
-  showHint('??'+label+' 버전 ?�성 �?..');
+  showHint('⏳ '+label+' 버전 생성 중...');
   const ok = await loadH2C();
-  if(!ok){ alert('html2canvas 로드 ?�패'); return; }
+  if(!ok){ alert('html2canvas 로드 실패'); return; }
 
   const preview = document.getElementById('preview');
   const origW = preview.style.width;
 
-  // ?�시�??��??�비 ?�용
+  // 임시로 타겟 너비 적용
   preview.style.width = targetW + 'px';
-  // ?�트 리스케?�을 ?�한 ?�깐 ?��?
+  // 폰트 리스케일을 위한 잠깐 대기
   await new Promise(r => setTimeout(r, 600));
   document.activeElement?.blur();
   tfDeselect?.();
@@ -1584,28 +1584,28 @@ async function doSaveCustom(targetW, scale, fmt, label){
       fmt === 'png' ? 'image/png' : 'image/jpeg', 0.98
     );
     const finalW = targetW * scale;
-    showHint('??'+label+' '+finalW+'px ?��?지 ?�성 ?�료');
+    showHint('✅ '+label+' '+finalW+'px 이미지 생성 완료');
     showImgModal(dataUrl, fmt, false, label+' '+finalW+'px');
   } catch(err){
-    showHint('???�류: '+err.message);
+    showHint('❌ 오류: '+err.message);
     console.error(err);
-    alert('캡처 ?�류: '+err.message);
+    alert('캡처 오류: '+err.message);
   } finally {
-    // ?�래 ?�비 복원
+    // 원래 너비 복원
     preview.style.width = origW;
   }
 }
 
-// ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═??
-//  분할 ?�?? ?�션 ?�위�?캡처 ??3500px 기�? 그룹?????�치�?
-// ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═??
+// ═══════════════════════════════════════════════════════════════
+//  분할 저장: 섹션 단위로 캡처 → 3500px 기준 그룹핑 → 합치기
+// ═══════════════════════════════════════════════════════════════
 async function saveSplit(targetW, scale, maxH){
   targetW = targetW || 860;
   scale   = scale   || 1;  // 기본 860px 출력
   maxH    = maxH    || 3500;
 
   const ok = await loadH2C();
-  if(!ok){ alert('html2canvas 로드 ?�패'); return; }
+  if(!ok){ alert('html2canvas 로드 실패'); return; }
 
   const preview = document.getElementById('preview');
   const origW   = preview.style.width;
@@ -1615,7 +1615,7 @@ async function saveSplit(targetW, scale, maxH){
   await new Promise(r => setTimeout(r, 700));
 
   const sections = Array.from(document.querySelectorAll('#preview > .sec-wrap'));
-  if(!sections.length){ showHint('???�션 ?�음'); preview.style.width = origW; return; }
+  if(!sections.length){ showHint('❌ 섹션 없음'); preview.style.width = origW; return; }
 
   const skipEl = el => {
     if(['INPUT','BUTTON','SELECT'].includes(el.tagName)) return true;
@@ -1626,16 +1626,16 @@ async function saveSplit(targetW, scale, maxH){
       .some(k => el.classList.contains(k));
   };
 
-  showHint('??0 / ' + sections.length + ' 캡처 �?..');
+  showHint('⏳ 0 / ' + sections.length + ' 캡처 중...');
 
   try{
-    // ?�?� 1. ?�션�?개별 캡처 (보이지 ?�거???�기 0???�션?� 건너?�) ?�?�?�?�?�?�?�?�?�
+    // ── 1. 섹션별 개별 캡처 (보이지 않거나 크기 0인 섹션은 건너뜀) ─────────
     const captured = [];
     let skippedN = 0;
     for(let i = 0; i < sections.length; i++){
       const sec = sections[i];
-      showHint('??' + (i+1) + ' / ' + sections.length + ' 캡처 �?..');
-      // 가?�성 + ?�기 검??
+      showHint('⏳ ' + (i+1) + ' / ' + sections.length + ' 캡처 중...');
+      // 가시성 + 크기 검사
       const rect = sec.getBoundingClientRect();
       const visible = sec.offsetParent !== null && rect.width > 0 && rect.height > 0;
       if(!visible){
@@ -1649,7 +1649,7 @@ async function saveSplit(targetW, scale, maxH){
           scale        : scale,
           useCORS      : true,
           allowTaint   : true,
-          backgroundColor: null,   // ?�션 배경???��?
+          backgroundColor: null,   // 섹션 배경색 유지
           logging      : false,
           imageTimeout : 12000,
           ignoreElements: skipEl,
@@ -1665,20 +1665,20 @@ async function saveSplit(targetW, scale, maxH){
         continue;
       }
       captured.push(cv);
-      await new Promise(r => setTimeout(r, 30)); // 브라?��? ??고르�?
+      await new Promise(r => setTimeout(r, 30)); // 브라우저 숨 고르기
     }
 
     if(!captured.length){
-      throw new Error('캡처?????�는 ?�션???�습?�다 (?��? 비어?�거???��? ?�태).');
+      throw new Error('캡처할 수 있는 섹션이 없습니다 (전부 비어있거나 숨김 상태).');
     }
-    if(skippedN > 0) console.info('[saveSplit] ?�킵???�션:', skippedN, '/', sections.length);
+    if(skippedN > 0) console.info('[saveSplit] 스킵된 섹션:', skippedN, '/', sections.length);
 
-    // ?�?� 2. 3500px 기�??�로 그룹???�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+    // ── 2. 3500px 기준으로 그룹핑 ───────────────────────────────────────
     const chunks = [];
     let group = [], groupH = 0;
 
     for(const cv of captured){
-      // ?��? 그룹???�고, 추�??�면 maxH 초과 ???�재 그룹 ?�정
+      // 이미 그룹이 있고, 추가하면 maxH 초과 → 현재 그룹 확정
       if(group.length > 0 && groupH + cv.height > maxH){
         chunks.push(group);
         group = [];
@@ -1689,7 +1689,7 @@ async function saveSplit(targetW, scale, maxH){
     }
     if(group.length > 0) chunks.push(group);
 
-    // ?�?� 3. 그룹�??�쳐??최종 캔버???�성 ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+    // ── 3. 그룹별 합쳐서 최종 캔버스 생성 ──────────────────────────────
     const results = [];
     for(let ci = 0; ci < chunks.length; ci++){
       const chunk = chunks[ci];
@@ -1709,21 +1709,21 @@ async function saveSplit(targetW, scale, maxH){
 
       let y = 0;
       for(const cv of chunk){
-        if(!cv.width || !cv.height) continue; // 0 canvas 최종 가??
+        if(!cv.width || !cv.height) continue; // 0 canvas 최종 가드
         ctx.drawImage(cv, 0, y);
         y += cv.height;
       }
       results.push({ dataUrl: final.toDataURL('image/jpeg', 0.98), w, h, idx: ci+1, total: chunks.length });
     }
 
-    // ?�?� 4. 갤러�?모달�??�시 ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+    // ── 4. 갤러리 모달로 표시 ────────────────────────────────────────────
     showSplitGallery(results, targetW, scale);
-    showHint('??' + chunks.length + '�??�트 분할 ?�료!');
+    showHint('✅ ' + chunks.length + '개 파트 분할 완료!');
 
   } catch(err){
-    showHint('???�류: ' + err.message);
+    showHint('❌ 오류: ' + err.message);
     console.error(err);
-    alert('분할 캡처 ?�류: ' + err.message);
+    alert('분할 캡처 오류: ' + err.message);
   } finally {
     preview.style.width = origW;
   }
@@ -1736,23 +1736,23 @@ function showSplitGallery(parts, targetW, scale){
   modal.id = 'split-gallery';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999;display:flex;flex-direction:column;overflow:hidden;';
 
-  // ?�더
+  // 헤더
   var hdr = document.createElement('div');
   hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.07);flex-shrink:0;gap:8px;';
-  hdr.innerHTML = '<div style="color:#fff;font-size:13px;font-weight:700;">?�� 분할 ?�????'+parts.length+'�??�트 ('+ targetW +'px 출력)</div>';
+  hdr.innerHTML = '<div style="color:#fff;font-size:13px;font-weight:700;">📦 분할 저장 — '+parts.length+'개 파트 ('+ targetW +'px 출력)</div>';
 
   var info = document.createElement('div');
   info.style.cssText = 'color:#aaa;font-size:11px;background:rgba(255,255,255,.1);padding:5px 10px;border-radius:6px;';
-  info.textContent = '?�클�????��?지�??�른 ?�름?�로 ?�??;
+  info.textContent = '우클릭 → 이미지를 다른 이름으로 저장';
 
   var closeBtn = document.createElement('button');
-  closeBtn.textContent = '???�기';
+  closeBtn.textContent = '✕ 닫기';
   closeBtn.style.cssText = 'background:#dc2626;color:#fff;border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:700;';
   closeBtn.onclick = function(){ modal.remove(); };
 
   hdr.appendChild(info); hdr.appendChild(closeBtn);
 
-  // ?�크�??�역
+  // 스크롤 영역
   var scroll = document.createElement('div');
   scroll.style.cssText = 'display:flex;gap:20px;padding:16px;overflow-x:auto;overflow-y:hidden;flex:1;align-items:flex-start;';
 
@@ -1760,7 +1760,7 @@ function showSplitGallery(parts, targetW, scale){
     var card = document.createElement('div');
     card.style.cssText = 'flex-shrink:0;display:flex;flex-direction:column;gap:8px;align-items:center;';
 
-    // ?�트 ?�벨
+    // 파트 라벨
     var lbl = document.createElement('div');
     lbl.style.cssText = 'color:#fff;font-size:12px;font-weight:700;';
     lbl.textContent = 'Part ' + part.idx + ' / ' + part.total;
@@ -1769,18 +1769,18 @@ function showSplitGallery(parts, targetW, scale){
     size.style.cssText = 'color:#aaa;font-size:10px;';
     size.textContent = part.w + ' × ' + part.h + 'px';
 
-    // ?�운로드 버튼
+    // 다운로드 버튼
     var dlBtn = document.createElement('a');
     dlBtn.href = part.dataUrl;
     dlBtn.download = 'detail-part' + part.idx + '.jpg';
     dlBtn.style.cssText = 'background:#16a34a;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;';
-    dlBtn.textContent = '�?Part ' + part.idx + ' ?�운로드';
+    dlBtn.textContent = '⬇ Part ' + part.idx + ' 다운로드';
 
-    // ?��?지 (?�네??
+    // 이미지 (썸네일)
     var img = document.createElement('img');
     img.src = part.dataUrl;
     img.style.cssText = 'max-height:70vh;width:auto;border:2px solid rgba(255,255,255,.2);border-radius:6px;cursor:pointer;display:block;';
-    img.title = '?�클�????��?지�??�른 ?�름?�로 ?�??;
+    img.title = '우클릭 → 이미지를 다른 이름으로 저장';
 
     card.appendChild(lbl); card.appendChild(size); card.appendChild(dlBtn); card.appendChild(img);
     scroll.appendChild(card);
@@ -1789,22 +1789,22 @@ function showSplitGallery(parts, targetW, scale){
   modal.appendChild(hdr); modal.appendChild(scroll);
   document.body.appendChild(modal);
 
-  // 배경 ?�릭 ?�기
+  // 배경 클릭 닫기
   modal.addEventListener('click', function(ev){ if(ev.target === modal) modal.remove(); });
 }
 
-// ?�?� 모바??가?�성 최적???�??(860px 기�?, ?�트 2.3�??��?) ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 모바일 가독성 최적화 저장 (860px 기준, 폰트 2.3배 확대) ─────────────────
 async function saveOptimized(){
   var ok = await loadH2C();
-  if(!ok){ alert('html2canvas 로드 ?�패'); return; }
+  if(!ok){ alert('html2canvas 로드 실패'); return; }
 
   var preview = document.getElementById('preview');
   var origW = preview.style.width;
 
-  // 860px + 모바??최적???�트 ?�래???�용
+  // 860px + 모바일 최적화 폰트 클래스 적용
   preview.style.width = '860px';
   preview.classList.add('for-mobile-capture');
-  showHint('??모바??최적???��?지 ?�성 �?..');
+  showHint('⏳ 모바일 최적화 이미지 생성 중...');
   await new Promise(r => setTimeout(r, 900));
   document.activeElement && document.activeElement.blur();
   if(typeof tfDeselect==='function') tfDeselect();
@@ -1820,26 +1820,26 @@ async function saveOptimized(){
 
   try{
     var canvas = await html2canvas(preview,{
-      scale: 1,          // 860px × 1 = 860px (?�랫???��?)
+      scale: 1,          // 860px × 1 = 860px (플랫폼 표준)
       useCORS: true, allowTaint: true, backgroundColor: '#fff',
       logging: false, imageTimeout: 12000, ignoreElements: skipEl,
     });
     var dataUrl = canvas.toDataURL('image/jpeg', 0.98);
-    showHint('??860px 모바??최적???��?지 ?�성! (?�랫???��? ?�기)');
-    showImgModal(dataUrl, 'jpg', false, '??PC·모바??최적??(1720px)');
+    showHint('✅ 860px 모바일 최적화 이미지 완성! (플랫폼 표준 크기)');
+    showImgModal(dataUrl, 'jpg', false, '✅ PC·모바일 최적화 (1720px)');
   } catch(err){
-    showHint('???�류: '+err.message);
-    alert('?�류: '+err.message);
+    showHint('❌ 오류: '+err.message);
+    alert('오류: '+err.message);
   } finally {
     preview.style.width = origW;
     preview.classList.remove('for-mobile-capture');
   }
 }
 
-// ?�?� 모바??최적??분할 ?�???�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 모바일 최적화 분할 저장 ────────────────────────────────────────────────
 async function saveOptimizedSplit(){
   var ok = await loadH2C();
-  if(!ok){ alert('html2canvas 로드 ?�패'); return; }
+  if(!ok){ alert('html2canvas 로드 실패'); return; }
 
   var preview = document.getElementById('preview');
   var origW = preview.style.width;
@@ -1862,7 +1862,7 @@ async function saveOptimizedSplit(){
   try{
     var skippedN = 0;
     for(var i=0;i<sections.length;i++){
-      showHint('??'+(i+1)+'/'+sections.length+' 캡처 �?(모바??최적??...');
+      showHint('⏳ '+(i+1)+'/'+sections.length+' 캡처 중 (모바일 최적화)...');
       var rect = sections[i].getBoundingClientRect();
       var visible = sections[i].offsetParent !== null && rect.width > 0 && rect.height > 0;
       if(!visible){
@@ -1891,9 +1891,9 @@ async function saveOptimizedSplit(){
       await new Promise(r=>setTimeout(r,30));
     }
     if(!captured.length){
-      throw new Error('캡처?????�는 ?�션???�습?�다 (?��? 비어?�거???��? ?�태).');
+      throw new Error('캡처할 수 있는 섹션이 없습니다 (전부 비어있거나 숨김 상태).');
     }
-    if(skippedN > 0) console.info('[saveOptimizedSplit] ?�킵???�션:', skippedN, '/', sections.length);
+    if(skippedN > 0) console.info('[saveOptimizedSplit] 스킵된 섹션:', skippedN, '/', sections.length);
 
     var chunks=[], group=[], groupH=0;
     for(var ci=0;ci<captured.length;ci++){
@@ -1915,25 +1915,25 @@ async function saveOptimizedSplit(){
       ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
       var y=0;
       for(var j=0;j<chunks[k].length;j++){
-        if(!chunks[k][j].width || !chunks[k][j].height) continue; // 0 canvas 최종 가??
+        if(!chunks[k][j].width || !chunks[k][j].height) continue; // 0 canvas 최종 가드
         ctx.drawImage(chunks[k][j],0,y); y+=chunks[k][j].height;
       }
       results.push({dataUrl:final.toDataURL('image/jpeg',0.98),w:w,h:h,idx:k+1,total:chunks.length});
     }
     showSplitGallery(results,860,2);
-    showHint('??모바??최적??분할 ?�성! '+chunks.length+'�??�트');
+    showHint('✅ 모바일 최적화 분할 완성! '+chunks.length+'개 파트');
   } catch(err){
-    showHint('???�류: '+err.message); alert(err.message);
+    showHint('❌ 오류: '+err.message); alert(err.message);
   } finally {
     preview.style.width = origW;
     preview.classList.remove('for-mobile-capture');
   }
 }
 
-// ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═??
-//  ?�버 API ?�동 (Puppeteer 고화�??�더�?
-// ?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═?�═??
-var API_BASE = window.location.origin; // 같�? ?�버
+// ═══════════════════════════════════════════════════════════════
+//  서버 API 연동 (Puppeteer 고화질 렌더링)
+// ═══════════════════════════════════════════════════════════════
+var API_BASE = window.location.origin; // 같은 서버
 
 async function captureViaServer(opts){
   // opts: { mobile, split, format }
@@ -1941,16 +1941,16 @@ async function captureViaServer(opts){
   var format = opts.format || 'jpeg';
   var endpoint = opts.split ? '/api/capture/split' : '/api/capture';
 
-  // ?�재 ?�디??HTML ?�집
+  // 현재 에디터 HTML 수집
   var preview = document.getElementById('preview');
-  if(!preview){ showHint('??#preview ?�음'); return; }
+  if(!preview){ showHint('❌ #preview 없음'); return; }
 
-  // ?�?�용 HTML ?�성 (?�디??UI ?�거)
+  // 저장용 HTML 생성 (에디터 UI 제거)
   var clone = preview.cloneNode(true);
   clone.querySelectorAll('.sec-ov,.iz-ov,.del-btn,.add-btn,.resize-bar,.iz-zone-del,.tf-border,.tf-handle,.tf-dim,.s-size-ctrl,.feat-row-add-wrap').forEach(function(e){e.remove();});
   clone.querySelectorAll('[contenteditable]').forEach(function(e){e.removeAttribute('contenteditable');});
 
-  // ?�재 CSS ?�함???�전??HTML
+  // 현재 CSS 포함한 완전한 HTML
   var styleEl = document.querySelector('style');
   var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
     + '<style>'
@@ -1963,7 +1963,7 @@ async function captureViaServer(opts){
     + clone.outerHTML
     + '</body></html>';
 
-  showHint('???�버?�서 캡처 �?..');
+  showHint('⏳ 서버에서 캡처 중...');
 
   try{
     if(opts.split){
@@ -1975,22 +1975,22 @@ async function captureViaServer(opts){
       var data = await res.json();
       if(!data.ok) throw new Error(data.error);
       showServerSplitGallery(data.chunks, width);
-      showHint('??'+data.parts+'�??�트 캡처 ?�료!');
+      showHint('✅ '+data.parts+'개 파트 캡처 완료!');
     } else {
       var res = await fetch(API_BASE + endpoint, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ html, width, scale:1, format, quality:98 })
+        body: JSON.stringify({ html, width, scale:1, format, quality:95 })
       });
       if(!res.ok) throw new Error(await res.text());
       var blob = await res.blob();
       var url = URL.createObjectURL(blob);
-      showImgModal(url, format==='png'?'png':'jpg', true, width+'px ?�버 캡처');
-      showHint('???�버 캡처 ?�료! '+width+'px');
+      showImgModal(url, format==='png'?'png':'jpg', true, width+'px 서버 캡처');
+      showHint('✅ 서버 캡처 완료! '+width+'px');
     }
   } catch(e){
-    showHint('???�버 ?�류: '+e.message);
-    alert('?�버 ?�류: '+e.message);
+    showHint('❌ 서버 오류: '+e.message);
+    alert('서버 오류: '+e.message);
   }
 }
 
@@ -2004,10 +2004,10 @@ function showServerSplitGallery(chunks, width){
 
   var hdr = document.createElement('div');
   hdr.style.cssText = 'display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,.07);flex-shrink:0;';
-  hdr.innerHTML = '<span style="color:#fff;font-weight:700;font-size:14px;">??'+chunks.length+'�??�트 / 출력 '+width+'px</span>'
-    +'<span style="color:#aaa;font-size:11px;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:6px;">?�클�????��?지 ?�??/span>';
+  hdr.innerHTML = '<span style="color:#fff;font-weight:700;font-size:14px;">✂ '+chunks.length+'개 파트 / 출력 '+width+'px</span>'
+    +'<span style="color:#aaa;font-size:11px;background:rgba(255,255,255,.1);padding:4px 10px;border-radius:6px;">우클릭 → 이미지 저장</span>';
   var closeBtn = document.createElement('button');
-  closeBtn.textContent = '??;
+  closeBtn.textContent = '✕';
   closeBtn.style.cssText = 'margin-left:auto;background:#dc2626;color:#fff;border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-weight:700;';
   closeBtn.onclick = function(){ modal.remove(); };
   hdr.appendChild(closeBtn);
@@ -2016,26 +2016,26 @@ function showServerSplitGallery(chunks, width){
   scroll.style.cssText = 'display:flex;gap:16px;padding:16px;overflow-x:auto;flex:1;align-items:flex-start;';
 
   chunks.forEach(function(chunk){
-    // ?�션 ?��?지?�을 Canvas�??�치�?
+    // 섹션 이미지들을 Canvas로 합치기
     var card = document.createElement('div');
     card.style.cssText = 'flex-shrink:0;display:flex;flex-direction:column;gap:8px;align-items:center;';
 
     var lbl = document.createElement('div');
     lbl.style.cssText = 'color:#fff;font-size:12px;font-weight:700;';
-    lbl.textContent = 'Part '+chunk.index+' ('+chunk.sections.length+'?�션)';
+    lbl.textContent = 'Part '+chunk.index+' ('+chunk.sections.length+'섹션)';
 
     var dlBtn = document.createElement('a');
     dlBtn.style.cssText = 'background:#16a34a;color:#fff;padding:6px 14px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;';
-    dlBtn.textContent = '�??�운로드';
+    dlBtn.textContent = '⬇ 다운로드';
     dlBtn.download = 'part'+chunk.index+'.jpg';
 
-    // Canvas�??�션???�치�?
+    // Canvas로 섹션들 합치기
     var totalH = chunk.sections.reduce(function(s,sec){return s+sec.height;},0);
     var canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = totalH;
     canvas.style.cssText = 'max-height:70vh;width:auto;border:2px solid rgba(255,255,255,.2);border-radius:4px;display:block;cursor:pointer;';
-    canvas.title = '?�클�????��?지�??�른 ?�름?�로 ?�??;
+    canvas.title = '우클릭 → 이미지를 다른 이름으로 저장';
 
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = '#fff';
@@ -2068,7 +2068,7 @@ function showServerSplitGallery(chunks, width){
   modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
 }
 
-// ?�?� ?�??버튼 ?�결 ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 저장 버튼 연결 ──────────────────────────────────────────────────────────
 function saveServer(opts){ captureViaServer(opts); }
 
 function toggleMobilePreview(btn){
@@ -2079,12 +2079,12 @@ function toggleMobilePreview(btn){
     btn.style.color = on ? '#fff' : '';
     btn.style.borderColor = on ? '#2563eb' : '';
   }
-  showHint(on ? '?�� 모바??최적??미리보기 ON (?�????모습)' : '?�� ?�반 ?�집 모드');
+  showHint(on ? '👁 모바일 최적화 미리보기 ON (저장 시 모습)' : '👁 일반 편집 모드');
 }
 
-// ?�?� ?�플�??�??불러?�기 + HTML import ?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
+// ── 템플릿 저장/불러오기 + HTML import ──────────────────────────────────────
 var TPL_KEY='dps_templates_v1';
-// ?�버 API 기반 ?�플�??�??
+// 서버 API 기반 템플릿 저장
 async function tplServerSave(snap){
   try{
     const res=await fetch('/api/templates/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(snap)});
@@ -2099,14 +2099,14 @@ async function tplServerList(){
 }
 async function tplServerLoad(name){
   try{
-    const fname=name.replace(/[^a-z0-9가-??-]/gi,'_');
+    const fname=name.replace(/[^a-z0-9가-힣_-]/gi,'_');
     const res=await fetch('/api/templates/'+encodeURIComponent(fname));
     return await res.json();
   }catch(e){return null;}
 }
 async function tplServerDelete(name){
   try{
-    const fname=name.replace(/[^a-z0-9가-??-]/gi,'_');
+    const fname=name.replace(/[^a-z0-9가-힣_-]/gi,'_');
     await fetch('/api/templates/'+encodeURIComponent(fname),{method:'DELETE'});
   }catch(e){}
 }
@@ -2115,8 +2115,8 @@ function tplSaveAll(arr){ try{ localStorage.setItem(TPL_KEY, JSON.stringify(arr)
 
 function tplSnapshot(name){
   var pv=document.getElementById('preview'); if(!pv) return null;
-  // ?�버?�이 ?�거???�린 HTML 추출
-  // ??.tf-handle,.tf-border,.tf-dim,.tf-lock-badge??보존 ??복원 ???�기 조절 ?�들 ?��?
+  // 오버레이 제거된 클린 HTML 추출
+  // ⚠ .tf-handle,.tf-border,.tf-dim,.tf-lock-badge는 보존 → 복원 시 크기 조절 핸들 유지
   var clone=pv.cloneNode(true);
   clone.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
   return {
@@ -2142,9 +2142,9 @@ function rebindPreview(){
       var tf=iz.querySelector('.tf-wrap');
       if(tf){
         bindTF(tf,iz);
-        // tf-wrap???�는 iz: iz-ov(z-index:30)가 마우???�벤??가로채지 ?�도�??��?
+        // tf-wrap이 있는 iz: iz-ov(z-index:30)가 마우스 이벤트 가로채지 않도록 숨김
         iz.querySelectorAll('.iz-ov').forEach(function(o){o.style.display='none';});
-        // file input??비활?�화 (initTF?� ?�일??처리)
+        // file input도 비활성화 (initTF와 동일한 처리)
         var fi=iz.querySelector('input[type=file]');
         if(fi){fi.style.pointerEvents='none';fi.style.opacity='0';}
       }
@@ -2155,7 +2155,7 @@ function rebindPreview(){
 }
 
 function tplApply(tpl){
-  if(!tpl||!tpl.html){ alert('?�플�??�이?��? 비어?�습?�다'); return; }
+  if(!tpl||!tpl.html){ alert('템플릿 데이터가 비어있습니다'); return; }
   var pv=document.getElementById('preview'); if(!pv) return;
   pv.innerHTML=tpl.html;
   if(tpl.width){ pv.style.width=tpl.width+'px'; }
@@ -2168,38 +2168,38 @@ function tplApply(tpl){
     applyFont(tpl.font);
   }
   rebindPreview();
-  showHint('??'+(tpl.name||'?�플�?)+' 불러??);
+  showHint('✅ '+(tpl.name||'템플릿')+' 불러옴');
   closeTplModal();
 }
 
 async function tplSaveCurrent(){
   var input=document.getElementById('tpl-name-input');
   var name=(input&&input.value||'').trim();
-  if(!name){ alert('?�플�??�름???�력?�세??); return; }
+  if(!name){ alert('템플릿 이름을 입력하세요'); return; }
   var snap=tplSnapshot(name); if(!snap) return;
-  showHint('???�??�?..');
+  showHint('⏳ 저장 중...');
   var ok=await tplServerSave(snap);
   if(ok){
     if(input) input.value='';
     await renderTplList();
-    showHint('??"'+name+'" ?�?�됨');
+    showHint('✅ "'+name+'" 저장됨');
   } else {
-    showHint('???�???�패');
+    showHint('❌ 저장 실패');
   }
 }
 
 function tplDelete(name){
-  if(!confirm('"'+name+'" ??��?�까??')) return;
+  if(!confirm('"'+name+'" 삭제할까요?')) return;
   var arr=tplList().filter(function(t){return t.name!==name;});
   tplSaveAll(arr); renderTplList();
 }
 
 function tplExportJSON(name){
   var arr=tplList(); var t=arr.find(function(x){return x.name===name;});
-  if(!t){ alert('?�플�??�음'); return; }
+  if(!t){ alert('템플릿 없음'); return; }
   var b=new Blob([JSON.stringify(t,null,2)],{type:'application/json;charset=utf-8'});
   var u=URL.createObjectURL(b);
-  var a=document.createElement('a'); a.href=u; a.download='template-'+name.replace(/[^a-z0-9가-??-]/gi,'_')+'.json';
+  var a=document.createElement('a'); a.href=u; a.download='template-'+name.replace(/[^a-z0-9가-힣_-]/gi,'_')+'.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u);
 }
 
@@ -2211,13 +2211,13 @@ function tplImportFile(file){
     var tpl=null;
     if(/\.json$/i.test(file.name)){
       try{ tpl=JSON.parse(txt); }
-      catch(e){ alert('JSON ?�싱 ?�패: '+e.message); return; }
+      catch(e){ alert('JSON 파싱 실패: '+e.message); return; }
     } else if(/\.html?$/i.test(file.name)){
-      // saveHTML�??�?�된 ?�일 ??#preview ??sec-wrap 추출
+      // saveHTML로 저장된 파일 → #preview 안 sec-wrap 추출
       var doc=new DOMParser().parseFromString(txt,'text/html');
       var srcPv=doc.getElementById('preview');
-      if(!srcPv){ alert('?�로?�한 HTML??#preview ?�소가 ?�습?�다'); return; }
-      // ?�버?�이 ?�거
+      if(!srcPv){ alert('업로드한 HTML에 #preview 요소가 없습니다'); return; }
+      // 오버레이 제거
       srcPv.querySelectorAll('.sec-ov,.iz-ov,.resize-bar,.tf-handle,.tf-dim').forEach(function(el){el.remove();});
       tpl={
         name:file.name.replace(/\.html?$/i,''),
@@ -2226,10 +2226,10 @@ function tplImportFile(file){
         html:srcPv.innerHTML
       };
     } else {
-      alert('JSON ?�는 HTML ?�일�?지?�합?�다');
+      alert('JSON 또는 HTML 파일만 지원합니다');
       return;
     }
-    if(!confirm('?�재 ?�업????��?�고 "'+(tpl.name||'?�일')+'"??불러?�까??\n(?�???????�용?� ?�라집니??')) return;
+    if(!confirm('현재 작업을 덮어쓰고 "'+(tpl.name||'파일')+'"을 불러올까요?\n(저장 안 한 내용은 사라집니다)')) return;
     tplApply(tpl);
     rebindPreview();
   };
@@ -2244,15 +2244,15 @@ function _tplFromRow(btn){
 }
 async function tplLoadByRow(btn){
   var t=_tplFromRow(btn); if(!t) return;
-  showHint('??불러?�는 �?..');
+  showHint('⏳ 불러오는 중...');
   var full=await tplServerLoad(t.name);
   if(full) tplApply(full);
-  else showHint('??불러?�기 ?�패');
+  else showHint('❌ 불러오기 실패');
 }
 function tplExportByRow(btn){ var t=_tplFromRow(btn); if(t) tplExportJSON(t.name); }
 async function tplDeleteByRow(btn){
   var t=_tplFromRow(btn); if(!t) return;
-  if(!confirm('Delete "'+t.name+'"?')) return;
+  if(!confirm('"'+t.name+'" 삭제할까요?')) return;
   await tplServerDelete(t.name);
   await renderTplList();
 }
@@ -2261,7 +2261,7 @@ async function renderTplList(){
   var arr=await tplServerList();
   box._tpls=arr;
   if(arr.length===0){
-    box.innerHTML='<div style="padding:24px;text-align:center;color:#94a3b8;font-size:12px;">No saved templates</div>';
+    box.innerHTML='<div style="padding:24px;text-align:center;color:#94a3b8;font-size:12px;">저장된 템플릿이 없습니다</div>';
     return;
   }
   box.innerHTML=arr.map(function(t,i){
@@ -2269,9 +2269,9 @@ async function renderTplList(){
     return '<div class="tpl-row" data-i="'+i+'">'
       +'<div class="tpl-row-info"><div class="tpl-row-name">'+_tplRowEsc(t.name)+'</div><div class="tpl-row-meta">'+when+' · '+(t.width||860)+'px</div></div>'
       +'<div class="tpl-row-acts">'
-      +'<button class="tpl-row-btn load" onclick="tplLoadByRow(this)">Load</button>'
+      +'<button class="tpl-row-btn load" onclick="tplLoadByRow(this)">불러오기</button>'
       +'<button class="tpl-row-btn export" onclick="tplExportByRow(this)">JSON</button>'
-      +'<button class="tpl-row-btn del" onclick="tplDeleteByRow(this)">Delete</button>'
+      +'<button class="tpl-row-btn del" onclick="tplDeleteByRow(this)">삭제</button>'
       +'</div></div>';
   }).join('');
 }
@@ -2285,7 +2285,7 @@ function closeTplModal(){
   var m=document.getElementById('tpl-modal'); if(m) m.style.display='none';
 }
 
-// ?�?�?� ?�로???��?지 관�?(FTP) ?�?�?�
+// ─── 업로드 이미지 관리 (FTP) ───
 function _fmtSize(n){
   if(!n&&n!==0) return '';
   if(n<1024) return n+'B';
@@ -2307,7 +2307,7 @@ async function renderUploadsList(){
   var box=document.getElementById('uploads-list');
   var info=document.getElementById('uploads-info');
   if(!box) return;
-  box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;">??목록 불러?�는 �?..</div>';
+  box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;">⏳ 목록 불러오는 중...</div>';
   try{
     var res=await fetch('/api/uploads');
     if(!res.ok){
@@ -2317,10 +2317,10 @@ async function renderUploadsList(){
     var list=await res.json();
     if(info){
       var totalSize=list.reduce(function(s,it){return s+(it.size||0);},0);
-      info.textContent='�?'+list.length+'�?· '+_fmtSize(totalSize);
+      info.textContent='총 '+list.length+'개 · '+_fmtSize(totalSize);
     }
     if(!list.length){
-      box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;">?�로?�된 ?��?지가 ?�습?�다.</div>';
+      box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;">업로드된 이미지가 없습니다.</div>';
       return;
     }
     box.innerHTML=list.map(function(it){
@@ -2335,46 +2335,46 @@ async function renderUploadsList(){
         +'</div>'
         +'<div style="display:flex;gap:4px;padding:6px 8px;border-top:1px solid #f1f5f9;background:#fafbff;">'
         +'<button onclick="uploadsCopyUrl(\''+_escAttr(it.url).replace(/\\\'/g,"\\'")+'\')" style="flex:1;padding:5px;background:#e0e7ff;color:#1e3a8a;border:none;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;">URL</button>'
-        +'<button onclick="uploadsDelete(\''+_escAttr(it.name).replace(/\\\'/g,"\\'")+'\')" style="flex:1;padding:5px;background:#fee2e2;color:#991b1b;border:none;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;">??��</button>'
+        +'<button onclick="uploadsDelete(\''+_escAttr(it.name).replace(/\\\'/g,"\\'")+'\')" style="flex:1;padding:5px;background:#fee2e2;color:#991b1b;border:none;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;">삭제</button>'
         +'</div>'
         +'</div>';
     }).join('');
   }catch(e){
-    box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#dc2626;">??'+(e.message||'불러?�기 ?�패')+'</div>';
+    box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#dc2626;">❌ '+(e.message||'불러오기 실패')+'</div>';
   }
 }
 
 async function uploadsDelete(name){
-  if(!confirm('"'+name+'" ??��?�까?? (복구 불�?)')) return;
+  if(!confirm('"'+name+'" 삭제할까요? (복구 불가)')) return;
   try{
     var res=await fetch('/api/uploads/'+encodeURIComponent(name),{method:'DELETE'});
     if(!res.ok){
       var j={}; try{ j=await res.json(); }catch(e){}
       throw new Error(j.error || ('delete '+res.status));
     }
-    showHint('?�� ??��?? '+name);
+    showHint('🗑 삭제됨: '+name);
     await renderUploadsList();
   }catch(e){
-    alert('??�� ?�패: '+e.message);
+    alert('삭제 실패: '+e.message);
   }
 }
 
 function uploadsCopyUrl(url){
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(function(){ showHint('?�� URL 복사??); },
+    navigator.clipboard.writeText(url).then(function(){ showHint('📋 URL 복사됨'); },
                                             function(){ prompt('URL 복사:', url); });
   } else {
     prompt('URL 복사:', url);
   }
 }
 
-// ?�리뷰에???�용 중이지 ?��? ?��?지�??�괄 ??�� (중복/고아 ?�리)
+// 프리뷰에서 사용 중이지 않은 이미지를 일괄 삭제 (중복/고아 정리)
 async function uploadsDeleteDuplicates(){
   try{
     var res=await fetch('/api/uploads');
     if(!res.ok) throw new Error('list '+res.status);
     var list=await res.json();
-    // ?�재 ?�리뷰에??참조 중인 ?�일�?집합
+    // 현재 프리뷰에서 참조 중인 파일명 집합
     var pv=document.getElementById('preview');
     var usedNames={};
     if(pv){
@@ -2388,8 +2388,8 @@ async function uploadsDeleteDuplicates(){
       });
     }
     var orphans=list.filter(function(it){ return !usedNames[it.name]; });
-    if(!orphans.length){ alert('?�리??미사???��?지가 ?�습?�다.'); return; }
-    if(!confirm('?�재 ?�리뷰에???�용?��? ?�는 ?��?지 '+orphans.length+'개�? ??��?�니??\n(복구 불�?) 진행?�까??')) return;
+    if(!orphans.length){ alert('정리할 미사용 이미지가 없습니다.'); return; }
+    if(!confirm('현재 프리뷰에서 사용하지 않는 이미지 '+orphans.length+'개를 삭제합니다.\n(복구 불가) 진행할까요?')) return;
     var okN=0, failN=0;
     for(var i=0;i<orphans.length;i++){
       try{
@@ -2397,16 +2397,16 @@ async function uploadsDeleteDuplicates(){
         if(r.ok) okN++; else failN++;
       }catch(e){ failN++; }
     }
-    showHint('?�� ?�리 ?�료: '+okN+'�???��'+(failN?(' · ?�패 '+failN):''));
+    showHint('🧹 정리 완료: '+okN+'개 삭제'+(failN?(' · 실패 '+failN):''));
     await renderUploadsList();
   }catch(e){
-    alert('?�리 ?�패: '+e.message);
+    alert('정리 실패: '+e.message);
   }
 }
 
-// Start fresh with default 21-section template
+// 기본 21개 섹션으로 새로 시작
 function tplNewDefault(){
-  if(!confirm('Reset current work and start fresh with default template (21 sections)?\n\nUnsaved changes will be lost.')) return;
+  if(!confirm('현재 작업이 사라지고 기본 템플릿으로 새로 시작합니다. 진행할까요?\n\n저장하지 않은 변경사항은 복구할 수 없습니다.')) return;
   var TYPES=['hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview'); if(!preview) return;
   preview.innerHTML='';
@@ -2415,13 +2415,13 @@ function tplNewDefault(){
   }
   document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
   closeTplModal();
-  showHint('Reset to default template (21 sections)');
+  showHint('🆕 기본 템플릿으로 시작 (21개 섹션)');
 }
 
 /*INIT_BEGIN*/(function(){
   var TYPES=['hero','banner','hero','trust','proof','copy','infl','feat','duo','wearing','mood','angle','compare','story','style','pkg','size','info','wash','pd','faq','footer'];
   var preview=document.getElementById('preview');
-  if(!preview){alert('Error: #preview element not found');return;}
+  if(!preview){alert('❌ #preview 요소를 찾을 수 없습니다');return;}
   preview.innerHTML='';
   var ok=0, fail=[];
   for(var i=0;i<TYPES.length;i++){
@@ -2434,18 +2434,18 @@ function tplNewDefault(){
     }
   }
   if(ok===0){
-    // All sections failed to load - show error
+    // 전체 실패 시 화면에 표시
     preview.innerHTML='<div style="padding:40px;color:#dc2626;font-family:sans-serif;">'
-      +'<h2>Section Load Failed</h2>'
+      +'<h2>⚠️ 섹션 로드 실패</h2>'
       +'<p>'+fail.join('<br>')+'</p>'
-      +'<button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;background:#4f9cf9;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;">Reload Page</button>'
+      +'<button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;background:#4f9cf9;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;">🔄 새로고침</button>'
       +'</div>';
   } else if(fail.length>0){
-    console.warn('Some sections failed:', fail);
+    console.warn('일부 섹션 실패:', fail);
   }
-  try{renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){console.warn('EP init error:',e);}
+  try{renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){console.warn('EP 초기화 오류:',e);}
   document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});
-  // Bind text formatting toolbar to all contenteditable
+  // 전체 텍스트 툴바 연결
   setTimeout(function(){
     document.querySelectorAll('#preview [contenteditable]').forEach(function(el){
       if(typeof bindFT==='function')bindFT(el);
