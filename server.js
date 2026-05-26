@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(compression());
-app.use(express.json({ limit: '30mb' }));
+app.use(express.json({ limit: '100mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));

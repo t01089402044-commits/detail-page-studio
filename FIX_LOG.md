@@ -47,6 +47,14 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js + editor.js — 업로드 용량 증가 + 클라이언트 자동 압축
+- 파일: server.js, public/editor.js
+- 수정: `app.use(express.json({ limit: '30mb' → '100mb' }))`
+- 추가: `compressImage(file, cb)` 헬퍼 (Canvas 리사이즈/JPEG 0.8 인코딩, 너비 860px 초과 시에만 처리, toDataURL 실패 시 원본 fallback)
+- 수정: `pv()`, `izClickOpen()` → FileReader/Image 직접 호출 대신 `compressImage` 사용
+- 보호: `initTF()`, `buildIzOverlay()` 내부 호출은 미변경 (사용자 명시 범위 외)
+- 교훈: payload 한도 늘리는 동시에 클라이언트에서 줄여야 서버 부하/저장 용량 모두 절감
+
 ### [2026-05-26] editor.js — 템플릿 불러오기 후 이미지 크기조절 불가 버그 수정
 - 파일: public/editor.js
 - 수정: tplSnapshot()의 clone clean 대상에서 `.tf-handle,.tf-border,.tf-dim,.tf-lock-badge` 제외 (저장 시 보존)

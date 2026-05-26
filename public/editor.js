@@ -270,16 +270,43 @@ function closeAddModal(){var m=document.getElementById('add-modal');if(m)m.class
 function setJpgScale(s,btn){_jpgScale=s+1;document.querySelectorAll('#jpg-1x,#jpg-2x').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 const TF={active:null,drag:null};
 
+// 이미지 자동 압축: 너비 860px 초과 시 Canvas로 리사이즈, JPEG 0.8로 인코딩
+// 작거나 같으면 원본 dataURL 그대로 전달
+function compressImage(file, cb){
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var MAX_W=860;
+      if(img.naturalWidth<=MAX_W){
+        cb(e.target.result, img.naturalWidth, img.naturalHeight);
+        return;
+      }
+      var w=MAX_W;
+      var h=Math.round(MAX_W*(img.naturalHeight/img.naturalWidth));
+      var canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      var ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      try{
+        var dataURL=canvas.toDataURL('image/jpeg',0.8);
+        cb(dataURL, w, h);
+      }catch(err){
+        // toDataURL 실패 시 원본 사용 (예: 매우 큰 캔버스)
+        cb(e.target.result, img.naturalWidth, img.naturalHeight);
+      }
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 function pv(input){
   if(!input.files||!input.files[0])return;
   var zone=input.closest?input.closest('.iz'):input.parentElement;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const img=new Image();
-    img.onload=()=>initTF(zone,img.src,img.naturalWidth,img.naturalHeight);
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(input.files[0]);
+  compressImage(input.files[0], function(src,nW,nH){
+    initTF(zone,src,nW,nH);
+  });
 }
 
 function initTF(zone,src,nW,nH){
@@ -365,13 +392,9 @@ function izClickOpen(iz,e){
   tmp.style.cssText='position:fixed;top:-9999px;left:-9999px;';
   tmp.onchange=function(){
     if(!tmp.files||!tmp.files[0]){document.body.removeChild(tmp);return;}
-    var reader=new FileReader();
-    reader.onload=function(ev){
-      var img=new Image();
-      img.onload=function(){initTF(iz,img.src,img.naturalWidth,img.naturalHeight);};
-      img.src=ev.target.result;
-    };
-    reader.readAsDataURL(tmp.files[0]);
+    compressImage(tmp.files[0], function(src,nW,nH){
+      initTF(iz,src,nW,nH);
+    });
     setTimeout(function(){if(tmp.parentNode)document.body.removeChild(tmp);},1000);
   };
   document.body.appendChild(tmp);tmp.click();
