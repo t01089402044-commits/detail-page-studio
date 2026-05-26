@@ -71,6 +71,11 @@ function safeName(name) {
 
 // Template list (from FTP)
 app.get('/api/templates', async (req, res) => {
+  // FTP env vars not configured - return empty list
+  if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
+    return res.json([]);
+  }
+
   let client;
   try {
     client = await ftpConnect();
@@ -99,6 +104,11 @@ app.get('/api/templates', async (req, res) => {
 
 // Save template (to FTP)
 app.post('/api/templates/save', async (req, res) => {
+  // FTP env vars not configured
+  if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
+    return res.status(400).json({ error: 'FTP not configured - set FTP_HOST/FTP_USER/FTP_PASS env vars' });
+  }
+
   let client;
   try {
     const tpl = req.body;
@@ -121,6 +131,11 @@ app.post('/api/templates/save', async (req, res) => {
 
 // Load template (from FTP)
 app.get('/api/templates/:name', async (req, res) => {
+  // FTP env vars not configured
+  if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
+    return res.status(404).json({ error: 'not found' });
+  }
+
   let client;
   try {
     const fname = safeName(req.params.name) + '.json';
@@ -138,6 +153,11 @@ app.get('/api/templates/:name', async (req, res) => {
 
 // Delete template (from FTP)
 app.delete('/api/templates/:name', async (req, res) => {
+  // FTP env vars not configured
+  if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
+    return res.status(400).json({ error: 'FTP not configured' });
+  }
+
   let client;
   try {
     const fname = safeName(req.params.name) + '.json';
