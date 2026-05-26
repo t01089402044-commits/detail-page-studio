@@ -65,8 +65,10 @@ node server.js
 - 이미지 업로드 시 클라이언트가 Canvas로 압축 → `/api/upload` POST → 서버가 `basic-ftp`로 외부 FTP에 저장 → public URL 반환
 - 템플릿/HTML에는 base64가 아닌 URL만 저장 (저장 용량 폭증 방지)
 - 관리 UI: 툴바 "🖼 이미지 관리" → 그리드 썸네일 + 개별 삭제 + URL 복사 + "중복 정리"(프리뷰 미사용 파일 일괄 삭제)
+- 한국 호스팅 인코딩 처리: `client.ftp.encoding='binary'` + `iconv-lite`로 CP949 byte-perfect 전송. 공개 URL도 cp949 URL-encoded(`%BB%F3%BC%BC%C6%E4%C0%CC%C1%F6`)로 반환해 301 redirect 회피
+- FTP 홈 ≠ 웹 documentroot: 이 호스팅의 경우 FTP `/public/`이 `xngolf.co.kr`의 documentroot. 기본 `FTP_REMOTE_DIR=/public/SE2/upload/상세페이지/`
 - 필수 환경변수: `FTP_HOST`, `FTP_USER`, `FTP_PASS`
-- 선택 환경변수: `FTP_REMOTE_DIR`, `FTP_PUBLIC_BASE`
+- 선택 환경변수: `FTP_REMOTE_DIR`, `FTP_PUBLIC_BASE`, `FTP_PATH_ENCODING`(기본 `cp949`)
 - ⚠ 자격증명은 코드/repo에 절대 박지 않음 — `process.env`만 사용. 로컬 테스트 시 PowerShell `$env:FTP_PASS='...'` 또는 별도 `.env`+dotenv
 
 ### 5. R2 (Cloudflare) 시도 → 폐기

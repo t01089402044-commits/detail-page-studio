@@ -47,6 +47,26 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js — FTP 업로드 한글 경로/인코딩 디버깅 및 수정
+- 파일: server.js, package.json (iconv-lite 추가)
+- 증상: 업로드는 200 OK + URL 반환되지만 브라우저에서 액박. `/api/uploads` 목록은 항상 `[]`
+- 진단:
+  1. 한국 호스팅(Apache)이 한국어 디렉토리를 **CP949/EUC-KR 바이트**로 저장. 우리는 `basic-ftp` 기본 UTF-8로 디렉토리 생성 → 별개 디렉토리가 만들어졌고 웹에서 못 찾음 (404)
+  2. **FTP 루트(`/`)와 웹 documentroot가 다름** — FTP `/`에는 WordPress 파일들이 있고, 실제 웹 루트는 FTP `/public/` 이었음. 사용자가 알려준 `https://xngolf.co.kr/SE2/upload/상세페이지/`는 FTP의 `/public/SE2/upload/상세페이지/`
+  3. `basic-ftp` 의 `FileInfo`는 `isFile/isDirectory`가 **getter** — `{...it}` spread 시 사라져서 filter가 전부 false → `[]`
+- 수정:
+  - `iconv-lite` 추가, `client.ftp.encoding='binary'` + 모든 경로를 `iconv.encode(s, 'cp949').toString('binary')`로 변환해서 전달 (byte-perfect)
+  - `FTP_REMOTE_DIR` 기본값 `/public/SE2/upload/상세페이지/` (`/public/` 접두)
+  - `FTP_PUBLIC_BASE` 자동 계산: 한국어 세그먼트를 cp949 URL-encoded (`%BB%F3%BC%BC%C6%E4%C0%CC%C1%F6/`)로 반환 → 브라우저에서 301 redirect 없이 바로 200
+  - upload/list/delete 모두 cwd 의존 안 하고 **명시적 절대 경로** 사용
+  - list의 `{...it, ...}` 패턴 제거 → filter를 spread 전에 수행
+- 환경변수: `FTP_PATH_ENCODING` (선택, 기본 `cp949`) 추가
+- 검증: 외부 EUC-KR URL 직접 요청 시 HTTP 200, list 3개 정상 반환, delete OK
+- 교훈:
+  - 한국 호스팅 FTP는 cp949 디렉토리명 + 웹은 EUC-KR 경로 변환 → byte-perfect 전송 필요
+  - basic-ftp의 FileInfo는 클래스 인스턴스. spread 주의
+  - FTP 홈 != 웹 documentroot. 항상 실제 경로 탐색 필요
+
 ### [2026-05-26] server.js + editor.js + index.html — FTP 이미지 업로드 + 관리 UI
 - 파일: server.js, public/editor.js, public/index.html, package.json
 - 추가: `basic-ftp` 의존성

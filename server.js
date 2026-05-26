@@ -6,13 +6,53 @@ const path = require('path');
 const fs = require('fs');
 const { Readable } = require('stream');
 const ftp = require('basic-ftp');
+const iconv = require('iconv-lite');
 
 // FTP 설정 — 자격증명은 코드/repo에 박지 않고 환경변수만 사용
 const FTP_HOST = process.env.FTP_HOST || '';
 const FTP_USER = process.env.FTP_USER || '';
 const FTP_PASS = process.env.FTP_PASS || '';
-const FTP_REMOTE_DIR = process.env.FTP_REMOTE_DIR || '/SE2/upload/상세페이지/';
-const FTP_PUBLIC_BASE = process.env.FTP_PUBLIC_BASE || 'https://xngolf.co.kr/SE2/upload/상세페이지/';
+// 웹 도메인 xngolf.co.kr의 documentroot가 FTP의 /public/ 이므로 실제 FTP 경로는 /public/ 접두사 필요
+const FTP_REMOTE_DIR = process.env.FTP_REMOTE_DIR || '/public/SE2/upload/상세페이지/';
+// FTP 서버가 디렉토리/파일명에 사용하는 인코딩 (한국 호스팅은 보통 cp949/euc-kr)
+const FTP_PATH_ENCODING = process.env.FTP_PATH_ENCODING || 'cp949';
+// 공개 URL용 베이스. 한국어 디렉토리는 cp949 URL-encoded로 박아서 redirect 없이 바로 200 응답
+// 기본값 계산은 모듈 로드 후에 (urlEncodeCp949 함수 선언 이후 필요) — 아래에서 처리
+let FTP_PUBLIC_BASE = process.env.FTP_PUBLIC_BASE || '';
+
+// JS 문자열을 FTP 서버 인코딩(cp949)으로 변환 → latin1 string (basic-ftp가 byte-perfect 전송)
+function encPath(s){
+  if (FTP_PATH_ENCODING === 'utf8' || FTP_PATH_ENCODING === 'utf-8') return s;
+  return iconv.encode(s, FTP_PATH_ENCODING).toString('binary');
+}
+function decName(latin1){
+  if (FTP_PATH_ENCODING === 'utf8' || FTP_PATH_ENCODING === 'utf-8') return latin1;
+  return iconv.decode(Buffer.from(latin1, 'binary'), FTP_PATH_ENCODING);
+}
+// 공개 URL용: JS 문자열의 한글을 cp949 바이트로 변환 후 %XX 시퀀스로 (Apache가 cp949 경로로 인식하도록)
+function urlEncodeCp949(s){
+  const bytes = iconv.encode(s, FTP_PATH_ENCODING);
+  let out = '';
+  for (const b of bytes) {
+    // ASCII 안전문자(영숫자, -_.~)는 그대로
+    if ((b>=0x30&&b<=0x39)||(b>=0x41&&b<=0x5A)||(b>=0x61&&b<=0x7A)||b===0x2D||b===0x5F||b===0x2E||b===0x7E) {
+      out += String.fromCharCode(b);
+    } else {
+      out += '%' + b.toString(16).toUpperCase().padStart(2, '0');
+    }
+  }
+  return out;
+}
+
+// FTP_PUBLIC_BASE 기본값 자동 계산
+// 웹 URL: https://xngolf.co.kr + (FTP_REMOTE_DIR에서 /public 제거한 경로) — 한국어 부분은 cp949 URL-encoded
+if (!FTP_PUBLIC_BASE) {
+  let webPath = FTP_REMOTE_DIR.replace(/^\/public(\/|$)/, '/');
+  if (!webPath.endsWith('/')) webPath += '/';
+  // 경로 세그먼트별로 cp949 URL 인코딩 (슬래시는 보존)
+  const encodedPath = webPath.split('/').map(seg => seg ? urlEncodeCp949(seg) : seg).join('/');
+  FTP_PUBLIC_BASE = 'https://xngolf.co.kr' + encodedPath;
+}
 
 const TMPL_DIR = path.join(__dirname, 'templates');
 if (!fs.existsSync(TMPL_DIR)) fs.mkdirSync(TMPL_DIR);
@@ -80,14 +120,17 @@ app.delete('/api/templates/:name', (req, res) => {
 });
 
 // FTP 클라이언트 생성 + 디렉토리 진입
+// basic-ftp는 socket I/O에 utf8/binary/utf16le만 지원. 한국 호스팅(cp949 디렉토리)
+// 호환을 위해 encoding을 'binary'(latin1)로 두고, 우리가 직접 iconv로 변환한 바이트를 전달
 async function ftpConnect() {
   if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
     throw new Error('FTP 환경변수 미설정 (FTP_HOST/FTP_USER/FTP_PASS)');
   }
   const client = new ftp.Client(15000);
-  client.ftp.encoding = 'utf8';
+  client.ftp.encoding = 'binary';
   await client.access({ host: FTP_HOST, user: FTP_USER, password: FTP_PASS, secure: false });
-  await client.ensureDir(FTP_REMOTE_DIR);
+  // ensureDir: cp949 바이트로 인코딩된 경로. 존재하지 않으면 생성, 있으면 cd
+  await client.ensureDir(encPath(FTP_REMOTE_DIR));
   return client;
 }
 
@@ -105,7 +148,8 @@ app.post('/api/upload', async (req, res) => {
     const fname = Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
 
     client = await ftpConnect();
-    await client.uploadFrom(Readable.from(buf), fname);
+    // 명시적으로 절대 경로 + 파일명 (cwd 의존 안 함)
+    await client.uploadFrom(Readable.from(buf), encPath(FTP_REMOTE_DIR.replace(/\/$/, '') + '/' + fname));
     res.json({ url: FTP_PUBLIC_BASE + encodeURIComponent(fname), name: fname, size: buf.length });
   } catch (e) {
     console.error('[FTP upload error]', e.message);
@@ -120,15 +164,18 @@ app.get('/api/uploads', async (req, res) => {
   let client;
   try {
     client = await ftpConnect();
-    const items = await client.list();
+    // 명시적 path로 list (cwd 의존하지 않음)
+    const items = await client.list(encPath(FTP_REMOTE_DIR));
+    // 주의: basic-ftp의 FileInfo는 isFile/isDirectory가 getter라 spread로 잃어버림. 원본 객체에서 직접 평가
     const list = items
-      .filter(it => it.isFile && /\.(jpe?g|png|gif|webp|bmp)$/i.test(it.name))
+      .filter(it => it.isFile)
       .map(it => ({
-        name: it.name,
+        name: decName(it.name),
         size: it.size,
-        modifiedAt: it.modifiedAt ? new Date(it.modifiedAt).toISOString() : null,
-        url: FTP_PUBLIC_BASE + encodeURIComponent(it.name)
+        modifiedAt: it.modifiedAt ? new Date(it.modifiedAt).toISOString() : null
       }))
+      .filter(it => /\.(jpe?g|png|gif|webp|bmp)$/i.test(it.name))
+      .map(it => ({ ...it, url: FTP_PUBLIC_BASE + encodeURIComponent(it.name) }))
       .sort((a, b) => (b.modifiedAt || '').localeCompare(a.modifiedAt || ''));
     res.json(list);
   } catch (e) {
@@ -149,7 +196,7 @@ app.delete('/api/uploads/:name', async (req, res) => {
       return res.status(400).json({ error: '잘못된 파일명' });
     }
     client = await ftpConnect();
-    await client.remove(raw);
+    await client.remove(encPath(FTP_REMOTE_DIR.replace(/\/$/, '') + '/' + raw));
     res.json({ ok: true });
   } catch (e) {
     console.error('[FTP delete error]', e.message);
