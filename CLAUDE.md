@@ -61,6 +61,14 @@ node server.js
 - 에디터 전용 UI 클래스(`iz-ov, tf-handle, tf-dim, tf-lock-badge, resize-bar, sec-toolbar, del-btn, add-btn, ico-btn, iz-zone-del`)는 export clone에서 제거
 - 관련 커밋: `ecc3705`, `70f117c`, `0cfb330`
 
+### 5-1. FTP 이미지 업로드 (현재 채택)
+- 이미지 업로드 시 클라이언트가 Canvas로 압축 → `/api/upload` POST → 서버가 `basic-ftp`로 외부 FTP에 저장 → public URL 반환
+- 템플릿/HTML에는 base64가 아닌 URL만 저장 (저장 용량 폭증 방지)
+- 관리 UI: 툴바 "🖼 이미지 관리" → 그리드 썸네일 + 개별 삭제 + URL 복사 + "중복 정리"(프리뷰 미사용 파일 일괄 삭제)
+- 필수 환경변수: `FTP_HOST`, `FTP_USER`, `FTP_PASS`
+- 선택 환경변수: `FTP_REMOTE_DIR`, `FTP_PUBLIC_BASE`
+- ⚠ 자격증명은 코드/repo에 절대 박지 않음 — `process.env`만 사용. 로컬 테스트 시 PowerShell `$env:FTP_PASS='...'` 또는 별도 `.env`+dotenv
+
 ### 5. R2 (Cloudflare) 시도 → 폐기
 - 목적: 템플릿 영구 저장을 Cloudflare R2에 두려 했음
 - 시도 순서: 직접 AWS SigV4 서명 → `aws4` 패키지 → `@aws-sdk/client-s3` (forcePathStyle, region 변경) → `minio` 클라이언트 → 연결 테스트 엔드포인트 추가

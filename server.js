@@ -4,6 +4,15 @@ const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
 const fs = require('fs');
+const { Readable } = require('stream');
+const ftp = require('basic-ftp');
+
+// FTP 설정 — 자격증명은 코드/repo에 박지 않고 환경변수만 사용
+const FTP_HOST = process.env.FTP_HOST || '';
+const FTP_USER = process.env.FTP_USER || '';
+const FTP_PASS = process.env.FTP_PASS || '';
+const FTP_REMOTE_DIR = process.env.FTP_REMOTE_DIR || '/SE2/upload/상세페이지/';
+const FTP_PUBLIC_BASE = process.env.FTP_PUBLIC_BASE || 'https://xngolf.co.kr/SE2/upload/상세페이지/';
 
 const TMPL_DIR = path.join(__dirname, 'templates');
 if (!fs.existsSync(TMPL_DIR)) fs.mkdirSync(TMPL_DIR);
@@ -68,6 +77,86 @@ app.delete('/api/templates/:name', (req, res) => {
     if (fs.existsSync(fpath)) fs.unlinkSync(fpath);
     res.json({ ok: true });
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// FTP 클라이언트 생성 + 디렉토리 진입
+async function ftpConnect() {
+  if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
+    throw new Error('FTP 환경변수 미설정 (FTP_HOST/FTP_USER/FTP_PASS)');
+  }
+  const client = new ftp.Client(15000);
+  client.ftp.encoding = 'utf8';
+  await client.access({ host: FTP_HOST, user: FTP_USER, password: FTP_PASS, secure: false });
+  await client.ensureDir(FTP_REMOTE_DIR);
+  return client;
+}
+
+// 이미지 업로드: dataURL → FTP → public URL 반환
+app.post('/api/upload', async (req, res) => {
+  let client;
+  try {
+    const { dataURL } = req.body || {};
+    if (!dataURL) return res.status(400).json({ error: 'dataURL 필요' });
+    const m = dataURL.match(/^data:image\/([a-z0-9+]+);base64,(.+)$/i);
+    if (!m) return res.status(400).json({ error: '잘못된 dataURL 형식' });
+    const extRaw = m[1].toLowerCase();
+    const ext = extRaw === 'jpeg' ? 'jpg' : extRaw;
+    const buf = Buffer.from(m[2], 'base64');
+    const fname = Date.now() + '_' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+
+    client = await ftpConnect();
+    await client.uploadFrom(Readable.from(buf), fname);
+    res.json({ url: FTP_PUBLIC_BASE + encodeURIComponent(fname), name: fname, size: buf.length });
+  } catch (e) {
+    console.error('[FTP upload error]', e.message);
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
+});
+
+// 업로드된 이미지 목록
+app.get('/api/uploads', async (req, res) => {
+  let client;
+  try {
+    client = await ftpConnect();
+    const items = await client.list();
+    const list = items
+      .filter(it => it.isFile && /\.(jpe?g|png|gif|webp|bmp)$/i.test(it.name))
+      .map(it => ({
+        name: it.name,
+        size: it.size,
+        modifiedAt: it.modifiedAt ? new Date(it.modifiedAt).toISOString() : null,
+        url: FTP_PUBLIC_BASE + encodeURIComponent(it.name)
+      }))
+      .sort((a, b) => (b.modifiedAt || '').localeCompare(a.modifiedAt || ''));
+    res.json(list);
+  } catch (e) {
+    console.error('[FTP list error]', e.message);
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
+});
+
+// 업로드된 이미지 삭제
+app.delete('/api/uploads/:name', async (req, res) => {
+  let client;
+  try {
+    const raw = req.params.name || '';
+    // 경로 이동 차단
+    if (raw.includes('/') || raw.includes('\\') || raw.includes('..')) {
+      return res.status(400).json({ error: '잘못된 파일명' });
+    }
+    client = await ftpConnect();
+    await client.remove(raw);
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('[FTP delete error]', e.message);
+    res.status(500).json({ error: e.message });
+  } finally {
+    if (client) client.close();
+  }
 });
 
 let browser = null;

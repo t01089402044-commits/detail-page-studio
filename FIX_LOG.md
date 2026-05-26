@@ -47,6 +47,26 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js + editor.js + index.html — FTP 이미지 업로드 + 관리 UI
+- 파일: server.js, public/editor.js, public/index.html, package.json
+- 추가: `basic-ftp` 의존성
+- 추가 엔드포인트:
+  - `POST /api/upload` — dataURL → FTP 업로드 → public URL 반환
+  - `GET /api/uploads` — FTP 디렉토리 내 이미지 목록 (이름/크기/수정시각/URL)
+  - `DELETE /api/uploads/:name` — 단일 파일 삭제 (경로이동 차단 검증 포함)
+- 환경변수 (Railway/로컬에 설정):
+  - `FTP_HOST`, `FTP_USER`, `FTP_PASS` (필수)
+  - `FTP_REMOTE_DIR` (선택, 기본 `/SE2/upload/상세페이지/`)
+  - `FTP_PUBLIC_BASE` (선택, 기본 `https://xngolf.co.kr/SE2/upload/상세페이지/`)
+- 자격증명은 코드/repo에 절대 박지 않음. `process.env` 만 참조
+- editor.js:
+  - `uploadToFTP(dataURL)` 헬퍼 추가
+  - `compressImage()` 흐름 변경: 압축 → /api/upload → URL을 콜백에 전달. 업로드 실패 시 dataURL fallback + 사용자 알림
+  - `buildIzOverlay` 내부 업로드 핸들러도 `compressImage` 사용으로 통합 (FTP 일관 적용)
+  - 새 UI: 툴바 "🖼 이미지 관리" 버튼 + `#uploads-modal` (그리드형 썸네일 리스트, 개별 삭제/URL 복사, **중복 정리** — 현재 프리뷰에서 사용 중이지 않은 파일 일괄 삭제)
+- 보호: 기존 `/api/capture`, `getBrowser()`, 템플릿 4개 API 변경 없음
+- 교훈: base64 dataURL을 그대로 템플릿에 저장하면 크기 폭증 → CDN/FTP URL만 저장하는 게 정답
+
 ### [2026-05-26] server.js + editor.js — 업로드 용량 증가 + 클라이언트 자동 압축
 - 파일: server.js, public/editor.js
 - 수정: `app.use(express.json({ limit: '30mb' → '100mb' }))`

@@ -270,31 +270,55 @@ function closeAddModal(){var m=document.getElementById('add-modal');if(m)m.class
 function setJpgScale(s,btn){_jpgScale=s+1;document.querySelectorAll('#jpg-1x,#jpg-2x').forEach(function(b){b.classList.remove('act');});if(btn)btn.classList.add('act');}
 const TF={active:null,drag:null};
 
+// 압축된 dataURL을 서버(/api/upload)로 보내 FTP에 저장 → public URL 반환
+function uploadToFTP(dataURL){
+  return fetch('/api/upload', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({dataURL:dataURL})
+  }).then(function(r){
+    if(!r.ok){
+      return r.json().then(function(j){ throw new Error(j.error || ('upload '+r.status)); },
+                           function(){ throw new Error('upload '+r.status); });
+    }
+    return r.json();
+  }).then(function(j){
+    if(!j||!j.url) throw new Error('서버 응답에 url 없음');
+    return j.url;
+  });
+}
+
 // 이미지 자동 압축: 너비 860px 초과 시 Canvas로 리사이즈, JPEG 0.8로 인코딩
-// 작거나 같으면 원본 dataURL 그대로 전달
+// 작거나 같으면 원본 dataURL 그대로 사용. 이후 FTP에 업로드해 URL을 콜백으로 전달
+// 업로드 실패 시 dataURL을 fallback으로 콜백
 function compressImage(file, cb){
   var reader=new FileReader();
   reader.onload=function(e){
     var img=new Image();
     img.onload=function(){
       var MAX_W=860;
+      var src, w, h;
       if(img.naturalWidth<=MAX_W){
-        cb(e.target.result, img.naturalWidth, img.naturalHeight);
-        return;
+        src=e.target.result; w=img.naturalWidth; h=img.naturalHeight;
+      } else {
+        w=MAX_W;
+        h=Math.round(MAX_W*(img.naturalHeight/img.naturalWidth));
+        var canvas=document.createElement('canvas');
+        canvas.width=w; canvas.height=h;
+        var ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        try{ src=canvas.toDataURL('image/jpeg',0.8); }
+        catch(err){ src=e.target.result; w=img.naturalWidth; h=img.naturalHeight; }
       }
-      var w=MAX_W;
-      var h=Math.round(MAX_W*(img.naturalHeight/img.naturalWidth));
-      var canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
-      var ctx=canvas.getContext('2d');
-      ctx.drawImage(img,0,0,w,h);
-      try{
-        var dataURL=canvas.toDataURL('image/jpeg',0.8);
-        cb(dataURL, w, h);
-      }catch(err){
-        // toDataURL 실패 시 원본 사용 (예: 매우 큰 캔버스)
-        cb(e.target.result, img.naturalWidth, img.naturalHeight);
-      }
+      showHint('⏳ 이미지 업로드 중...');
+      uploadToFTP(src).then(function(url){
+        showHint('✅ 업로드 완료');
+        cb(url, w, h);
+      }).catch(function(err){
+        console.warn('FTP 업로드 실패 → dataURL fallback:', err && err.message);
+        showHint('⚠ 업로드 실패 — 임시 미리보기 사용');
+        cb(src, w, h);
+      });
     };
     img.src=e.target.result;
   };
@@ -499,15 +523,9 @@ function buildIzOverlay(iz){
     tmp.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;';
     tmp.onchange=function(){
       if(!tmp.files||!tmp.files[0]){document.body.removeChild(tmp);return;}
-      var reader=new FileReader();
-      reader.onload=function(ev){
-        var img=new Image();
-        img.onload=function(){
-          initTF(iz,img.src,img.naturalWidth,img.naturalHeight);
-        };
-        img.src=ev.target.result;
-      };
-      reader.readAsDataURL(tmp.files[0]);
+      compressImage(tmp.files[0], function(src,nW,nH){
+        initTF(iz,src,nW,nH);
+      });
       // 사용 완료 후 제거
       setTimeout(function(){if(tmp.parentNode)document.body.removeChild(tmp);},1000);
     };
@@ -2217,6 +2235,125 @@ async function openTplModal(){
 }
 function closeTplModal(){
   var m=document.getElementById('tpl-modal'); if(m) m.style.display='none';
+}
+
+// ─── 업로드 이미지 관리 (FTP) ───
+function _fmtSize(n){
+  if(!n&&n!==0) return '';
+  if(n<1024) return n+'B';
+  if(n<1024*1024) return (n/1024).toFixed(1)+'KB';
+  return (n/1024/1024).toFixed(2)+'MB';
+}
+function _escAttr(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+async function openUploadsModal(){
+  var m=document.getElementById('uploads-modal'); if(!m) return;
+  m.style.display='flex';
+  await renderUploadsList();
+}
+function closeUploadsModal(){
+  var m=document.getElementById('uploads-modal'); if(m) m.style.display='none';
+}
+
+async function renderUploadsList(){
+  var box=document.getElementById('uploads-list');
+  var info=document.getElementById('uploads-info');
+  if(!box) return;
+  box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;">⏳ 목록 불러오는 중...</div>';
+  try{
+    var res=await fetch('/api/uploads');
+    if(!res.ok){
+      var j={}; try{ j=await res.json(); }catch(e){}
+      throw new Error(j.error || ('list '+res.status));
+    }
+    var list=await res.json();
+    if(info){
+      var totalSize=list.reduce(function(s,it){return s+(it.size||0);},0);
+      info.textContent='총 '+list.length+'개 · '+_fmtSize(totalSize);
+    }
+    if(!list.length){
+      box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#94a3b8;">업로드된 이미지가 없습니다.</div>';
+      return;
+    }
+    box.innerHTML=list.map(function(it){
+      var when=(it.modifiedAt||'').slice(0,16).replace('T',' ');
+      return '<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column;">'
+        +'<div style="position:relative;background:#f8fafc;aspect-ratio:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">'
+        +'<img src="'+_escAttr(it.url)+'" loading="lazy" style="max-width:100%;max-height:100%;object-fit:contain;" referrerpolicy="no-referrer">'
+        +'</div>'
+        +'<div style="padding:6px 8px;font-size:10px;color:#475569;border-top:1px solid #f1f5f9;overflow:hidden;">'
+        +'<div style="font-family:\'DM Mono\',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="'+_escAttr(it.name)+'">'+_escAttr(it.name)+'</div>'
+        +'<div style="color:#94a3b8;font-size:9px;margin-top:2px;">'+when+' · '+_fmtSize(it.size)+'</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:4px;padding:6px 8px;border-top:1px solid #f1f5f9;background:#fafbff;">'
+        +'<button onclick="uploadsCopyUrl(\''+_escAttr(it.url).replace(/\\\'/g,"\\'")+'\')" style="flex:1;padding:5px;background:#e0e7ff;color:#1e3a8a;border:none;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;">URL</button>'
+        +'<button onclick="uploadsDelete(\''+_escAttr(it.name).replace(/\\\'/g,"\\'")+'\')" style="flex:1;padding:5px;background:#fee2e2;color:#991b1b;border:none;border-radius:5px;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;">삭제</button>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }catch(e){
+    box.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:#dc2626;">❌ '+(e.message||'불러오기 실패')+'</div>';
+  }
+}
+
+async function uploadsDelete(name){
+  if(!confirm('"'+name+'" 삭제할까요? (복구 불가)')) return;
+  try{
+    var res=await fetch('/api/uploads/'+encodeURIComponent(name),{method:'DELETE'});
+    if(!res.ok){
+      var j={}; try{ j=await res.json(); }catch(e){}
+      throw new Error(j.error || ('delete '+res.status));
+    }
+    showHint('🗑 삭제됨: '+name);
+    await renderUploadsList();
+  }catch(e){
+    alert('삭제 실패: '+e.message);
+  }
+}
+
+function uploadsCopyUrl(url){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){ showHint('📋 URL 복사됨'); },
+                                            function(){ prompt('URL 복사:', url); });
+  } else {
+    prompt('URL 복사:', url);
+  }
+}
+
+// 프리뷰에서 사용 중이지 않은 이미지를 일괄 삭제 (중복/고아 정리)
+async function uploadsDeleteDuplicates(){
+  try{
+    var res=await fetch('/api/uploads');
+    if(!res.ok) throw new Error('list '+res.status);
+    var list=await res.json();
+    // 현재 프리뷰에서 참조 중인 파일명 집합
+    var pv=document.getElementById('preview');
+    var usedNames={};
+    if(pv){
+      pv.querySelectorAll('img').forEach(function(img){
+        var s=img.getAttribute('src')||'';
+        try{
+          var u=new URL(s, location.href);
+          var fn=decodeURIComponent(u.pathname.split('/').pop());
+          if(fn) usedNames[fn]=true;
+        }catch(e){}
+      });
+    }
+    var orphans=list.filter(function(it){ return !usedNames[it.name]; });
+    if(!orphans.length){ alert('정리할 미사용 이미지가 없습니다.'); return; }
+    if(!confirm('현재 프리뷰에서 사용하지 않는 이미지 '+orphans.length+'개를 삭제합니다.\n(복구 불가) 진행할까요?')) return;
+    var okN=0, failN=0;
+    for(var i=0;i<orphans.length;i++){
+      try{
+        var r=await fetch('/api/uploads/'+encodeURIComponent(orphans[i].name),{method:'DELETE'});
+        if(r.ok) okN++; else failN++;
+      }catch(e){ failN++; }
+    }
+    showHint('🧹 정리 완료: '+okN+'개 삭제'+(failN?(' · 실패 '+failN):''));
+    await renderUploadsList();
+  }catch(e){
+    alert('정리 실패: '+e.message);
+  }
 }
 
 // 기본 21개 섹션으로 새로 시작
