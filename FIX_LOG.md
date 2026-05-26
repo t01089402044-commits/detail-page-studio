@@ -47,6 +47,12 @@
 
 ## 수정 이력
 
+### [2026-05-26] server.js — 한글 문자열 인코딩 깨짐 수정
+- **문제**: server.js 전체에 깨진 한글 주석/에러 메시지로 인한 SyntaxError
+- **해결**: 모든 한글 주석과 에러 메시지를 영어로 교체
+- **확인**: `node server.js` 정상 시작 (SyntaxError 없음)
+- **커밋**: `c8846d1 fix: server.js 한글 문자열 영어로 교체`
+
 ### [2026-05-26] editor.js + server.js — JPG 분할 저장 0-canvas 오류 + 이미지 proxy 추가
 - 파일: public/editor.js (saveSplit, saveOptimizedSplit), server.js
 - 증상: 분할 저장 시 alert "Failed to execute 'drawImage' on 'CanvasRenderingContext2D': The image argument is a canvas element with a width or height of 0."
