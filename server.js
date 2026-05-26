@@ -65,7 +65,7 @@ async function r2Request(method, key, body, contentType) {
 
     throw new Error('Unsupported method: ' + method);
   } catch (err) {
-    console.error('[R2 Error] 상세 정보:', {
+    console.error('[R2 Error] ?�세 ?�보:', {
       name: err.name,
       message: err.message,
       code: err.Code || err.code,
@@ -133,7 +133,7 @@ app.get('/api/test-r2', async (req, res) => {
 
     res.json({
       ok: true,
-      message: 'R2 연결 성공',
+      message: 'R2 ?�결 ?�공',
       objectCount: result.KeyCount,
       config: {
         endpoint: R2_ENDPOINT,
@@ -166,7 +166,7 @@ app.get('/api/test-r2', async (req, res) => {
     });
   }
 });
-// 템플릿 목록
+// ?�플�?목록
 app.get('/api/templates', async (req, res) => {
   try{
     const r = await r2Request('GET', `?list-type=2&bucket=${R2_BUCKET}`);
@@ -181,31 +181,30 @@ app.get('/api/templates', async (req, res) => {
   }catch(e){ res.status(500).json({ error: e.message }); }
 });
 
-// 템플릿 저장
-app.post('/api/templates/save', async (req, res) => {
+// ?�플�??�??app.post('/api/templates/save', async (req, res) => {
   try{
     const tpl = req.body;
-    if(!tpl||!tpl.name) return res.status(400).json({ error: '이름 필요' });
+    if(!tpl||!tpl.name) return res.status(400).json({ error: '?�름 ?�요' });
     const key = tpl.name + '.json';
     tpl.savedAt = new Date().toISOString();
     const body = Buffer.from(JSON.stringify(tpl), 'utf8');
     const r = await r2Request('PUT', key, body, 'application/json');
-    if(r.status >= 400) throw new Error('저장 실패: '+r.body);
+    if(r.status >= 400) throw new Error('?�???�패: '+r.body);
     res.json({ ok: true });
  }catch(e){ console.error('SAVE ERROR:', e.message, e.stack); res.status(500).json({ error: e.message }); }
 });
 
-// 템플릿 불러오기
+// ?�플�?불러?�기
 app.get('/api/templates/:name', async (req, res) => {
   try{
     const key = req.params.name + '.json';
     const r = await r2Request('GET', key);
-    if(r.status >= 400) return res.status(404).json({ error: '없음' });
+    if(r.status >= 400) return res.status(404).json({ error: '?�음' });
     res.json(JSON.parse(r.body));
   }catch(e){ res.status(404).json({ error: e.message }); }
 });
 
-// 템플릿 삭제
+// ?�플�???��
 app.delete('/api/templates/:name', async (req, res) => {
   try{
     const key = req.params.name + '.json';
@@ -224,8 +223,8 @@ async function getBrowser() {
 }
 
 app.post('/api/capture', async (req, res) => {
-  const { html, width = 860, scale = 2, format = 'jpeg', quality = 95 } = req.body;
-  if (!html) return res.status(400).json({ error: 'html 필요' });
+  const { html, width = 860, scale = 2, format = 'jpeg', quality = 98 } = req.body;
+  if (!html) return res.status(400).json({ error: 'html ?�요' });
   let page;
   try {
     const b = await getBrowser();
@@ -234,7 +233,7 @@ app.post('/api/capture', async (req, res) => {
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
     await new Promise(r => setTimeout(r, 1200));
     const preview = await page.$('#preview');
-    if (!preview) throw new Error('#preview 없음');
+    if (!preview) throw new Error('#preview ?�음');
     const buf = await preview.screenshot({ type: format === 'png' ? 'png' : 'jpeg', quality: format === 'jpeg' ? quality : undefined });
     res.set('Content-Type', format === 'png' ? 'image/png' : 'image/jpeg');
     res.send(buf);
