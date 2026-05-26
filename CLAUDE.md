@@ -28,6 +28,26 @@ node server.js
 - [ ] 기존 기능 정상 동작
 - [ ] FIX_LOG.md 업데이트
 
+## 필수 테스트 절차
+1. **로컬 문법 체크**: `node server.js` 실행해서 SyntaxError 없는지 확인
+2. **Railway 배포 후 2분 대기**: git push 후 Railway 자동 배포 완료 시간
+3. **실제 URL fetch로 응답 확인**: `https://detail-page-studio-production.up.railway.app/api/*` 직접 호출
+4. **브라우저에서 동작 확인 요청**: 사용자에게 실제 동작 확인 요청
+5. **확인 전까지 "완료" 보고 금지**: 모든 단계 완료 후에만 최종 보고
+
+## 자주 하는 실수
+❌ **로컬만 테스트하고 Railway 실제 환경 미확인**
+  - Railway 환경변수, ephemeral filesystem 등 배포 환경 차이 간과
+  - 해결: 배포 후 반드시 실제 URL로 API 테스트
+
+❌ **한글 문자열 PowerShell로 수정 시 인코딩 깨짐**
+  - PowerShell의 기본 인코딩이 UTF-8이 아닐 수 있음
+  - 해결: 한글 포함 파일은 Write tool로 전체 재작성 또는 영어로 교체
+
+❌ **git pull 없이 push해서 충돌**
+  - 원격 변경사항 무시하고 push → rejected
+  - 해결: push 전 `git pull --rebase` 또는 push 실패 시 즉시 pull
+
 ## 작업 스타일
 - 결과물 먼저
 - 설명 최소화
