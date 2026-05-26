@@ -102,30 +102,39 @@ app.get('/api/templates', async (req, res) => {
   }
 });
 
-// Save template (to FTP)
+// Save template (to FTP or local fallback)
 app.post('/api/templates/save', async (req, res) => {
-  // FTP env vars not configured
-  if (!FTP_HOST || !FTP_USER || !FTP_PASS) {
-    return res.status(400).json({ error: 'FTP not configured - set FTP_HOST/FTP_USER/FTP_PASS env vars' });
+  const tpl = req.body;
+  if (!tpl || !tpl.name) return res.status(400).json({ error: 'name required' });
+  const fname = safeName(tpl.name) + '.json';
+  tpl.savedAt = new Date().toISOString();
+  const content = JSON.stringify(tpl, null, 2);
+
+  // FTP available: save to FTP
+  if (FTP_HOST && FTP_USER && FTP_PASS) {
+    let client;
+    try {
+      client = await ftpConnect();
+      await client.ensureDir(encPath(FTP_TEMPLATE_DIR));
+      await client.uploadFrom(Readable.from(Buffer.from(content, 'utf8')), encPath(FTP_TEMPLATE_DIR.replace(/\/$/, '') + '/' + fname));
+      return res.json({ ok: true });
+    } catch (e) {
+      console.error('[FTP template save error, fallback to local]', e.message);
+      // FTP failed, fallback to local
+    } finally {
+      if (client) client.close();
+    }
   }
 
-  let client;
+  // Local fallback: save to templates/ directory
   try {
-    const tpl = req.body;
-    if (!tpl || !tpl.name) return res.status(400).json({ error: 'name required' });
-    const fname = safeName(tpl.name) + '.json';
-    tpl.savedAt = new Date().toISOString();
-    const content = JSON.stringify(tpl, null, 2);
-
-    client = await ftpConnect();
-    await client.ensureDir(encPath(FTP_TEMPLATE_DIR));
-    await client.uploadFrom(Readable.from(Buffer.from(content, 'utf8')), encPath(FTP_TEMPLATE_DIR.replace(/\/$/, '') + '/' + fname));
-    res.json({ ok: true });
+    const TMPL_DIR = path.join(__dirname, 'templates');
+    if (!fs.existsSync(TMPL_DIR)) fs.mkdirSync(TMPL_DIR, { recursive: true });
+    fs.writeFileSync(path.join(TMPL_DIR, fname), content, 'utf8');
+    res.json({ ok: true, local: true });
   } catch (e) {
-    console.error('[FTP template save error]', e.message);
+    console.error('[Local template save error]', e.message);
     res.status(500).json({ error: e.message });
-  } finally {
-    if (client) client.close();
   }
 });
 
@@ -304,7 +313,8 @@ app.post('/api/capture', async (req, res) => {
     const b = await getBrowser();
     page = await b.newPage();
     await page.setViewport({ width, height: 1080, deviceScaleFactor: scale });
-    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
+    const wrappedHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;">${html}</body></html>`;
+    await page.setContent(wrappedHTML, { waitUntil: 'networkidle0', timeout: 45000 });
     await new Promise(r => setTimeout(r, 1200));
     const preview = await page.$('#preview');
     if (!preview) throw new Error('#preview not found');

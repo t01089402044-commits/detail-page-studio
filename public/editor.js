@@ -1180,7 +1180,7 @@ async function doSave(scale, fmt){
   // ── 서버가 연결된 경우: Puppeteer 고화질 캡처 ──────────────────────────
   if(API){
     try{
-      const html = document.documentElement.outerHTML;
+      const html = document.getElementById('preview').outerHTML;
       // scale=1: 860px, scale=2: 1720px, scale=3: 2580px (width * scale, deviceScaleFactor=1)
       const targetWidth = 860 * (scale || 1);
       const res = await fetch(API + '/capture', {
