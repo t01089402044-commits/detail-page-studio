@@ -193,7 +193,7 @@ app.delete('/api/uploads/:name', async (req, res) => {
     const raw = req.params.name || '';
     // 寃쎈줈 ?대룞 李⑤떒
     if (raw.includes('/') || raw.includes('\\') || raw.includes('..')) {
-      return res.status(400).json({ error: '?섎せ???뚯씪紐? });
+      return res.status(400).json({ error: 'invalid filename' });
     }
     client = await ftpConnect();
     await client.remove(encPath(FTP_REMOTE_DIR.replace(/\/$/, '') + '/' + raw));
