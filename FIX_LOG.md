@@ -47,6 +47,27 @@
 
 ## 수정 이력
 
+### [2026-05-27] editor.js — 2× 해상도 container query 반영 수정
+- **문제**: 2× JPG 저장 시 최종 출력 이미지가 여전히 860px로 나옴 (1720px 아님)
+- **원인**: 
+  - `doSave()`에서 `pv.innerHTML`을 캡처할 때, 원본 #preview가 860px 상태
+  - CSS container query(`container-type:inline-size`)로 폰트/레이아웃이 860px 기준으로 계산됨
+  - 새로운 1720px 컨테이너에 innerHTML을 복사해도 내용물은 이미 860px로 렌더링된 상태
+- **해결**:
+  - html2canvas 함수들처럼 캡처 **전에** preview를 targetWidth로 임시 리사이징
+  - 700ms 대기해서 폰트/레이아웃 재계산 완료 후 innerHTML 캡처
+  - finally 블록에서 원본 너비 복원
+- **변경 코드**:
+  ```javascript
+  const origW = pv.style.width;
+  pv.style.width = targetWidth + 'px';
+  await new Promise(r => setTimeout(r, 700));
+  // ... innerHTML 캡처
+  pv.style.width = origW;  // 복원
+  ```
+- **검증**: `node -c public/editor.js` ✓
+- **커밋**: `50b40e2 fix: 2× JPG 해상도 버그 수정 - 캡처 전 preview 임시 리사이징`
+
 ### [2026-05-26] editor.js — 2× 고화질 버튼 해상도 수정
 - **문제**: 2× 버튼 클릭 시 860px로 저장됨 (1720px 아님)
 - **원인**: 
