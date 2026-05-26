@@ -1179,10 +1179,20 @@ async function doSave(scale, fmt){
 
   // ── 서버가 연결된 경우: Puppeteer 고화질 캡처 ──────────────────────────
   if(API){
+    const pv = document.getElementById('preview');
+    if(!pv) throw new Error('#preview not found');
+    const origW = pv.style.width;  // 원본 너비 저장
     try{
-      const pv = document.getElementById('preview');
-      if(!pv) throw new Error('#preview not found');
-      console.log('[DEBUG] Original preview width:', pv.style.width, 'offsetWidth:', pv.offsetWidth);
+      // scale=1: 860px, scale=2: 1720px, scale=3: 2580px
+      const targetWidth = 860 * (scale || 1);
+
+      // 프리뷰를 목표 너비로 임시 조정 (container query 반영 위해)
+      pv.style.width = targetWidth + 'px';
+      console.log('[DEBUG] Resized preview to:', targetWidth, 'px');
+
+      // 폰트 리스케일 및 레이아웃 재계산 대기 (html2canvas와 동일한 로직)
+      await new Promise(r => setTimeout(r, 700));
+
       // CSS 수집
       const styleEls = document.querySelectorAll('style,link[rel="stylesheet"]');
       let allCss = '';
@@ -1194,9 +1204,8 @@ async function doSave(scale, fmt){
         +'<link href="https://cdn.jsdelivr.net/npm/suit-fonts@1.0.0/dist/suit.css" rel="stylesheet">'
         +'<style>@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");font-weight:500;}@font-face{font-family:"Gmarket Sans";src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");font-weight:700;}</style>'
         +'<style>'+allCss+'body{margin:0;padding:0;}#preview{margin:0 auto;}</style></head><body>';
-      // scale=1: 860px, scale=2: 1720px, scale=3: 2580px (width * scale, deviceScaleFactor=1)
-      const targetWidth = 860 * (scale || 1);
       const fullHtml = html + '<div id="preview" style="width:'+targetWidth+'px">'+pv.innerHTML+'</div></body></html>';
+
       const res = await fetch(API + '/api/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1210,6 +1219,8 @@ async function doSave(scale, fmt){
       return;
     } catch(err){
       console.warn('서버 캡처 실패, html2canvas로 폴백:', err);
+    } finally {
+      pv.style.width = origW;  // 원본 너비 복원
     }
   }
 
