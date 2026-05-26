@@ -1175,7 +1175,7 @@ async function loadH2C(){
 
 async function doSave(scale, fmt){
   showHint('⏳ 이미지 생성 중...');
-  const API = window.EDITOR_API_URL || '';   // 서버 URL (배포 후 설정)
+  const API = window.API_BASE || '';   // 서버 URL (배포 후 설정)
 
   // ── 서버가 연결된 경우: Puppeteer 고화질 캡처 ──────────────────────────
   if(API){
