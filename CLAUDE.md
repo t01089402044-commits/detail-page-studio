@@ -43,11 +43,14 @@ node server.js
 - 관련 UI(`#ai-copy*` 영역, 자동 생성 버튼)와 호출 코드 정리
 - 잔존 흔적은 `c5089cf fix: AI 소재 스펙 3줄 정상 적용` 정도이며 현재 활성 코드에는 AI 호출 없음
 
-### 2. 템플릿 저장 — 파일시스템 방식 (현재 채택)
-- 서버: `server.js`의 `/api/templates` 4종 (목록/저장/불러오기/삭제) 모두 `templates/` 디렉토리에 JSON 파일로 처리
-- 파일명 sanitization: `name.replace(/[^a-z0-9가-힣_-]/gi, '_') + '.json'`
+### 2. 템플릿 저장 — FTP 방식 (현재 채택)
+- **2026-05-26 변경**: Railway ephemeral filesystem 대응 → 로컬 파일시스템에서 FTP로 전환
+- 서버: `server.js`의 `/api/templates` 4종 (목록/저장/불러오기/삭제) 모두 FTP 기반
+- 저장 경로: `FTP_TEMPLATE_DIR=/public/SE2/upload/templates/` (환경변수로 설정 가능)
+- 파일명 sanitization: `name.replace(/[^\w]/gi, '_') + '.json'`
 - 클라이언트: `editor.js`의 `tplServerList/Save/Load/Delete` → 이 API 사용
-- 장점: 외부 의존성 0, Render/Railway 디스크에 그대로 영속됨, 서명 오류 없음
+- 장점: Railway 재배포 후에도 템플릿 영속, 이미지 업로드와 동일한 FTP 인프라 사용
+- 커밋: `4087ff3 feat: 템플릿 저장을 FTP로 변경`
 
 ### 3. 이미지 bindTF 재연결 버그 (해결됨)
 - 증상: 템플릿 불러오기 후 이미지 드래그/리사이즈 불가
