@@ -47,6 +47,21 @@
 
 ## 수정 이력
 
+### [2026-06-16] 저장해상도·폰트·AI제거·모바일·템플릿 일괄 개선
+- 파일: public/editor.js, public/index.html, public/editor.css
+- **저장 해상도 (네이버 860 규격 + 이중압축 대비)**:
+  - doSave 저장폭 1080 검토 후 → 860 확정(네이버 규격, 리사이즈 손실 제거). 편집 프리뷰 미변경(clone으로 캡처)
+  - JPG 2×(1720)/3×(2580) 옵션, 무손실 **PNG 단일/분할** 추가 (savePNG, saveSplit format 파라미터화)
+  - 분할(saveSplit/showSplitGallery)에 format 추가 → PNG 분할 다운로드(.png) 지원
+  - 실측: 분할 장당 1720×~3500px, 0.3MB 수준 → 한도 대비 여유 충분
+- **출력 폰트 가독성**: index.html #preview 14종 +4~6px 상향(모바일 축소 대비). 에디터 UI 폰트 미변경
+- **AI 카피라이팅 완전 제거**: 툴바/탭 버튼, tab-ai 패널, aiGenerate/aiApply 함수, _aiResult 변수, api.anthropic.com 직접호출 제거. 저장 탭 기본 활성
+- **모바일 에디터 레이아웃**(@media max-width:820px): 미리보기 화면폭 맞춤 축소(_fitPreviewMobile), 오른쪽 패널 하단으로 + compact
+- **템플릿 저장 FTP→localStorage 전환**: 서버 목록 로컬폴백 없음 + 한글 파일명 충돌 버그 → localStorage(tplList/tplSaveAll) 기반으로 통합. tplSaveCurrent/renderTplList/tplLoadByRow/tplDeleteByRow/tplExportByRow 수정. "현재상태 JSON 다운로드" 버튼 추가(_downloadTpl/tplDownloadCurrent). 한글 이름 안전, 카테고리별 템플릿 가능
+- 보호: getBrowser(), /api/capture, _FT_FONTS, applyFont(), bindTF() 미변경
+- 인코딩: editor.js는 UTF-8 BOM+CRLF → Edit 도구 대신 Node로 BOM/줄바꿈 보존하며 수정
+- 교훈: 폰 체감 글자크기 = 디자인폰트 × (폰폭/레이아웃폭). 해상도(배수)는 선명도만, 체감크기는 레이아웃폭이 결정. 네이버/사방넷 이중압축은 큰 폰트+적정용량(분할)으로 방어
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1

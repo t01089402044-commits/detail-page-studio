@@ -14,20 +14,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
 /* 모바일 가독성: 작은 폰트 사이즈 업 */
-#preview .sec-en { font-size: 13px !important; }
-#preview .s-banner-season { font-size: 14px !important; }
-#preview .s-banner-en { font-size: 15px !important; }
-#preview .s-proof-lbl { font-size: 13px !important; }
-#preview .s-trust-desc { font-size: 13px !important; }
-#preview .s-trust-name { font-size: 14px !important; }
-#preview .s-feat-desc { font-size: 14px !important; }
-#preview .s-faq-a { font-size: 14px !important; }
-#preview .s-story-spec { font-size: 13px !important; }
-#preview .s-infl-tag { font-size: 12px !important; }
-#preview .s-model-info-body { font-size: 13px !important; }
-#preview .s-size-note { font-size: 13px !important; }
-#preview .s-footer p { font-size: 13px !important; }
-#preview .s-wash-note { font-size: 14px !important; }
+#preview .sec-en { font-size: 17px !important; }
+#preview .s-banner-season { font-size: 19px !important; }
+#preview .s-banner-en { font-size: 19px !important; }
+#preview .s-proof-lbl { font-size: 17px !important; }
+#preview .s-trust-desc { font-size: 18px !important; }
+#preview .s-trust-name { font-size: 19px !important; }
+#preview .s-feat-desc { font-size: 20px !important; }
+#preview .s-faq-a { font-size: 20px !important; }
+#preview .s-story-spec { font-size: 17px !important; }
+#preview .s-infl-tag { font-size: 16px !important; }
+#preview .s-model-info-body { font-size: 18px !important; }
+#preview .s-size-note { font-size: 17px !important; }
+#preview .s-footer p { font-size: 17px !important; }
+#preview .s-wash-note { font-size: 19px !important; }
 </style>
   <link rel="stylesheet" href="/editor.css">
 </head>
@@ -61,13 +61,13 @@
   <div class="tb-spacer"></div>
   <button class="tb-btn" id="mb-preview-btn" onclick="toggleMobilePreview(this)"><i class="ti ti-device-mobile"></i> 모바일 보기</button>
   <button class="tb-btn orange" onclick="saveOptimized()" title="860px 모바일 최적화 (네이버/쿠팡 표준)"><i class="ti ti-device-mobile"></i> 모바일 JPG</button>
-  <button class="tb-btn" onclick="saveJPG()" title="고해상도 (2580px)"><i class="ti ti-file-type-jpg"></i> JPG</button>
+  <button class="tb-btn" onclick="saveJPG()" title="고해상도 (1720/2580px)"><i class="ti ti-file-type-jpg"></i> JPG</button>
   <button class="tb-btn accent" onclick="saveHTML()"><i class="ti ti-file-code"></i> HTML</button>
   <button class="tb-btn" onclick="openTplModal()"><i class="ti ti-template"></i> 템플릿</button>
   <button class="tb-btn" onclick="document.getElementById('tpl-import-file').click()"><i class="ti ti-upload"></i> 불러오기</button>
   <input id="tpl-import-file" type="file" accept=".json,.html,.htm" style="display:none" onchange="if(this.files[0]){tplImportFile(this.files[0]); this.value='';}">
   <button class="tb-btn" onclick="openUploadsModal()"><i class="ti ti-photo"></i> 이미지 관리</button>
-  <button class="tb-btn" onclick="switchTab('ai')"><i class="ti ti-wand"></i> AI</button>
+
 </div>
 
 <!-- 업로드 이미지 관리 모달 -->
@@ -101,7 +101,7 @@
       <div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;">현재 작업을 새 템플릿으로 저장</div>
       <div style="display:flex;gap:6px;">
         <input id="tpl-name-input" type="text" placeholder="예: 여름원피스 v1" style="flex:1;padding:8px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;" onkeydown="if(event.key==='Enter')tplSaveCurrent()">
-        <button onclick="tplSaveCurrent()" style="padding:8px 14px;background:#16a34a;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">저장</button>
+        <button onclick="tplSaveCurrent()" style="padding:8px 14px;background:#16a34a;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;">저장</button><button onclick="tplDownloadCurrent()" style="padding:8px 12px;background:#0ea5e9;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">JSON↓</button>
       </div>
       <div style="font-size:10px;color:#94a3b8;margin-top:6px;">💡 같은 이름으로 저장하면 덮어씁니다. 브라우저 저장공간 한계 시 JSON 다운로드 사용.</div>
     </div>
@@ -113,35 +113,25 @@
   <div id="center"><div id="preview" style="width:860px;"></div></div>
   <div id="right">
     <div class="tab-bar">
-      <button class="tab-btn act" data-tab="ai" onclick="switchTab('ai')"><i class="ti ti-wand"></i>AI</button>
-      <button class="tab-btn" data-tab="dl" onclick="switchTab('dl')"><i class="ti ti-download"></i>저장</button>
+      
+      <button class="tab-btn act" data-tab="dl" onclick="switchTab('dl')"><i class="ti ti-download"></i>저장</button>
       <button class="tab-btn" data-tab="share" onclick="switchTab('share')"><i class="ti ti-info-circle"></i>공유</button>
     </div>
     <div class="tab-content">
-      <div class="tab-pane act" id="tab-ai">
-        <div class="ai-banner"><div class="ai-banner-title">🤖 AI 카피라이팅</div><div class="ai-banner-desc">제품 정보 입력 → 전체 섹션 자동 생성</div></div>
-        <div class="rp-field"><label class="rp-label">브랜드명</label><input class="rp-input" id="ai-brand" value="브랜드명"></div>
-        <div class="rp-field"><label class="rp-label">제품명</label><input class="rp-input" id="ai-product" value="제품명을 입력하세요"></div>
-        <div class="rp-field"><label class="rp-label">카테고리</label><input class="rp-input" id="ai-category" value="의류/패션"></div>
-        <div class="rp-field"><label class="rp-label">핵심기능</label><input class="rp-input" id="ai-features" value="기능1, 기능2, 기능3"></div>
-        <div class="rp-field"><label class="rp-label">타겟 고객</label><input class="rp-input" id="ai-target" value="20-40대 여성"></div>
-        <div class="rp-field"><label class="rp-label">분위기/톤</label><input class="rp-input" id="ai-tone" value="프리미엄·감성적"></div>
-        <button class="ai-gen-btn" id="ai-gen-btn" onclick="aiGenerate()">✨ AI 카피 자동 생성</button>
-        <div id="ai-result" style="display:none;"></div>
-        <button id="ai-apply-btn" class="apply-btn" style="display:none;" onclick="aiApply()">🚀 모든 섹션에 적용</button>
-      </div>
-      <div class="tab-pane" id="tab-dl">
+      <div class="tab-pane act" id="tab-dl">
         <div class="dl-card">
           <div class="dl-card-title">🖼 이미지 저장</div>
           <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <button class="wb-btn act" id="jpg-1x" onclick="setJpgScale(1,this)">1× 표준</button>
-            <button class="wb-btn" id="jpg-2x" onclick="setJpgScale(2,this)">2× 고화질</button>
+            <button class="wb-btn act" id="jpg-2x" onclick="setJpgScale(2,this)">2× (1720px)</button>
+            <button class="wb-btn" id="jpg-3x" onclick="setJpgScale(3,this)">3× (2580px)</button>
           </div>
+          <button class="dl-btn" onclick="savePNG()" style="width:100%;margin-bottom:8px;background:#0f766e;color:#fff;"><i class="ti ti-file-type-png"></i> PNG 무손실 (860×3=2580px, 네이버 권장)</button>
           <div class="dl-grid">
             <!-- 분할 저장 -->
         <div style="margin-bottom:12px;padding:10px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);border-radius:8px;">
           <div style="font-size:10px;color:#818cf8;font-weight:800;letter-spacing:.1em;margin-bottom:8px;">✂ 분할 저장 (3500px 기준)</div>
-          <button class="dl-btn" onclick="saveSplit(860,1,3500)" style="width:100%;margin-bottom:4px;background:#4f46e5;"><i class="ti ti-scissors"></i> 🖥 PC 분할 (1720px)</button>
+          <button class="dl-btn" onclick="saveSplit(860,2,3500)" style="width:100%;margin-bottom:4px;background:#4f46e5;"><i class="ti ti-scissors"></i> 🖥 PC 분할 (1720px)</button>
+          <button class="dl-btn" onclick="saveSplit(860,2,3500,'png')" style="width:100%;margin-bottom:4px;background:#0f766e;color:#fff;"><i class="ti ti-scissors"></i> 🖥 PNG 무손실 분할 (1720px)</button>
         </div>
           </div>
         </div>
