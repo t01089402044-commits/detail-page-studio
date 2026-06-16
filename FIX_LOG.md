@@ -69,6 +69,15 @@
 - 모바일 JPG/분할(saveOptimized/saveOptimizedSplit) html2canvas scale 1→**2**(고해상도). 목표=쿠팡 수준 가독성
 - 교훈: 큰폰트 가독성은 for-mobile-capture 모드(=모바일 JPG 버튼)에서만 적용. 일반 미리보기/JPG는 데스크톱 비율 유지
 
+### [2026-06-16 추가2] 단일 페이지 모바일 가독성(PC/모바일 공통) + 분할 전체다운로드
+- 방향: PC/모바일 분리 ❌ → 한 페이지로 모바일 가독성 향상. for-mobile-capture를 #preview에 **항상 적용**(always-on, index.html class)
+- 폰트: 360px 기준 스샷 반복 검증으로 본문 35px(쿠팡 수준, 한줄 ~13자)로 확정. for-mobile 전체 폰트 스케일 조정 + weight 500(약간 볼드)
+- proof: 숫자 30px/라벨 18px/패딩 축소 → "2,841개" 한 줄
+- 정렬: s-feat-desc/s-style-items/s-cmp-desc-txt에 min-height(2줄) → 설명 1/2줄 차이로 생기던 이미지 슬롯 단차 제거
+- 분할 저장 갤러리: "⬇ 전체 다운로드" 버튼(모든 파트 일괄, 0.4s 간격, png/jpg 자동)
+- 검증: headless puppeteer로 360px 렌더 스샷 직접 확인하며 크기/정렬 튜닝
+- 보호구역 미변경
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1

@@ -1581,7 +1581,7 @@ function showSplitGallery(parts, targetW, scale, format){
   closeBtn.style.cssText = 'background:#dc2626;color:#fff;border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:700;';
   closeBtn.onclick = function(){ modal.remove(); };
 
-  hdr.appendChild(info); hdr.appendChild(closeBtn);
+  var allBtn=document.createElement('button');allBtn.textContent='⬇ 전체 다운로드';allBtn.style.cssText='background:#16a34a;color:#fff;border:none;padding:7px 14px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:700;';allBtn.onclick=function(){var ext=(format==='png')?'png':'jpg';parts.forEach(function(p,i){setTimeout(function(){var aa=document.createElement('a');aa.href=p.dataUrl;aa.download='detail-part'+p.idx+'.'+ext;document.body.appendChild(aa);aa.click();document.body.removeChild(aa);},i*400);});};hdr.appendChild(info); hdr.appendChild(allBtn); hdr.appendChild(closeBtn);
 
   // 스크롤 영역
   var scroll = document.createElement('div');
@@ -1663,7 +1663,7 @@ async function saveOptimized(){
     alert('오류: '+err.message);
   } finally {
     preview.style.width = origW;
-    preview.classList.remove('for-mobile-capture');
+    /* for-mobile-capture 항상 적용 */
   }
 }
 
@@ -1757,7 +1757,7 @@ async function saveOptimizedSplit(){
     showHint('❌ 오류: '+err.message); alert(err.message);
   } finally {
     preview.style.width = origW;
-    preview.classList.remove('for-mobile-capture');
+    /* for-mobile-capture 항상 적용 */
   }
 }
 
