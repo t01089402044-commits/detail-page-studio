@@ -147,16 +147,16 @@ const SEC_TMPL = {
     +'</div></div></div>';
 },
   info:()=>`<div class="sec-wrap s-info">
-    <div class="s-info-title" contenteditable>Information</div>
-    <table class="s-info-tbl">
-      <tr><td class="s-info-key" contenteditable>Season</td><td><div class="ck-group"><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Spring/Autumn</span></div><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Summer</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Winter</span></div></div></td></tr>
-      <tr><td class="s-info-key" contenteditable>Fit</td><td><div class="ck-group"><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Slim</span></div><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Regular</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Oversize</span></div></div></td></tr>
-      <tr><td class="s-info-key" contenteditable>Thickness</td><td><div class="ck-group"><div class="ck on"><div class="ck-box"></div><span class="ck-txt" contenteditable>Thin</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Regular</span></div><div class="ck"><div class="ck-box"></div><span class="ck-txt" contenteditable>Heavy</span></div></div></td></tr>
-      <tr><td class="s-info-key" contenteditable>Fabric</td><td class="s-info-val" contenteditable>소재를 입력하세요</td></tr>
-      <tr><td class="s-info-key" contenteditable>Color</td><td class="s-info-val" contenteditable>컬러를 입력하세요</td></tr>
-      <tr><td class="s-info-key" contenteditable>Size</td><td class="s-info-val" contenteditable>XS / S / M / L / XL</td></tr>
-      <tr><td class="s-info-key" contenteditable>Origin</td><td class="s-info-val" contenteditable>Korea</td></tr>
-    </table>
+    <div class="s-info-title" contenteditable>상품정보고시</div>
+    <table class="s-info-tbl"><tbody>
+      <tr><td class="s-info-key" contenteditable>상품명</td><td class="s-info-val" contenteditable>상품명을 입력하세요</td><td class="s-info-key" contenteditable>사이즈</td><td class="s-info-val" contenteditable>사이즈를 입력하세요</td></tr>
+      <tr><td class="s-info-key" contenteditable>색상</td><td class="s-info-val" contenteditable>색상을 입력하세요</td><td class="s-info-key" contenteditable>제조사</td><td class="s-info-val" contenteditable>제조사를 입력하세요</td></tr>
+      <tr><td class="s-info-key" contenteditable>소재</td><td class="s-info-val" contenteditable>소재를 입력하세요</td><td class="s-info-key" contenteditable>제조국</td><td class="s-info-val" contenteditable>제조국을 입력하세요</td></tr>
+      <tr><td class="s-info-key" contenteditable>주소</td><td class="s-info-val" colspan="3" contenteditable>주소를 입력하세요</td></tr>
+      <tr><td class="s-info-key" contenteditable>연락처</td><td class="s-info-val" contenteditable>연락처를 입력하세요</td><td class="s-info-key" contenteditable>취급주의</td><td class="s-info-val" contenteditable>취급 주의사항을 입력하세요</td></tr>
+    </tbody></table>
+    <div class="s-info-notice" contenteditable>※ 본 상품은 디자인/상표/특허 출원중 제품입니다.
+불법복제 및 카피 시 엄중한 법적처벌을 받을 수 있음을 고지합니다.</div>
   </div>`,
   wash:()=>`<div class="sec-wrap s-wash">
     <div class="s-wash-title" contenteditable>Washing &amp; Care</div>
