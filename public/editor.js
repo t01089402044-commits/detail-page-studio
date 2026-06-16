@@ -990,7 +990,7 @@ async function doSave(scale, fmt){
     try{
       // deviceScaleFactor 방식: viewport는 항상 860px, scale로 해상도 배수 조정
       // scale=1: 860px, scale=2: 1720px (860×2), scale=3: 2580px (860×3)
-      const s = scale || 2; const SAVE_W = 860;
+      const s = scale || 2; const SAVE_W = 1000;
 
       // CSS 수집
       const styleEls = document.querySelectorAll('style,link[rel="stylesheet"]');
@@ -1431,7 +1431,7 @@ async function doSaveCustom(targetW, scale, fmt, label){
 //  분할 저장: 섹션 단위로 캡처 → 3500px 기준 그룹핑 → 합치기
 // ═══════════════════════════════════════════════════════════════
 async function saveSplit(targetW, scale, maxH, format){
-  targetW = targetW || 860;
+  targetW = targetW || 1000;
   scale   = scale   || 1;  // 기본 860px 출력
   maxH    = maxH    || 3500; format = format || 'jpeg';
 
@@ -1633,7 +1633,7 @@ async function saveOptimized(){
   var origW = preview.style.width;
 
   // 860px + 모바일 최적화 폰트 클래스 적용
-  preview.style.width = '860px';
+  preview.style.width = '1000px';
   preview.classList.add('for-mobile-capture');
   showHint('⏳ 모바일 최적화 이미지 생성 중...');
   await new Promise(r => setTimeout(r, 900));
@@ -1651,7 +1651,7 @@ async function saveOptimized(){
 
   try{
     var canvas = await html2canvas(preview,{
-      scale: 1,          // 860px × 1 = 860px (플랫폼 표준)
+      scale: 2,          // 860px × 1 = 860px (플랫폼 표준)
       useCORS: true, allowTaint: true, backgroundColor: '#fff',
       logging: false, imageTimeout: 12000, ignoreElements: skipEl,
     });
@@ -1674,7 +1674,7 @@ async function saveOptimizedSplit(){
 
   var preview = document.getElementById('preview');
   var origW = preview.style.width;
-  preview.style.width = '860px';
+  preview.style.width = '1000px';
   preview.classList.add('for-mobile-capture');
   await new Promise(r => setTimeout(r, 900));
   if(typeof tfDeselect==='function') tfDeselect();
@@ -1704,7 +1704,7 @@ async function saveOptimizedSplit(){
       var cv;
       try{
         cv = await html2canvas(sections[i],{
-          scale:1, useCORS:true, allowTaint:true,
+          scale:2, useCORS:true, allowTaint:true,
           backgroundColor:null, logging:false, imageTimeout:12000,
           ignoreElements:skipEl,
         });

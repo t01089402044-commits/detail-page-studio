@@ -54,14 +54,15 @@
   </div>
   <div class="tb-sep"></div>
   <button class="wb-btn" onclick="setW(480,this)">480px</button>
-  <button class="wb-btn act" id="wb860" onclick="setW(860,this)">860px ★</button>
+  <button class="wb-btn" id="wb860" onclick="setW(860,this)">860px</button>
+  <button class="wb-btn act" id="wb1000" onclick="setW(1000,this)">1000px ★</button>
   <button class="wb-btn" onclick="setW(1080,this)">1080px</button>
   <div class="tb-sep"></div>
   <button class="tb-btn primary" onclick="openAddModal()"><i class="ti ti-plus"></i> 섹션 추가</button>
   <div class="tb-spacer"></div>
   <button class="tb-btn" id="mb-preview-btn" onclick="toggleMobilePreview(this)"><i class="ti ti-device-mobile"></i> 모바일 보기</button>
-  <button class="tb-btn orange" onclick="saveOptimized()" title="860px 모바일 최적화 (네이버/쿠팡 표준)"><i class="ti ti-device-mobile"></i> 모바일 JPG</button>
-  <button class="tb-btn" onclick="saveJPG()" title="고해상도 (1720/2580px)"><i class="ti ti-file-type-jpg"></i> JPG</button>
+  <button class="tb-btn orange" onclick="saveOptimized()" title="2000px 모바일 (큰폰트·고해상도)"><i class="ti ti-device-mobile"></i> 모바일 JPG</button>
+  <button class="tb-btn" onclick="saveJPG()" title="고해상도 (2000/3000px)"><i class="ti ti-file-type-jpg"></i> JPG</button>
   <button class="tb-btn accent" onclick="saveHTML()"><i class="ti ti-file-code"></i> HTML</button>
   <button class="tb-btn" onclick="openTplModal()"><i class="ti ti-template"></i> 템플릿</button>
   <button class="tb-btn" onclick="document.getElementById('tpl-import-file').click()"><i class="ti ti-upload"></i> 불러오기</button>
@@ -110,7 +111,7 @@
   </div>
 </div>
 <div id="body">
-  <div id="center"><div id="preview" style="width:860px;"></div></div>
+  <div id="center"><div id="preview" style="width:1000px;"></div></div>
   <div id="right">
     <div class="tab-bar">
       
@@ -122,16 +123,16 @@
         <div class="dl-card">
           <div class="dl-card-title">🖼 이미지 저장</div>
           <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <button class="wb-btn act" id="jpg-2x" onclick="setJpgScale(2,this)">2× (1720px)</button>
-            <button class="wb-btn" id="jpg-3x" onclick="setJpgScale(3,this)">3× (2580px)</button>
+            <button class="wb-btn act" id="jpg-2x" onclick="setJpgScale(2,this)">2× (2000px)</button>
+            <button class="wb-btn" id="jpg-3x" onclick="setJpgScale(3,this)">3× (3000px)</button>
           </div>
-          <button class="dl-btn" onclick="savePNG()" style="width:100%;margin-bottom:8px;background:#0f766e;color:#fff;"><i class="ti ti-file-type-png"></i> PNG 무손실 (860×3=2580px, 네이버 권장)</button>
+          <button class="dl-btn" onclick="savePNG()" style="width:100%;margin-bottom:8px;background:#0f766e;color:#fff;"><i class="ti ti-file-type-png"></i> PNG 무손실 (1000×3=3000px, 네이버 권장)</button>
           <div class="dl-grid">
             <!-- 분할 저장 -->
         <div style="margin-bottom:12px;padding:10px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);border-radius:8px;">
           <div style="font-size:10px;color:#818cf8;font-weight:800;letter-spacing:.1em;margin-bottom:8px;">✂ 분할 저장 (3500px 기준)</div>
-          <button class="dl-btn" onclick="saveSplit(860,2,3500)" style="width:100%;margin-bottom:4px;background:#4f46e5;"><i class="ti ti-scissors"></i> 🖥 PC 분할 (1720px)</button>
-          <button class="dl-btn" onclick="saveSplit(860,2,3500,'png')" style="width:100%;margin-bottom:4px;background:#0f766e;color:#fff;"><i class="ti ti-scissors"></i> 🖥 PNG 무손실 분할 (1720px)</button>
+          <button class="dl-btn" onclick="saveSplit(1000,2,3500)" style="width:100%;margin-bottom:4px;background:#4f46e5;"><i class="ti ti-scissors"></i> 🖥 PC 분할 (2000px)</button>
+          <button class="dl-btn" onclick="saveSplit(1000,2,3500,'png')" style="width:100%;margin-bottom:4px;background:#0f766e;color:#fff;"><i class="ti ti-scissors"></i> 🖥 PNG 무손실 분할 (2000px)</button>
         </div>
           </div>
         </div>

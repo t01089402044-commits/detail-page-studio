@@ -62,6 +62,13 @@
 - 인코딩: editor.js는 UTF-8 BOM+CRLF → Edit 도구 대신 Node로 BOM/줄바꿈 보존하며 수정
 - 교훈: 폰 체감 글자크기 = 디자인폰트 × (폰폭/레이아웃폭). 해상도(배수)는 선명도만, 체감크기는 레이아웃폭이 결정. 네이버/사방넷 이중압축은 큰 폰트+적정용량(분할)으로 방어
 
+### [2026-06-16 추가] 기본폭 1000px + 모바일 큰폰트/볼드 + 모바일캡처 고해상도
+- 기본 페이지폭 860→**1000px**(편집 기본버튼+저장 SAVE_W/saveSplit/saveOptimized 모두). 저장 배수 2×=2000/3×=3000, 라벨 일괄 갱신
+- 모바일 큰폰트 모드(for-mobile-capture) 본문/설명 20종 +20% 상향 + **font-weight:500**(약간 볼드)
+- 누락 보강: s-trust-name/desc, s-cmp-desc-name/txt (신뢰배지·비교설명) for-mobile 오버라이드 추가
+- 모바일 JPG/분할(saveOptimized/saveOptimizedSplit) html2canvas scale 1→**2**(고해상도). 목표=쿠팡 수준 가독성
+- 교훈: 큰폰트 가독성은 for-mobile-capture 모드(=모바일 JPG 버튼)에서만 적용. 일반 미리보기/JPG는 데스크톱 비율 유지
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
