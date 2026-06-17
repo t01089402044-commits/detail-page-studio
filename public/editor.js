@@ -1319,6 +1319,26 @@ function saveEditHTML(){
   URL.revokeObjectURL(u);showHint('✅ 편집 HTML 저장됨');
 }
 
+async function saveStandaloneHTML(){
+  showHint('⏳ 편집용 HTML 생성 중...');
+  try{
+    var base=window.location.origin;
+    var css=await fetch(base+'/editor.css',{cache:'no-store'}).then(function(r){return r.text();});
+    var jsc=await fetch(base+'/editor.js',{cache:'no-store'}).then(function(r){return r.text();});
+    var clone=document.documentElement.cloneNode(true);
+    var link=clone.querySelector('link[href*="editor.css"]');
+    if(link){var st=document.createElement('style');st.textContent=css;link.parentNode.replaceChild(st,link);}
+    var scr=clone.querySelector('script[src*="editor.js"]');
+    if(scr){var ns=document.createElement('script');ns.textContent=jsc;scr.parentNode.replaceChild(ns,scr);}
+    var doc=makeFixed(clone.outerHTML);
+    var blob=new Blob(['<!DOCTYPE html>'+doc],{type:'text/html;charset=utf-8'});
+    var u=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=u;a.download='detail-page-editor.html';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+    showHint('✅ 편집 HTML 저장됨 — 파일 열면 모든 기능 사용 가능');
+  }catch(e){ showHint('❌ HTML 생성 실패: '+e.message); alert('HTML 생성 실패: '+e.message); }
+}
+
 // ── 전역 이벤트 ───────────────────────────────────────────────────────────
 document.addEventListener('click',function(e){
   if(!e.target.closest('.bg-pop')&&!e.target.closest('.sov-bg'))

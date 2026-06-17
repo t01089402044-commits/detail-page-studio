@@ -83,6 +83,12 @@
 - 편집가능 플레이스홀더. s-info CSS 재작성(상단 굵은선/행 구분선/라벨 볼드/제목 가운데) + for-mobile 가독성 오버라이드
 - 기존 체크박스(ck-group) 방식 제거
 
+### [2026-06-16 추가4] HTML 다운로드 → 자체완결형 기능 에디터로 교체
+- 문제: 기존 saveHTML이 editor.css 미인라인 정적 출력 → 레이아웃 깨짐+기능없음. 템플릿(localStorage)은 base64 이미지로 용량초과 저장실패.
+- 해결: HTML 버튼 → saveStandaloneHTML(). DOM 복제 후 editor.css/editor.js를 인라인(외부참조 제거), makeFixed로 init 재바인딩, API_BASE=프로덕션 유지 → 파일 단독 실행 시 레일웨이와 동일 외관+전기능(캡처/FTP/템플릿은 프로덕션 API 경유).
+- 검증: headless로 export→재로드 시 22섹션 렌더/함수 6종 동작/에러0 확인.
+- 효과: 이미지 포함 작업도 HTML로 저장→재오픈 편집 가능(localStorage 용량한계 회피).
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
