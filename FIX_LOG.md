@@ -89,6 +89,11 @@
 - 검증: headless로 export→재로드 시 22섹션 렌더/함수 6종 동작/에러0 확인.
 - 효과: 이미지 포함 작업도 HTML로 저장→재오픈 편집 가능(localStorage 용량한계 회피).
 
+### [2026-06-16 추가5] 내보낸 HTML 버그 2건 수정
+- ① 다운로드 HTML의 기존 이미지 리사이즈 안 됨: makeFixed init이 tf-wrap의 iz-ov 숨김/file input 비활성을 빠뜨려 오버레이(z-index:30)가 이벤트 가로챔(FIX_LOG #3 동일). → init 재바인딩에 iz-ov display:none + file input 비활성 추가.
+- ② 단독 HTML에서 재저장 실패: saveStandaloneHTML이 /editor.css·/editor.js를 무조건 fetch → file://엔 없어 throw. → link/script가 외부참조일 때만 fetch(이미 인라인된 단독파일은 fetch 생략하고 그대로 재직렬화).
+- 검증: headless로 export→단독로드 재저장 OK(에러0), init에 iz-ov숨김 포함 확인.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1

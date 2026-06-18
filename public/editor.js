@@ -1276,7 +1276,7 @@ function sizeDelCol(secEl){var thead=secEl.querySelector('.s-size-tbl thead tr')
 // ── saveHTML / saveEditHTML ────────────────────────────────────────────────
 function makeFixed(orig){
   return orig
-    .replace(/\/\*INIT_BEGIN\*\/[\s\S]*?\/\*INIT_END\*\//,"(function(){\n  var preview=document.getElementById('preview');\n  if(!preview)return;\n  [].slice.call(preview.querySelectorAll(':scope>.sec-wrap')).forEach(function(sec){\n    var type=sec.dataset.secType;\n    var meta=(typeof SEC_META!=='undefined'&&SEC_META[type])||{label:type||''};\n    [].slice.call(sec.querySelectorAll('.sec-ov')).forEach(function(o){o.remove();});\n    if(typeof buildSecOv==='function')sec.appendChild(buildSecOv(sec,meta));\n    [].slice.call(sec.querySelectorAll('.iz')).forEach(function(iz){\n      [].slice.call(iz.querySelectorAll('.iz-ov')).forEach(function(o){o.remove();});\n      if(typeof buildIzOverlay==='function')buildIzOverlay(iz);\n      if(typeof addBar==='function')addBar(iz);\n      var tf=iz.querySelector('.tf-wrap');\n      if(tf&&typeof bindTF==='function')bindTF(tf,iz);\n    });\n  });\n  try{if(typeof renderEPCats==='function'&&typeof EP_CATS!=='undefined')renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){}\n  document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});\n})();")
+    .replace(/\/\*INIT_BEGIN\*\/[\s\S]*?\/\*INIT_END\*\//,"(function(){\n  var preview=document.getElementById('preview');\n  if(!preview)return;\n  [].slice.call(preview.querySelectorAll(':scope>.sec-wrap')).forEach(function(sec){\n    var type=sec.dataset.secType;\n    var meta=(typeof SEC_META!=='undefined'&&SEC_META[type])||{label:type||''};\n    [].slice.call(sec.querySelectorAll('.sec-ov')).forEach(function(o){o.remove();});\n    if(typeof buildSecOv==='function')sec.appendChild(buildSecOv(sec,meta));\n    [].slice.call(sec.querySelectorAll('.iz')).forEach(function(iz){\n      [].slice.call(iz.querySelectorAll('.iz-ov')).forEach(function(o){o.remove();});\n      if(typeof buildIzOverlay==='function')buildIzOverlay(iz);\n      if(typeof addBar==='function')addBar(iz);\n      var tf=iz.querySelector('.tf-wrap');\n      if(tf){if(typeof bindTF==='function')bindTF(tf,iz);[].slice.call(iz.querySelectorAll('.iz-ov')).forEach(function(o){o.style.display='none';});var fi=iz.querySelector('input[type=file]');if(fi){fi.style.pointerEvents='none';fi.style.opacity='0';}}\n    });\n  });\n  try{if(typeof renderEPCats==='function'&&typeof EP_CATS!=='undefined')renderEPCats(Object.keys(EP_CATS)[0]);}catch(e){}\n  document.querySelectorAll('.s-mood-copy,.s-mood-main-ov').forEach(function(el){el.remove();});\n})();")
     .replace('html,body{height:100%;overflow:hidden;}','html{height:100%;}body{min-height:100%;overflow-y:auto;background:#dde0e8;}')
     .replace('id="body"','id="body" style="min-height:calc(100vh - 48px)"');
 }
@@ -1323,13 +1323,11 @@ async function saveStandaloneHTML(){
   showHint('⏳ 편집용 HTML 생성 중...');
   try{
     var base=window.location.origin;
-    var css=await fetch(base+'/editor.css',{cache:'no-store'}).then(function(r){return r.text();});
-    var jsc=await fetch(base+'/editor.js',{cache:'no-store'}).then(function(r){return r.text();});
     var clone=document.documentElement.cloneNode(true);
     var link=clone.querySelector('link[href*="editor.css"]');
-    if(link){var st=document.createElement('style');st.textContent=css;link.parentNode.replaceChild(st,link);}
+    if(link){var css=await fetch(base+'/editor.css',{cache:'no-store'}).then(function(r){return r.text();});var st=document.createElement('style');st.textContent=css;link.parentNode.replaceChild(st,link);}
     var scr=clone.querySelector('script[src*="editor.js"]');
-    if(scr){var ns=document.createElement('script');ns.textContent=jsc;scr.parentNode.replaceChild(ns,scr);}
+    if(scr){var jsc=await fetch(base+'/editor.js',{cache:'no-store'}).then(function(r){return r.text();});var ns=document.createElement('script');ns.textContent=jsc;scr.parentNode.replaceChild(ns,scr);}
     var doc=makeFixed(clone.outerHTML);
     var blob=new Blob(['<!DOCTYPE html>'+doc],{type:'text/html;charset=utf-8'});
     var u=URL.createObjectURL(blob);
