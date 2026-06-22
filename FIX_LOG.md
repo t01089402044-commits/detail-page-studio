@@ -103,6 +103,10 @@
 - 수정: .iz 전체에 aspect-ratio:1/1+height:auto!important(이미지 넣어도 정사각 유지). tf-wrap은 position:absolute라 슬롯 높이 영향 없음.
 - initTF fit을 contain→cover로(부등호 반전) → 이미지가 정사각을 꽉 채움(overflow:hidden로 크롭). 검증: 1500×1000 이미지→슬롯 1000², tf-wrap 1500×1000 정사각 덮음.
 
+### [2026-06-16 추가8] 이미지 삭제 버튼(iz-del) 호버/클릭 안 됨 수정
+- 원인: initTF가 만드는 .iz-del에 CSS가 전혀 없어 좌상단 작은 기본버튼으로 뜨고 z-index 없어 tf-wrap(z-index:5)에 가려 호버/클릭 불가.
+- 수정: .iz-del 우상단 절대배치 + z-index:61(핸들/래퍼 위) + 32px 빨강원 + .iz:hover시 표시. 검증: 클릭가능 최상단 요소 확인.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1

@@ -980,3 +980,7 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 
 /* SQUARE-SLOTS: 빈 이미지 슬롯 기본 정사각형 */
 .iz{aspect-ratio:1/1!important;height:auto!important;}
+
+/* IZ-DEL-FIX: 이미지 삭제 버튼 위치/z-index(우상단, tf-wrap 위) */
+.iz-del{position:absolute;top:10px;right:10px;z-index:61;width:32px;height:32px;border-radius:50%;background:rgba(220,38,38,.92);border:none;color:#fff;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,.3);}
+.iz:hover .iz-del{display:flex;}
