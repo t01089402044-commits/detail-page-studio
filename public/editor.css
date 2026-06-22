@@ -988,3 +988,9 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 .iz-move-up{top:10px;}
 .iz-move-down{top:46px;}
 .iz:hover .iz-move{display:flex;}
+
+/* INFL-FILL: 인플루언서 카드 슬롯은 정사각 제외, 카드 꽉 채움 */
+.s-infl-card{overflow:hidden;}
+.s-infl-grid-top .s-infl-card{height:560px;}
+.s-infl-grid-bot .s-infl-card{height:340px;}
+.s-infl-card .iz{position:absolute!important;inset:0!important;aspect-ratio:auto!important;height:auto!important;width:auto!important;}

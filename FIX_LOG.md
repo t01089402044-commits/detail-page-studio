@@ -111,6 +111,11 @@
 - footer 왼쪽 붙음: editor.css 521·523줄 끊긴 셀렉터(.s-pd-2col> / .s-pd-3col> 뒤 내용없음)가 파서에서 .s-pd-3col>.s-footer{...}로 합쳐져 .s-footer 패딩(48px) 무력화 → padding 0. 끊긴 셀렉터 2줄 제거 → footer 48px=FAQ 정렬, pd-2col/3col 플렉스도 정상화.
 - 슬롯 위/아래 이동: buildIzOverlay에 .iz-move(⬆⬇) 버튼(z-index:61, hover시, 이미지 유무 무관) + izMove(iz,dir): iz 형제 재정렬 후 resize-bar 재생성. 검증 A,B↔B,A.
 
+### [2026-06-16 추가10] 인플루언서 카드 슬롯 카드 채움(정사각 부작용 수정)
+- 정사각(aspect-ratio:1/1) 블랭킷이 카드형(세로 긴) 슬롯까지 정사각화 → flex로 늘어난 카드를 못 채워 빈공간.
+- .s-infl-card .iz를 position:absolute;inset:0(정사각 해제)로 카드 채움 + 카드 높이(top 560/bot 340) 부여. 검증: iz=카드(360×560), 이미지 카드 채움.
+- ⚠ 각도/스타일/무드 카드도 동일 부작용 가능 → 보고 시 동일 패턴 적용.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
