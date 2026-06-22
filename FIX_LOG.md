@@ -94,6 +94,10 @@
 - ② 단독 HTML에서 재저장 실패: saveStandaloneHTML이 /editor.css·/editor.js를 무조건 fetch → file://엔 없어 throw. → link/script가 외부참조일 때만 fetch(이미 인라인된 단독파일은 fetch 생략하고 그대로 재직렬화).
 - 검증: headless로 export→단독로드 재저장 OK(에러0), init에 iz-ov숨김 포함 확인.
 
+### [2026-06-16 추가6] 이미지 슬롯 기본값 정사각형
+- 빈 이미지 슬롯(.iz:not(.has-image))에 aspect-ratio:1/1 + height:auto!important → 폭 기준 정사각형(고정 px height 무시). 풀폭 1000×1000, 2단 ~541², 기타 ~360²/299². 모든 화면폭에서 정사각 유지.
+- 이미지 넣은 슬롯(has-image)은 기존 tf 리사이즈 유지(영향 없음).
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1

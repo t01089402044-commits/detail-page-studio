@@ -977,3 +977,6 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 #preview.for-mobile-capture .s-info-key{font-size:27px!important;font-weight:700!important;}
 #preview.for-mobile-capture .s-info-val{font-size:27px!important;}
 #preview.for-mobile-capture .s-info-notice{font-size:24px!important;}
+
+/* SQUARE-SLOTS: 빈 이미지 슬롯 기본 정사각형 */
+.iz:not(.has-image){aspect-ratio:1/1!important;height:auto!important;}
