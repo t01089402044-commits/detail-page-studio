@@ -333,7 +333,7 @@ function initTF(zone,src,nW,nH){
   const zH=Math.max(zone.offsetHeight||0,zone.style.height?parseInt(zone.style.height):0)||400;
   const ratio=nW/nH;
   let w,h;
-  if(nW/zW>nH/zH){w=zW;h=w/ratio;}
+  if(nW/zW<nH/zH){w=zW;h=w/ratio;}
   else{h=zH;w=h*ratio;}
   let x=(zW-w)/2,y=(zH-h)/2;
   const wrap=document.createElement('div');

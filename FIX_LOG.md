@@ -98,6 +98,11 @@
 - 빈 이미지 슬롯(.iz:not(.has-image))에 aspect-ratio:1/1 + height:auto!important → 폭 기준 정사각형(고정 px height 무시). 풀폭 1000×1000, 2단 ~541², 기타 ~360²/299². 모든 화면폭에서 정사각 유지.
 - 이미지 넣은 슬롯(has-image)은 기존 tf 리사이즈 유지(영향 없음).
 
+### [2026-06-16 추가7] 정사각 슬롯 - 이미지 넣어도 정사각 유지 + 채움(cover)
+- 문제: aspect-ratio를 .iz:not(.has-image)에만 줘서 이미지 넣으면 정사각 풀리고 슬롯이 인라인높이로 줄어 이미지가 작아짐.
+- 수정: .iz 전체에 aspect-ratio:1/1+height:auto!important(이미지 넣어도 정사각 유지). tf-wrap은 position:absolute라 슬롯 높이 영향 없음.
+- initTF fit을 contain→cover로(부등호 반전) → 이미지가 정사각을 꽉 채움(overflow:hidden로 크롭). 검증: 1500×1000 이미지→슬롯 1000², tf-wrap 1500×1000 정사각 덮음.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
