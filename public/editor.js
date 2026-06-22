@@ -656,6 +656,7 @@ function buildIzOverlay(iz){
   });
   ov.appendChild(delBtn);
 
+  if(!iz.querySelector('.iz-move-up')){var _mu=document.createElement('button');_mu.type='button';_mu.className='iz-move iz-move-up';_mu.textContent='⬆';_mu.title='위로 이동';_mu.addEventListener('click',function(e){e.stopPropagation();izMove(iz,-1);});var _md=document.createElement('button');_md.type='button';_md.className='iz-move iz-move-down';_md.textContent='⬇';_md.title='아래로 이동';_md.addEventListener('click',function(e){e.stopPropagation();izMove(iz,1);});iz.appendChild(_mu);iz.appendChild(_md);}
   iz.appendChild(ov);
 }
 
@@ -671,6 +672,16 @@ function izAddSlot(btn){
   buildIzOverlay(newIz);
   parent.insertBefore(newIz,iz.nextSibling);
   showHint('✅ 이미지 슬롯 추가됨');
+}
+function izMove(iz,dir){
+  var parent=iz.parentElement; if(!parent)return;
+  function izList(){return Array.prototype.filter.call(parent.children,function(c){return c.classList&&c.classList.contains('iz');});}
+  var izs=izList(); var i=izs.indexOf(iz);
+  if(dir<0){ if(i<=0){showHint('⬆ 맨 위 슬롯입니다');return;} parent.insertBefore(iz,izs[i-1]); }
+  else { if(i>=izs.length-1){showHint('⬇ 맨 아래 슬롯입니다');return;} parent.insertBefore(izs[i+1],iz); }
+  parent.querySelectorAll(':scope > .resize-bar').forEach(function(b){b.remove();});
+  izList().forEach(function(z){ if(typeof addBar==='function') addBar(z); });
+  showHint(dir<0?'⬆ 위로 이동':'⬇ 아래로 이동');
 }
 function izDelSlot(btn){
   const iz=btn.closest('.iz');

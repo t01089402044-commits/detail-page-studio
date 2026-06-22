@@ -107,6 +107,10 @@
 - 원인: initTF가 만드는 .iz-del에 CSS가 전혀 없어 좌상단 작은 기본버튼으로 뜨고 z-index 없어 tf-wrap(z-index:5)에 가려 호버/클릭 불가.
 - 수정: .iz-del 우상단 절대배치 + z-index:61(핸들/래퍼 위) + 32px 빨강원 + .iz:hover시 표시. 검증: 클릭가능 최상단 요소 확인.
 
+### [2026-06-16 추가9] footer 좌측 정렬(끊긴 셀렉터 버그) + 슬롯 위/아래 이동
+- footer 왼쪽 붙음: editor.css 521·523줄 끊긴 셀렉터(.s-pd-2col> / .s-pd-3col> 뒤 내용없음)가 파서에서 .s-pd-3col>.s-footer{...}로 합쳐져 .s-footer 패딩(48px) 무력화 → padding 0. 끊긴 셀렉터 2줄 제거 → footer 48px=FAQ 정렬, pd-2col/3col 플렉스도 정상화.
+- 슬롯 위/아래 이동: buildIzOverlay에 .iz-move(⬆⬇) 버튼(z-index:61, hover시, 이미지 유무 무관) + izMove(iz,dir): iz 형제 재정렬 후 resize-bar 재생성. 검증 A,B↔B,A.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1

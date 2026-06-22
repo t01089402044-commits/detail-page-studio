@@ -518,9 +518,7 @@ body{display:flex;flex-direction:column;font-family:'Noto Sans KR',sans-serif;fo
 .s-pd-hd{padding:40px 48px 0;}
 .s-pd-hd-title{font-size:20px;font-weight:700;letter-spacing:2px;color:#111;}
 .s-pd-2col{display:flex;gap:3px;}
-.s-pd-2col>
 .s-pd-3col{display:flex;gap:3px;}
-.s-pd-3col>
 
 /* Footer */
 .s-footer{background:#f8f8f8;padding:36px 48px;border-top:1px solid #eee;}
@@ -984,3 +982,9 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 /* IZ-DEL-FIX: 이미지 삭제 버튼 위치/z-index(우상단, tf-wrap 위) */
 .iz-del{position:absolute;top:10px;right:10px;z-index:61;width:32px;height:32px;border-radius:50%;background:rgba(220,38,38,.92);border:none;color:#fff;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,.3);}
 .iz:hover .iz-del{display:flex;}
+
+/* IZ-MOVE: 슬롯 위/아래 이동 버튼 */
+.iz-move{position:absolute;left:10px;z-index:61;width:30px;height:30px;border-radius:50%;background:rgba(37,99,235,.92);border:none;color:#fff;font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 1px 6px rgba(0,0,0,.3);}
+.iz-move-up{top:10px;}
+.iz-move-down{top:46px;}
+.iz:hover .iz-move{display:flex;}
