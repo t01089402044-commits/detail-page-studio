@@ -116,6 +116,13 @@
 - .s-infl-card .iz를 position:absolute;inset:0(정사각 해제)로 카드 채움 + 카드 높이(top 560/bot 340) 부여. 검증: iz=카드(360×560), 이미지 카드 채움.
 - ⚠ 각도/스타일/무드 카드도 동일 부작용 가능 → 보고 시 동일 패턴 적용.
 
+### [2026-06-16 추가11] 스프링 룩북 섹션 신규(BUCKET/MASTER BUNNY 레퍼런스)
+- SEC.spring 빌더 + SEC_META(스프링 룩북) 추가. 섹션 추가 메뉴에서 추가 가능.
+- 구성: 히어로(텍스트 오버레이+오프셋 박스), FOR SPRING GOLF(이미지+텍스트), 대형+MASTER BUNNY 워터마크+정사각, 하단 2박스+BRAND. 박스7=izNew 슬롯(호버 업로드), 텍스트9=contenteditable(폰트/크기 디자인 고정 !important로 for-mobile-capture 무시).
+- 슬롯은 .ss-box(aspect-ratio로 디자인 비율) + .s-spring .iz absolute inset:0로 채움(cover). 반응형: @container(max-width:600px) 모바일 스택.
+- 버그수정: 모바일 히어로가 align-items:flex-start(PC용) 때문에 column에서 박스 폭 붕괴(10px) → @container에 align-items:stretch + 폭100% 추가.
+- 검증(headless): 슬롯7 호버7 편집9 이미지cover, PC/모바일 렌더 확인.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
