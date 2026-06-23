@@ -1043,3 +1043,7 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
   .ss-h2{font-size:32px!important;}
   .ss-wm{font-size:46px!important;}
 }
+
+/* ANGLE-STYLE-FIX: 카드(이미지+캡션) 슬롯 디자인 비율 복원(정사각 해제) */
+.s-angle-cell .iz{aspect-ratio:430/520!important;height:auto!important;}
+.s-style-card .iz{aspect-ratio:267/400!important;height:auto!important;}

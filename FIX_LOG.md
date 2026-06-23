@@ -123,6 +123,12 @@
 - 버그수정: 모바일 히어로가 align-items:flex-start(PC용) 때문에 column에서 박스 폭 붕괴(10px) → @container에 align-items:stretch + 폭100% 추가.
 - 검증(headless): 슬롯7 호버7 편집9 이미지cover, PC/모바일 렌더 확인.
 
+### [2026-06-16 추가12] 스프링 모달버튼 추가 + 카드 슬롯(angle/style) 정사각 부작용 수정 + 모달 라벨 정정
+- 섹션추가 모달이 index.html 하드코딩이라 SEC_META만 추가하면 안 뜸 → "🌸 스프링 룩북" 버튼을 모달에 추가.
+- 전체 섹션 헤드리스 검증(23개 에러0 렌더). 정사각 부작용으로 angle 0/4·style 0/3 미채움 발견 → .s-angle-cell/.s-style-card .iz를 디자인 비율(430/520, 267/400)로 복원(이미지+캡션 구조라 absolute 불필요). 검증: angle 499×603·style 331×496 균일.
+- 모달 라벨 불일치 정정: info(상품정보고시로 바뀐) 라벨 "모델 정보"→"상품정보고시", pd(제품디테일) 라벨 "제품 정보 고시"→"제품 디테일".
+- 영향범위: 정사각/폰트 등 전역변경은 에디터로 새작업/템플릿 불러오기엔 적용, 이미 export/업로드한 정적 페이지엔 영향 없음.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
