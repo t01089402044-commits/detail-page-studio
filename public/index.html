@@ -129,6 +129,7 @@
             <button class="wb-btn" id="jpg-3x" onclick="setJpgScale(3,this)">3× (3000px)</button>
           </div>
           <button class="dl-btn" onclick="savePNG()" style="width:100%;margin-bottom:8px;background:#0f766e;color:#fff;"><i class="ti ti-file-type-png"></i> PNG 무손실 (1000×3=3000px, 네이버 권장)</button>
+          <button id="psd-btn" class="dl-btn" onclick="savePSD()" style="width:100%;margin-bottom:8px;background:#1e293b;color:#fff;"><i class="ti ti-brand-photoshop"></i> PSD (레이어 분리·텍스트 편집)</button>
           <div class="dl-grid">
             <!-- 분할 저장 -->
         <div style="margin-bottom:12px;padding:10px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);border-radius:8px;">
@@ -225,5 +226,7 @@
   });
 </script>
 <script src="/editor.js"></script>
+<script src="/ag-psd.js"></script>
+<script src="/psd-export.js"></script>
 </body>
 </html>

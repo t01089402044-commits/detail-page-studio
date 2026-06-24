@@ -135,6 +135,14 @@
 - 스프링 룩북 → bucketInner() 공통 + bucketpc/bucketmb 2빌더로 분리. CSS .s-spring→.s-bucket(공통)+.s-bucket-pc(가로 비대칭)/.s-bucket-mb(스택). 모달버튼 2개(버킷스토어 템플릿_pc/_모바일).
 - 검증: bucketPC heroDir=row, bucketMB heroDir=column, 각 슬롯7/편집9/호버7, 에러0.
 
+### [2026-06-24 추가18] PSD 레이어분리 내보내기 + 테마칩 호버숨김 + 모바일 정사각 겹침
+- PSD(포토샵 편집용): ag-psd(public/ag-psd.js 876KB)+public/psd-export.js. 저장모달 "PSD(레이어분리·텍스트편집)" 버튼.
+  · 구조: 배경 래스터 1개(텍스트·이미지·에디터크롬 숨김 후 html2canvas) + 이미지 슬롯별 개별 레이어 + 텍스트블록별 편집가능 PS 텍스트레이어(폰트/크기/색/위치 transform).
+  · 크롬제외(CHROME_SEL): sec-ov/bg-pop/ss-theme/iz-ov/iz-in/핸들 등. document.fonts.ready 대기로 리플로우 어긋남 방지. docH=실제 최대바닥값.
+  · 검증(headless+ag-psd readback): PC 9레이어(텍스트8+배경1) MB 9레이어, 크롬누수0, 텍스트 문서경계내, pageErr0.
+- 테마칩(.ss-theme): 항상보이던 것 → opacity0/visibility hidden 기본, .s-bucket:hover서만 표시.
+- 모바일 빅 정사각겹침: 큰이미지 tf-wrap(z5)에 가려지던 것 → .ss-mb-float z-index:20(>5)+겹침 -140px로 위에 표시.
+
 ### [2026-06-24 추가17] 버킷 PC/모바일 레퍼런스 충실도 — 빈슬롯 회색 + 누락블록
 - 사용자: PC/모바일 둘 다 "그대로 구현 안됨". 원인=빈 .iz 슬롯 bg가 #f0f2f8(거의 흰색)이라 목업의 솔리드 회색 박스와 전혀 달라보임.
 - 해결: .s-bucket .iz:not(.has-image){background:#a6a6a6}(테마무관 솔리드 회색)+라벨 흰색. → 목업처럼 회색 박스.
