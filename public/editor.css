@@ -1006,14 +1006,15 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 .ss-ar-sq{aspect-ratio:1/1;}
 .ss-ar-duo{aspect-ratio:430/560;}
 .ss-hero-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45),rgba(0,0,0,0) 55%);pointer-events:none;}
-.ss-hero-txt{position:absolute;left:40px;bottom:48px;z-index:3;}
+.ss-hero-txt{position:absolute;left:40px;bottom:48px;z-index:50;pointer-events:none;}
+.ss-hero-txt [contenteditable]{pointer-events:auto;}
 .ss-tag{font-size:13px!important;letter-spacing:2px;color:#fff;font-weight:700!important;margin-bottom:10px;opacity:.9;}
 .ss-tag.dark{color:#888;}
 .ss-h1{font-size:52px!important;font-weight:900!important;color:#fff;line-height:1.08!important;margin-bottom:14px;letter-spacing:-.01em;}
 .ss-sub{font-size:16px!important;color:#fff;letter-spacing:1px;opacity:.92;}
 .ss-h2{font-size:40px!important;font-weight:800!important;color:#222;line-height:1.15!important;margin-bottom:16px;letter-spacing:-.01em;}
 .ss-body{font-size:15px!important;color:#777;line-height:1.95!important;margin-top:14px;}
-.ss-wm{position:absolute;left:26px;bottom:40px;font-size:62px!important;font-weight:900!important;font-style:italic;color:rgba(255,255,255,.6);line-height:.98!important;z-index:2;letter-spacing:-.02em;}
+.ss-wm{position:absolute;left:26px;bottom:40px;font-size:62px!important;font-weight:900!important;font-style:italic;color:rgba(255,255,255,.6);line-height:.98!important;z-index:50;letter-spacing:-.02em;}
 .ss-body2{font-size:15px!important;color:#777;line-height:1.95!important;}
 .ss-tag2{font-size:13px!important;color:#999;}
 .ss-duo-l{display:flex;gap:4px;}
@@ -1046,3 +1047,8 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 /* ANGLE-STYLE-FIX: 카드(이미지+캡션) 슬롯 디자인 비율 복원(정사각 해제) */
 .s-angle-cell .iz{aspect-ratio:430/520!important;height:auto!important;}
 .s-style-card .iz{aspect-ratio:267/400!important;height:auto!important;}
+
+/* SS-MOVE-HANDLE: 버킷 텍스트 드래그 이동 핸들 */
+.ss-movable{cursor:default;}
+.ss-move-handle{position:absolute;top:-13px;left:-13px;width:26px;height:26px;border-radius:50%;background:rgba(37,99,235,.95);color:#fff;display:none;align-items:center;justify-content:center;cursor:move;font-size:13px;z-index:60;pointer-events:auto;box-shadow:0 1px 6px rgba(0,0,0,.3);}
+.ss-movable:hover .ss-move-handle{display:flex;}

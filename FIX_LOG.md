@@ -135,6 +135,13 @@
 - 스프링 룩북 → bucketInner() 공통 + bucketpc/bucketmb 2빌더로 분리. CSS .s-spring→.s-bucket(공통)+.s-bucket-pc(가로 비대칭)/.s-bucket-mb(스택). 모달버튼 2개(버킷스토어 템플릿_pc/_모바일).
 - 검증: bucketPC heroDir=row, bucketMB heroDir=column, 각 슬롯7/편집9/호버7, 에러0.
 
+### [2026-06-16 추가14] 버킷=템플릿화 + 히어로텍스트 이미지위/편집/드래그
+- 버킷을 섹션추가에서 제거 → 템플릿 모달에 "버킷스토어 템플릿_PC/_모바일로 새로 시작"(bucketNew: preview 비우고 해당 버킷만 추가).
+- 히어로 텍스트/워터마크: z-index 3→50(이미지 tf-wrap z5 위), .ss-hero-txt pointer-events:none + [contenteditable] auto(빈영역 클릭통과, 텍스트만 편집). 시각확인: 이미지 위 흰텍스트 정상.
+- 텍스트 위치 드래그: .ss-movable + ✥핸들(makeMovable/bindMovable), addSection/rebind서 바인딩.
+- 검증(headless): 단일섹션 템플릿/텍스트z50>5/핸들/편집9/전섹션 에러0.
+- ⚠ 레이아웃 충실도(빈공간·하단 대형박스 등) 추가 정밀화 필요(사용자 지정 대기).
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
