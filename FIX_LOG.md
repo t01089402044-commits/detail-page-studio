@@ -129,6 +129,12 @@
 - 모달 라벨 불일치 정정: info(상품정보고시로 바뀐) 라벨 "모델 정보"→"상품정보고시", pd(제품디테일) 라벨 "제품 정보 고시"→"제품 디테일".
 - 영향범위: 정사각/폰트 등 전역변경은 에디터로 새작업/템플릿 불러오기엔 적용, 이미 export/업로드한 정적 페이지엔 영향 없음.
 
+### [2026-06-16 추가13] 섹션 클릭 반영 버그(스크롤) 수정 + 버킷 PC/모바일 2버전 분리
+- "섹션 클릭해도 반영 안됨" 원인: addSection이 #preview 맨아래에 추가만 하고 스크롤 안 함 → 화면(상단) 변화 없어 보임. 모든 섹션 공통. → addSection에 sec.scrollIntoView 추가.
+- 검증결과 24섹션 전부 정상 렌더(깨진 섹션 없음) → 제거할 섹션 없음. "안 되던 것"=스크롤 버그.
+- 스프링 룩북 → bucketInner() 공통 + bucketpc/bucketmb 2빌더로 분리. CSS .s-spring→.s-bucket(공통)+.s-bucket-pc(가로 비대칭)/.s-bucket-mb(스택). 모달버튼 2개(버킷스토어 템플릿_pc/_모바일).
+- 검증: bucketPC heroDir=row, bucketMB heroDir=column, 각 슬롯7/편집9/호버7, 에러0.
+
 ### [2026-05-27] editor.js — deviceScaleFactor 방식으로 2× 해상도 수정 (최종)
 - **문제**: 여러 시도에도 불구하고 2× JPG 저장 시 860px 출력 지속
 - **근본 원인**: `width: 860 * scale, scale: 1` 전송 → viewport만 1720px로 확대, deviceScaleFactor는 1
