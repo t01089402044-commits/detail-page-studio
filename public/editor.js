@@ -180,7 +180,7 @@ const SEC_TMPL = {
     ${['모니터 해상도 또는 모바일 환경에 따라 실제 제품 색상과 다소 차이가 있을 수 있습니다.','사이즈 측정 방법에 따라 1~2cm 오차가 발생할 수 있습니다.','상품 수령 후 14일 이내 교환·반품 신청이 가능합니다.','불량·오배송의 경우 전액 환불 또는 교환 처리해 드립니다.'].map(t=>`<p contenteditable>${t}</p>`).join('')}
   </div>`,
 };
-function bucketInner(){return '<div class="ss-hero"><div class="ss-hero-left"><div class="ss-box ss-ar-hero1">'+izNew('히어로 메인','940 × 1040px','')+'<div class="ss-hero-ov"></div></div><div class="ss-hero-txt ss-movable"><div class="ss-tag" contenteditable>BRAND</div><div class="ss-h1" contenteditable>25 SPRING<br>COLLECTION</div><div class="ss-sub" contenteditable>SPECIAL BENEFIT 00% COUPON</div></div></div><div class="ss-hero-right"><div class="ss-box ss-ar-hero2">'+izNew('히어로 우측','980 × 1300px','')+'</div></div></div>'+'<div class="ss-golf"><div class="ss-golf-img"><div class="ss-box ss-ar-golf">'+izNew('스프링 골프','690 × 900px','')+'</div></div><div class="ss-golf-txt"><div class="ss-h2" contenteditable>FOR<br>SPRING GOLF</div><div class="ss-tag dark" contenteditable>BRAND</div><div class="ss-body" contenteditable>모던한 컬러감을 기본으로 과감한 패턴과 디테일,<br>다양한 소재를 믹스한 봄 스타일링 제안!</div></div></div>'+'<div class="ss-big"><div class="ss-big-main"><div class="ss-box ss-ar-big">'+izNew('대형 이미지','1280 × 1100px','')+'</div><div class="ss-wm ss-movable" contenteditable>MASTER BUNNY<br>EDITION</div></div><div class="ss-big-side"><div class="ss-body2" contenteditable>필드에서 기분 좋은 자신감을 안겨주는 S/S 스타일을<br>직접 만나보세요.</div><div class="ss-box ss-ar-sq">'+izNew('정사각 이미지','730 × 730px','')+'</div></div></div>'+'<div class="ss-duo"><div class="ss-duo-l"><div class="ss-box ss-ar-duo">'+izNew('하단 좌','430 × 560px','')+'</div><div class="ss-box ss-ar-duo">'+izNew('하단 우','430 × 560px','')+'</div></div><div class="ss-tag dark" contenteditable>BRAND</div></div>';}
+function bucketInner(){return '<div class="ss-theme sec-toolbar"><span>🎨 테마</span><input type="color" value="#f2f2f2" onchange="bucketTheme(this)" title="배경 색상"></div>'+'<div class="ss-hero"><div class="ss-hero-left"><div class="ss-box ss-ar-hero1">'+izNew('히어로 메인','940 × 1040px','')+'<div class="ss-hero-ov"></div></div><div class="ss-hero-txt ss-movable"><div class="ss-tag" contenteditable>BRAND</div><div class="ss-h1" contenteditable>25 SPRING<br>COLLECTION</div><div class="ss-sub" contenteditable>SPECIAL BENEFIT 00% COUPON</div></div></div><div class="ss-hero-right"><div class="ss-box ss-ar-hero2">'+izNew('히어로 우측','980 × 1300px','')+'</div></div></div>'+'<div class="ss-golf"><div class="ss-golf-img"><div class="ss-box ss-ar-golf">'+izNew('스프링 골프','690 × 900px','')+'</div></div><div class="ss-golf-txt"><div class="ss-h2" contenteditable>FOR<br>SPRING GOLF</div><div class="ss-tag dark" contenteditable>BRAND</div><div class="ss-body" contenteditable>모던한 컬러감을 기본으로 과감한 패턴과 디테일,<br>다양한 소재를 믹스한 봄 스타일링 제안!</div></div></div>'+'<div class="ss-big"><div class="ss-big-main"><div class="ss-box ss-ar-big">'+izNew('대형 이미지','1280 × 1100px','')+'</div><div class="ss-wm ss-movable" contenteditable>MASTER BUNNY<br>EDITION</div></div><div class="ss-big-side"><div class="ss-body2" contenteditable>필드에서 기분 좋은 자신감을 안겨주는 S/S 스타일을<br>직접 만나보세요.</div><div class="ss-box ss-ar-sq">'+izNew('정사각 이미지','730 × 730px','')+'</div></div></div>'+'<div class="ss-duo"><div class="ss-duo-l"><div class="ss-box ss-ar-duo">'+izNew('하단 좌','430 × 560px','')+'</div><div class="ss-box ss-ar-duo">'+izNew('하단 우','430 × 560px','')+'</div></div><div class="ss-tag dark" contenteditable>BRAND</div></div>';}
 const SEC_META = {
   banner:{label:'컬렉션 배너',icon:'ti-tag'},
   hero:{label:'히어로 이미지',icon:'ti-home'},
@@ -2301,6 +2301,16 @@ function makeMovable(el){
   });
 }
 function bindMovable(scope){ (scope||document).querySelectorAll('.ss-movable').forEach(makeMovable); }
+
+function bucketTheme(input){
+  var sec=input.closest('.s-bucket'); if(!sec)return;
+  var col=input.value; sec.style.setProperty('--bk-bg',col);
+  var c=col.replace('#',''); var r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),bl=parseInt(c.substr(4,2),16);
+  var lum=(0.299*r+0.587*g+0.114*bl)/255;
+  if(lum<0.55){ sec.style.setProperty('--bk-h','#ffffff'); sec.style.setProperty('--bk-body','rgba(255,255,255,.78)'); sec.style.setProperty('--bk-box','rgba(255,255,255,.16)'); sec.style.setProperty('--bk-line','rgba(255,255,255,.25)'); }
+  else { sec.style.setProperty('--bk-h','#222222'); sec.style.setProperty('--bk-body','#666666'); sec.style.setProperty('--bk-box','rgba(0,0,0,.10)'); sec.style.setProperty('--bk-line','rgba(0,0,0,.10)'); }
+  showHint('🎨 테마 색상 적용');
+}
 
 function bucketNew(ver){
   var nm=(ver==='mb'?'모바일':'PC');
