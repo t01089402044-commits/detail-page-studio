@@ -135,6 +135,17 @@
 - 스프링 룩북 → bucketInner() 공통 + bucketpc/bucketmb 2빌더로 분리. CSS .s-spring→.s-bucket(공통)+.s-bucket-pc(가로 비대칭)/.s-bucket-mb(스택). 모달버튼 2개(버킷스토어 템플릿_pc/_모바일).
 - 검증: bucketPC heroDir=row, bucketMB heroDir=column, 각 슬롯7/편집9/호버7, 에러0.
 
+### [2026-06-24 추가16] 버킷 모바일 전용 빌더(bucketInnerMb) — M 레퍼런스 구조 매칭
+- 문제: bucketmb가 PC용 bucketInner를 CSS 재적층만 해 모바일 레퍼런스(M)와 구조 불일치(히어로 좌+우 2블록 등).
+- 해결: bucketInnerMb() 신규. M 구조 — 히어로(풀폭1단+하단오버레이)/골프(가운데박스+아래텍스트)/빅(풀폭대형+워터마크+우측 겹친 정사각+텍스트)/듀오(2박스+BRAND)/풀폭 푸터. bucketmb가 사용.
+- CSS: .ss-ar-mhero/mgolf/mbig/msq/mduo/mfoot 신규 비율 + .s-bucket-mb .ss-mb-* 레이아웃. 모두 .s-bucket-mb 스코프라 PC(bucketpc) 무영향.
+- 검증(headless 420px): 6블록 전부 렌더(총 3018px), 히어로 오버레이/골프/빅 겹침/듀오/푸터 M과 일치.
+
+### [2026-06-24 추가15] 버킷 테마 컬러 자동대비 — 텍스트 color !important
+- 원인: 항상 켜진 #preview.for-mobile-capture{color:#222!important}가 버킷 텍스트 normal color를 상속으로 덮음(font-size는 !important라 적용, color는 normal이라 #222 오염).
+- 해결: .ss-h1/.ss-sub/.ss-h2/.ss-body/.ss-wm/.ss-body2/.ss-tag/.ss-tag2 color에 !important → var(--bk-h)/var(--bk-body) 정상.
+- 검증(headless): 다크bg=흰글자, 밝은bg=검은글자, 박스/라인 자동매칭. hero h1 흰색 오염도 동시 해결.
+
 ### [2026-06-16 추가14] 버킷=템플릿화 + 히어로텍스트 이미지위/편집/드래그
 - 버킷을 섹션추가에서 제거 → 템플릿 모달에 "버킷스토어 템플릿_PC/_모바일로 새로 시작"(bucketNew: preview 비우고 해당 버킷만 추가).
 - 히어로 텍스트/워터마크: z-index 3→50(이미지 tf-wrap z5 위), .ss-hero-txt pointer-events:none + [contenteditable] auto(빈영역 클릭통과, 텍스트만 편집). 시각확인: 이미지 위 흰텍스트 정상.

@@ -1044,6 +1044,24 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 .s-bucket-mb .ss-h2{font-size:32px!important;}
 .s-bucket-mb .ss-wm{font-size:46px!important;}
 
+/* S-BUCKET-MB: 모바일 전용 빌더(bucketInnerMb) 레이아웃 — 레퍼런스 M 매칭 */
+.ss-ar-mhero{aspect-ratio:750/1110;}
+.ss-ar-mgolf{aspect-ratio:540/760;}
+.ss-ar-mbig{aspect-ratio:750/1000;}
+.ss-ar-msq{aspect-ratio:1/1;}
+.ss-ar-mduo{aspect-ratio:360/480;}
+.ss-ar-mfoot{aspect-ratio:750/760;}
+.s-bucket-mb .ss-mb-hero{position:relative;}
+.s-bucket-mb .ss-mb-golf{padding:48px 56px 60px;text-align:left;}
+.s-bucket-mb .ss-mb-golf .ss-box{margin-bottom:34px;}
+.s-bucket-mb .ss-mb-big{position:relative;padding:0 0 60px;}
+.s-bucket-mb .ss-mb-big .ss-wm{left:24px;top:24px;bottom:auto;}
+.s-bucket-mb .ss-mb-float{width:62%;margin:-96px 24px 0 auto;position:relative;z-index:2;}
+.s-bucket-mb .ss-mb-big .ss-body2{padding:28px 24px 0;}
+.s-bucket-mb .ss-mb-duo{padding:0 24px 44px;}
+.s-bucket-mb .ss-mb-duo .ss-duo-l{gap:8px;}
+.s-bucket-mb .ss-mb-duo .ss-tag{margin-top:16px;text-align:right;}
+
 /* ANGLE-STYLE-FIX: 카드(이미지+캡션) 슬롯 디자인 비율 복원(정사각 해제) */
 .s-angle-cell .iz{aspect-ratio:430/520!important;height:auto!important;}
 .s-style-card .iz{aspect-ratio:267/400!important;height:auto!important;}
