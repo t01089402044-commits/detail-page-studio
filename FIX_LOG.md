@@ -135,6 +135,12 @@
 - 스프링 룩북 → bucketInner() 공통 + bucketpc/bucketmb 2빌더로 분리. CSS .s-spring→.s-bucket(공통)+.s-bucket-pc(가로 비대칭)/.s-bucket-mb(스택). 모달버튼 2개(버킷스토어 템플릿_pc/_모바일).
 - 검증: bucketPC heroDir=row, bucketMB heroDir=column, 각 슬롯7/편집9/호버7, 에러0.
 
+### [2026-06-24 추가17] 버킷 PC/모바일 레퍼런스 충실도 — 빈슬롯 회색 + 누락블록
+- 사용자: PC/모바일 둘 다 "그대로 구현 안됨". 원인=빈 .iz 슬롯 bg가 #f0f2f8(거의 흰색)이라 목업의 솔리드 회색 박스와 전혀 달라보임.
+- 해결: .s-bucket .iz:not(.has-image){background:#a6a6a6}(테마무관 솔리드 회색)+라벨 흰색. → 목업처럼 회색 박스.
+- 구조 보강: PC=하단 풀폭 푸터(ss-foot/ss-ar-foot) 추가, 모바일=빅↔듀오 사이 중간 풀폭(ss-mb-mid/ss-ar-mmid) 추가 — 레퍼런스에 있던 블록.
+- 검증(headless 1000/375px): PC 5블록(히어로2단/골프/빅/듀오/푸터), MB 6블록(히어로/골프/빅/중간/듀오/푸터) 모두 레퍼런스 일치.
+
 ### [2026-06-24 추가16] 버킷 모바일 전용 빌더(bucketInnerMb) — M 레퍼런스 구조 매칭
 - 문제: bucketmb가 PC용 bucketInner를 CSS 재적층만 해 모바일 레퍼런스(M)와 구조 불일치(히어로 좌+우 2블록 등).
 - 해결: bucketInnerMb() 신규. M 구조 — 히어로(풀폭1단+하단오버레이)/골프(가운데박스+아래텍스트)/빅(풀폭대형+워터마크+우측 겹친 정사각+텍스트)/듀오(2박스+BRAND)/풀폭 푸터. bucketmb가 사용.

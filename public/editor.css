@@ -999,12 +999,20 @@ label.iz-ov-btn { display:flex; align-items:center; justify-content:center; gap:
 .s-bucket{--bk-bg:#f2f2f2;--bk-box:#bdbdbd;--bk-h:#222;--bk-body:#777;--bk-line:rgba(0,0,0,.1);background:var(--bk-bg);position:relative;}
 .s-bucket .iz{position:absolute!important;inset:0!important;aspect-ratio:auto!important;height:auto!important;width:auto!important;}
 .s-bucket .ss-box{position:relative;overflow:hidden;background:var(--bk-box);}
+/* 버킷 빈 슬롯 = 목업처럼 솔리드 중간 회색(테마 무관), 라벨 흰색 */
+.s-bucket .iz:not(.has-image){background:#a6a6a6!important;border-color:transparent!important;border-radius:0!important;}
+.s-bucket .iz:not(.has-image):hover{background:#9a9a9a!important;border-color:transparent!important;}
+.s-bucket .iz .iz-lbl{color:rgba(255,255,255,.95)!important;}
+.s-bucket .iz .iz-px{color:rgba(255,255,255,.78)!important;}
+.s-bucket .iz .iz-ico{opacity:.55;color:#fff;}
 .ss-ar-hero1{aspect-ratio:940/1040;}
 .ss-ar-hero2{aspect-ratio:980/1300;}
 .ss-ar-golf{aspect-ratio:690/900;}
 .ss-ar-big{aspect-ratio:1280/1100;}
 .ss-ar-sq{aspect-ratio:1/1;}
 .ss-ar-duo{aspect-ratio:430/560;}
+.ss-ar-foot{aspect-ratio:1280/760;}
+.ss-ar-mmid{aspect-ratio:750/680;}
 .ss-hero-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45),rgba(0,0,0,0) 55%);pointer-events:none;}
 .ss-hero-txt{position:absolute;left:40px;bottom:48px;z-index:50;pointer-events:none;}
 .ss-hero-txt [contenteditable]{pointer-events:auto;}
