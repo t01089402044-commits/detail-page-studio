@@ -142,6 +142,7 @@
   · 검증(headless+ag-psd readback): PC 9레이어(텍스트8+배경1) MB 9레이어, 크롬누수0, 텍스트 문서경계내, pageErr0.
 - 테마칩(.ss-theme): 항상보이던 것 → opacity0/visibility hidden 기본, .s-bucket:hover서만 표시.
 - 모바일 빅 정사각겹침: 큰이미지 tf-wrap(z5)에 가려지던 것 → .ss-mb-float z-index:20(>5)+겹침 -140px로 위에 표시.
+- ⚠ PSD 미검증: 빈 슬롯 기준으로만 검증함. **실제 이미지(FTP/외부 호스팅) 들어간 상태**의 이미지 레이어 캡처는 CORS taint 가능성 있어 실사용 검증 필요(html2canvas useCORS:true+기존 이미지 proxy 경로 의존). 텍스트/배경 레이어는 정상.
 
 ### [2026-06-24 추가17] 버킷 PC/모바일 레퍼런스 충실도 — 빈슬롯 회색 + 누락블록
 - 사용자: PC/모바일 둘 다 "그대로 구현 안됨". 원인=빈 .iz 슬롯 bg가 #f0f2f8(거의 흰색)이라 목업의 솔리드 회색 박스와 전혀 달라보임.
