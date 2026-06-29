@@ -69,6 +69,20 @@
     preview.querySelectorAll('*').forEach(function (el) {
       try { var rr = el.getBoundingClientRect(); var bot = rr.bottom - baseRect.top; if (bot > maxBottom) maxBottom = bot; } catch (e) {}
     });
+    // PSD는 30000×30000 한계. 초과 시: 가능하면 스케일을 낮춰 PSD 유지,
+    // 원본 자체가 한계를 넘으면 PSB(대형문서, 포토샵에서 열림)로 자동 전환.
+    var PSD_LIMIT = 30000, PSB_LIMIT = 300000;
+    var contentMaxDim = Math.max(baseRect.width, maxBottom);
+    var psb = false;
+    if (contentMaxDim * scale > PSD_LIMIT) {
+      var fit = PSD_LIMIT / contentMaxDim;
+      if (fit >= 1) {
+        scale = Math.floor(fit * 100) / 100;       // 예: 1.87× — PSD 유지
+      } else {
+        psb = true;
+        scale = Math.min(scale, Math.floor((PSB_LIMIT / contentMaxDim) * 100) / 100);
+      }
+    }
     var docW = Math.max(1, Math.round(baseRect.width * scale));
     var docH = Math.max(1, Math.ceil(maxBottom * scale));
 
@@ -148,18 +162,19 @@
     }
 
     var psd = { width: docW, height: docH, children: layers };
-    var buffer = window.agPsd.writePsd(psd, { generateThumbnail: true, invalidateTextLayers: true });
-    if (opts.returnBuffer) { return { buffer: Array.from(new Uint8Array(buffer)), layers: layers.length, width: docW, height: docH }; }
-    var blob = new Blob([buffer], { type: 'image/vnd.adobe.photoshop' });
+    var buffer = window.agPsd.writePsd(psd, { generateThumbnail: true, invalidateTextLayers: true, psb: psb });
+    if (opts.returnBuffer) { return { buffer: Array.from(new Uint8Array(buffer)), layers: layers.length, width: docW, height: docH, psb: psb, scale: scale }; }
+    var ext = psb ? '.psb' : '.psd';
+    var blob = new Blob([buffer], { type: 'application/octet-stream' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'detail-page-' + (new Date().toISOString().slice(0, 10)) + '.psd';
+    a.download = 'detail-page-' + (new Date().toISOString().slice(0, 10)) + ext;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
 
     if (opts.onProgress) opts.onProgress('done');
-    return { layers: layers.length, width: docW, height: docH };
+    return { layers: layers.length, width: docW, height: docH, psb: psb, scale: scale };
   }
 
   window.savePSD = function () {

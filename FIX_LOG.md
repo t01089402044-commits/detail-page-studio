@@ -135,6 +135,11 @@
 - 스프링 룩북 → bucketInner() 공통 + bucketpc/bucketmb 2빌더로 분리. CSS .s-spring→.s-bucket(공통)+.s-bucket-pc(가로 비대칭)/.s-bucket-mb(스택). 모달버튼 2개(버킷스토어 템플릿_pc/_모바일).
 - 검증: bucketPC heroDir=row, bucketMB heroDir=column, 각 슬롯7/편집9/호버7, 에러0.
 
+### [2026-06-26 추가19] PSD 크기 초과(>30000px) 실패 수정 — 스케일 자동하향/PSB 전환
+- 증상: 긴 상세페이지 2배 저장 시 "Document size is too large (max 30000x30000)".
+- 수정(psd-export.js): 콘텐츠 최대변×scale>30000이면 ①스케일을 30000 내로 자동 하향(PSD 유지) ②원본 자체가 30000 초과면 PSB(대형문서) 전환(.psb, 포토샵 호환).
+- 검증(headless+ag-psd readback): 클램프 3900x29962(psb=false), 스택>30000 1000x38412(psb=true) 모두 OK.
+
 ### [2026-06-24 추가18] PSD 레이어분리 내보내기 + 테마칩 호버숨김 + 모바일 정사각 겹침
 - PSD(포토샵 편집용): ag-psd(public/ag-psd.js 876KB)+public/psd-export.js. 저장모달 "PSD(레이어분리·텍스트편집)" 버튼.
   · 구조: 배경 래스터 1개(텍스트·이미지·에디터크롬 숨김 후 html2canvas) + 이미지 슬롯별 개별 레이어 + 텍스트블록별 편집가능 PS 텍스트레이어(폰트/크기/색/위치 transform).
